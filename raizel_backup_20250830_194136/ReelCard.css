@@ -1,0 +1,71 @@
+/* ReelCard.css */
+.reel-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px; /* Ancho típico de un reel */
+    height: 85vh; /* Ocupa gran parte de la pantalla verticalmente */
+    background-color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    scroll-snap-align: start; /* Para el scroll vertical */
+}
+
+.reel-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Para que el video se vea completo sin deformarse */
+}
+
+.reel-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 20px;
+    color: white;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+}
+
+.reel-info {
+    flex-grow: 1;
+}
+
+.reel-info a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.reel-info p {
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+}
+
+.reel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.reel-actions .action-button .icon-button,
+.reel-actions .action-button .reactions-button,
+.reel-actions .action-button .share-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em; /* Íconos más grandes */
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.reel-actions .action-button .likes-count {
+    font-size: 0.6em;
+    font-weight: normal;
+}

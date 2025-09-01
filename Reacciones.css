@@ -1,0 +1,33 @@
+
+/* Reacciones.css */
+
+.reactions-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.reactions-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.reactions-button:hover {
+    background-color: #f0f0f0;
+}
+
+.reactions-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.likes-count {
+    font-size: 0.9em;
+    color: var(--text-color);
+}

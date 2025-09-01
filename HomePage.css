@@ -1,0 +1,95 @@
+/* HomePage.css */
+.home-page-container {
+    padding: 40px 20px;
+}
+
+.home-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.home-header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.home-header p {
+    font-size: 1.2em;
+    color: #666;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.module-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.module-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.module-card h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.module-card p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.manadabook-promo-section {
+    max-width: 900px;
+    margin: 80px auto 40px;
+    background-color: #f0f8ff;
+    border: 1px solid #bde0ff;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+}
+
+.manadabook-promo-content h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.manadabook-promo-content p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.manadabook-promo-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.manadabook-promo-button:hover {
+    background-color: #0056b3;
+}

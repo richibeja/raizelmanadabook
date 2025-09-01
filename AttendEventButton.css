@@ -1,0 +1,36 @@
+
+/* AttendEventButton.css */
+
+.attend-event-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.attend-event-button.attend {
+    background-color: #007bff;
+    color: white;
+}
+
+.attend-event-button.attend:hover {
+    background-color: #0056b3;
+}
+
+.attend-event-button.unattend {
+    background-color: #6c757d; /* Gris para cancelar */
+    color: white;
+}
+
+.attend-event-button.unattend:hover {
+    background-color: #5a6268;
+}
+
+.attend-event-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

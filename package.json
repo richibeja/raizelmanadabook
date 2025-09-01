@@ -5,11 +5,36 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "audit:perf": "node scripts/audit-performance.js",
+    "audit:lighthouse": "npx lighthouse http://localhost:3000 --output html --output-path ./lighthouse-reports/landing.html",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@next/font": "^14.2.15",
+    "@stripe/react-stripe-js": "^3.9.2",
+    "@stripe/stripe-js": "^7.9.0",
+    "clsx": "^2.1.1",
+    "firebase": "^12.2.1",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.542.0",
     "next": "15.5.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "stripe": "^18.5.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "19.1.12",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "15.5.2",
+    "typescript": "5.9.2"
   }
 }

@@ -1,0 +1,105 @@
+/* Reset y estilos base */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Estilos para la página principal */
+.home-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-page-container main {
+  flex: 1;
+  padding: 2rem;
+  text-align: center;
+}
+
+.home-page-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.home-page-container p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.home-page-container section {
+  padding: 2rem;
+  background-color: #f5f5f5;
+}
+
+.home-page-container section h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.home-page-container section a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.home-page-container section a:hover {
+  background-color: #45a049;
+}
+
+/* Estilos para el carrusel de sponsors */
+.sponsors-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  overflow-x: auto;
+}
+
+.sponsor {
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sponsor img {
+  display: block;
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+}

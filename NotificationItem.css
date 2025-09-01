@@ -1,0 +1,35 @@
+/* NotificationItem.css */
+
+.notification-item {
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.notification-item.unread {
+    background-color: #f0f8ff; /* Un azul claro para destacar las no leídas */
+    border-color: #bde0ff;
+}
+
+.notification-item p {
+    margin: 0;
+    color: #333;
+}
+
+.notification-item a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.notification-item a:hover {
+    text-decoration: underline;
+}
+
+.notification-time {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #666;
+}

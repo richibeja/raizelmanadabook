@@ -1,0 +1,78 @@
+/* ProductDetailPage.css */
+.product-detail-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.product-detail-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.product-detail-image {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.product-detail-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-detail-category {
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: bold;
+    align-self: flex-start;
+    margin-bottom: 10px;
+}
+
+.product-detail-info h1 {
+    margin: 0 0 15px 0;
+    font-size: 2.8em;
+}
+
+.product-detail-summary {
+    font-size: 1.1em;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.order-button {
+    padding: 15px 30px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    align-self: flex-start;
+}
+
+.order-button:hover {
+    background-color: #0056b3;
+}
+
+.product-detail-main-content {
+    margin-top: 40px;
+}
+
+.product-description-section p {
+    line-height: 1.7;
+    white-space: pre-wrap; /* Respeta los saltos de línea en la descripción */
+}
+
+.product-reviews-section {
+    margin-top: 30px;
+}

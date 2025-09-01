@@ -1,0 +1,42 @@
+/* BirthdayPets.css */
+.birthday-pets-container {
+    background-color: #fff8e1;
+    border: 1px solid #ffecb3;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.birthday-pets-container h4 {
+    margin-top: 0;
+    color: #e65100;
+}
+
+.birthday-list {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.birthday-pet-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+}
+
+.birthday-pet-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffc107;
+}
+
+.birthday-pet-item span {
+    font-size: 0.8em;
+    margin-top: 5px;
+    font-weight: bold;
+}

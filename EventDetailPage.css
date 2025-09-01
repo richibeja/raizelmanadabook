@@ -1,0 +1,57 @@
+
+/* EventDetailPage.css */
+
+.event-detail-header-image {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+}
+
+.event-detail-content {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.event-detail-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.event-detail-info-box {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.event-detail-info-box p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.event-detail-info-box strong {
+    color: #333;
+}
+
+.event-detail-description-section {
+    margin-top: 20px;
+}
+
+.event-detail-description-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.event-detail-description-section p {
+    line-height: 1.7;
+    color: #555;
+}
+
+.event-detail-rsvp-button-container {
+    margin: 20px 0;
+    text-align: center;
+}

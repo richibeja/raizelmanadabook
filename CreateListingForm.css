@@ -1,0 +1,90 @@
+
+/* CreateListingForm.css */
+
+.create-listing-container {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.create-listing-container h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.create-listing-form div {
+    margin-bottom: 15px;
+}
+
+.create-listing-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.create-listing-form input[type="text"],
+.create-listing-form input[type="number"],
+.create-listing-form select,
+.create-listing-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.create-listing-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.create-listing-form input:focus,
+.create-listing-form select:focus,
+.create-listing-form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.create-listing-form .price-category-group {
+    display: flex;
+    gap: 20px;
+}
+
+.create-listing-form .price-category-group > div {
+    flex: 1;
+}
+
+.create-listing-form button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.create-listing-form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.create-listing-form button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.create-listing-form .message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
