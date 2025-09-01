@@ -1,0 +1,1612 @@
+openapi: 3.0.3
+info:
+  title: ManadaBook API
+  description: API completa para la red social de mascotas más grande del mundo
+  version: 1.0.0
+  contact:
+    name: ManadaBook Support
+    email: support@manadabook.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.manadabook.com
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: Endpoints para autenticación de usuarios
+  - name: Users
+    description: Gestión de perfiles de usuarios
+  - name: Pets
+    description: Gestión de perfiles de mascotas
+  - name: Posts
+    description: Contenido social y feed
+  - name: Circles
+    description: Grupos y comunidades
+  - name: Marketplace
+    description: Compra/venta/adopción
+  - name: Snippets
+    description: Videos cortos estilo TikTok
+  - name: Ads
+    description: Sistema de publicidad pagada
+  - name: Messaging
+    description: Chat y mensajería en tiempo real
+  - name: Moderation
+    description: Moderación y administración
+  - name: Analytics
+    description: Tracking de eventos y métricas
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: '^\+?[1-9]\d{1,14}$'
+        avatar_url:
+          type: string
+          format: uri
+        role:
+          type: string
+          enum: [user, admin, moderator]
+        created_at:
+          type: string
+          format: date-time
+      required: [id, name, email]
+
+    Pet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+        species:
+          type: string
+          enum: [perro, gato, ave, pez, reptil, roedor, caballo, exótica, otro]
+        breed:
+          type: string
+          maxLength: 100
+        age:
+          type: object
+          properties:
+            years:
+              type: integer
+              minimum: 0
+            months:
+              type: integer
+              minimum: 0
+            estimated:
+              type: boolean
+        gender:
+          type: string
+          enum: [macho, hembra, indefinido]
+        personality:
+          type: string
+          maxLength: 200
+        interests:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+          maxLength: 200
+        bio:
+          type: string
+          maxLength: 1000
+        avatar_url:
+          type: string
+          format: uri
+        vaccines:
+          type: array
+          items:
+            type: string
+        privacy:
+          type: string
+          enum: [public, private, friends_only]
+        created_at:
+          type: string
+          format: date-time
+      required: [id, owner_id, name, species]
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        author_id:
+          type: string
+          format: uuid
+        pet_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+          maxLength: 2000
+        media:
+          type: array
+          items:
+            type: string
+            format: uri
+        type:
+          type: string
+          enum: [post, market, video]
+        visibility:
+          type: string
+          enum: [public, private, friends_only]
+        likes_count:
+          type: integer
+          minimum: 0
+        comments_count:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+      required: [id, author_id, content]
+
+    Circle:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 50
+          pattern: '^[a-z0-9-]+$'
+        type:
+          type: string
+          enum: [public, private]
+        admin_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          maxLength: 500
+        location:
+          type: string
+          maxLength: 200
+        members_count:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+      required: [id, name, slug, type, admin_id]
+
+    MarketplaceItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        seller_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 1000
+        price:
+          type: number
+          minimum: 0
+        currency:
+          type: string
+          enum: [USD, EUR, MXN, ARS, CLP]
+        photos:
+          type: array
+          items:
+            type: string
+            format: uri
+        status:
+          type: string
+          enum: [active, sold, reserved]
+        category:
+          type: string
+          enum: [mascota, alimento, juguete, accesorio, servicio, otro]
+        location:
+          type: string
+          maxLength: 200
+        created_at:
+          type: string
+          format: date-time
+      required: [id, seller_id, title, price, currency]
+
+    Snippet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        author_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 500
+        video_url:
+          type: string
+          format: uri
+        thumbnail_url:
+          type: string
+          format: uri
+        duration:
+          type: integer
+          minimum: 0
+        views:
+          type: integer
+          minimum: 0
+        likes:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+      required: [id, author_id, title, video_url]
+
+    Ad:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 500
+        target:
+          type: object
+          properties:
+            location:
+              type: string
+            species:
+              type: array
+              items:
+                type: string
+            interests:
+              type: array
+              items:
+                type: string
+        budget:
+          type: number
+          minimum: 0
+        bid_type:
+          type: string
+          enum: [CPM, CPC, CPI]
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        creative:
+          type: array
+          items:
+            type: string
+            format: uri
+        status:
+          type: string
+          enum: [pending, approved, active, paused, completed]
+        impressions:
+          type: integer
+          minimum: 0
+        clicks:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+      required: [id, owner_id, title, budget, bid_type]
+
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [direct, group]
+        title:
+          type: string
+          maxLength: 100
+        participants:
+          type: array
+          items:
+            type: string
+            format: uuid
+        last_message:
+          type: object
+          properties:
+            content:
+              type: string
+            sender_id:
+              type: string
+              format: uuid
+            created_at:
+              type: string
+              format: date-time
+        unread_count:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+      required: [id, type, participants]
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        conversation_id:
+          type: string
+          format: uuid
+        sender_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+          maxLength: 2000
+        media:
+          type: array
+          items:
+            type: string
+            format: uri
+        read_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+      required: [id, conversation_id, sender_id, content]
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        reporter_id:
+          type: string
+          format: uuid
+        target_type:
+          type: string
+          enum: [post, user, message, snippet, ad]
+        target_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          enum: [spam, inappropriate, harassment, fake, other]
+        description:
+          type: string
+          maxLength: 500
+        status:
+          type: string
+          enum: [pending, reviewed, resolved, dismissed]
+        created_at:
+          type: string
+          format: date-time
+      required: [id, reporter_id, target_type, target_id, reason]
+
+    AnalyticsEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+        event_type:
+          type: string
+          enum: [page_view, post_create, post_like, snippet_view, ad_click, purchase, join_circle]
+        event_category:
+          type: string
+          enum: [navigation, content, video, monetization, social]
+        event_data:
+          type: object
+        page_url:
+          type: string
+          format: uri
+        device_type:
+          type: string
+          enum: [desktop, mobile, tablet]
+        created_at:
+          type: string
+          format: date-time
+      required: [id, event_type, event_category]
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+
+paths:
+  # Authentication
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Registrar nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                phone:
+                  type: string
+              required: [name, email, password]
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Users
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Obtener perfil de usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Perfil de usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+
+    put:
+      tags:
+        - Users
+      summary: Actualizar perfil de usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                avatar_url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Perfil actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # Pets
+  /pets:
+    post:
+      tags:
+        - Pets
+      summary: Crear perfil de mascota
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '201':
+          description: Mascota creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+  /pets/{id}:
+    get:
+      tags:
+        - Pets
+      summary: Obtener perfil de mascota
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Perfil de mascota
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+    put:
+      tags:
+        - Pets
+      summary: Actualizar perfil de mascota
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Mascota actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+  # Posts
+  /posts:
+    post:
+      tags:
+        - Posts
+      summary: Crear nuevo post
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  maxLength: 2000
+                pet_id:
+                  type: string
+                  format: uuid
+                media:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                visibility:
+                  type: string
+                  enum: [public, private, friends_only]
+              required: [content]
+      responses:
+        '201':
+          description: Post creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+  /posts/{id}:
+    get:
+      tags:
+        - Posts
+      summary: Obtener post específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+  /posts/{id}/react:
+    post:
+      tags:
+        - Posts
+      summary: Reaccionar a un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [like, love, laugh, wow, sad, angry]
+              required: [type]
+      responses:
+        '200':
+          description: Reacción registrada
+
+  # Circles
+  /circles:
+    get:
+      tags:
+        - Circles
+      summary: Listar grupos
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [public, private]
+        - name: location
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de grupos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  circles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Circle'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Circles
+      summary: Crear nuevo grupo
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                type:
+                  type: string
+                  enum: [public, private]
+                description:
+                  type: string
+                  maxLength: 500
+                location:
+                  type: string
+                  maxLength: 200
+              required: [name, type]
+      responses:
+        '201':
+          description: Grupo creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Circle'
+
+  /circles/{id}:
+    get:
+      tags:
+        - Circles
+      summary: Obtener grupo específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Grupo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Circle'
+
+  /circles/{id}/join:
+    post:
+      tags:
+        - Circles
+      summary: Unirse a un grupo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Usuario unido al grupo
+
+  # Marketplace
+  /market/items:
+    get:
+      tags:
+        - Marketplace
+      summary: Listar items del marketplace
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [mascota, alimento, juguete, accesorio, servicio, otro]
+        - name: min_price
+          in: query
+          schema:
+            type: number
+        - name: max_price
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Lista de items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MarketplaceItem'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Marketplace
+      summary: Crear nuevo item
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketplaceItem'
+      responses:
+        '201':
+          description: Item creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceItem'
+
+  /market/items/{id}:
+    get:
+      tags:
+        - Marketplace
+      summary: Obtener item específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceItem'
+
+  # Snippets
+  /snippets:
+    get:
+      tags:
+        - Snippets
+      summary: Listar videos cortos
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+      responses:
+        '200':
+          description: Lista de videos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snippets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Snippet'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Snippets
+      summary: Subir nuevo video
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  maxLength: 200
+                description:
+                  type: string
+                  maxLength: 500
+                video:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Video subido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+
+  /snippets/{id}:
+    get:
+      tags:
+        - Snippets
+      summary: Obtener video específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Video
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snippet'
+
+  # Ads
+  /ads:
+    get:
+      tags:
+        - Ads
+      summary: Listar campañas publicitarias
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, approved, active, paused, completed]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de campañas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ads:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Ad'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Ads
+      summary: Crear nueva campaña
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ad'
+      responses:
+        '201':
+          description: Campaña creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ad'
+
+  /ads/{id}:
+    get:
+      tags:
+        - Ads
+      summary: Obtener campaña específica
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Campaña
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ad'
+
+  # Messaging
+  /conversations:
+    get:
+      tags:
+        - Messaging
+      summary: Listar conversaciones
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de conversaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conversation'
+
+    post:
+      tags:
+        - Messaging
+      summary: Crear nueva conversación
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [direct, group]
+                participants:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                title:
+                  type: string
+                  maxLength: 100
+              required: [type, participants]
+      responses:
+        '201':
+          description: Conversación creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+
+  /conversations/{id}/messages:
+    get:
+      tags:
+        - Messaging
+      summary: Obtener mensajes de conversación
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de mensajes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Messaging
+      summary: Enviar mensaje
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  maxLength: 2000
+                media:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+              required: [content]
+      responses:
+        '201':
+          description: Mensaje enviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  # Moderation
+  /reports:
+    get:
+      tags:
+        - Moderation
+      summary: Listar reportes
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, reviewed, resolved, dismissed]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de reportes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reports:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Moderation
+      summary: Crear reporte
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_type:
+                  type: string
+                  enum: [post, user, message, snippet, ad]
+                target_id:
+                  type: string
+                  format: uuid
+                reason:
+                  type: string
+                  enum: [spam, inappropriate, harassment, fake, other]
+                description:
+                  type: string
+                  maxLength: 500
+              required: [target_type, target_id, reason]
+      responses:
+        '201':
+          description: Reporte creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+
+  /moderation/actions:
+    post:
+      tags:
+        - Moderation
+      summary: Ejecutar acción de moderación
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_type:
+                  type: string
+                  enum: [post, user, message, snippet, ad]
+                target_id:
+                  type: string
+                  format: uuid
+                action_type:
+                  type: string
+                  enum: [warning, content_removal, temporary_ban, permanent_ban, unban]
+                reason:
+                  type: string
+                  maxLength: 500
+                duration_days:
+                  type: integer
+                  minimum: 1
+              required: [target_type, target_id, action_type, reason]
+      responses:
+        '200':
+          description: Acción ejecutada
+
+  # Analytics
+  /analytics/events:
+    get:
+      tags:
+        - Analytics
+      summary: Obtener eventos de analytics
+      parameters:
+        - name: event_type
+          in: query
+          schema:
+            type: string
+        - name: event_category
+          in: query
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de eventos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AnalyticsEvent'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  hasMore:
+                    type: boolean
+
+    post:
+      tags:
+        - Analytics
+      summary: Trackear evento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_type:
+                  type: string
+                event_category:
+                  type: string
+                event_data:
+                  type: object
+                page_url:
+                  type: string
+                  format: uri
+                device_type:
+                  type: string
+                  enum: [desktop, mobile, tablet]
+              required: [event_type, event_category]
+      responses:
+        '201':
+          description: Evento trackeado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsEvent'
+
+  /analytics/metrics:
+    get:
+      tags:
+        - Analytics
+      summary: Obtener métricas agregadas
+      parameters:
+        - name: metric_name
+          in: query
+          schema:
+            type: string
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Métricas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metrics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        metric_name:
+                          type: string
+                        metric_value:
+                          type: number
+                        metric_unit:
+                          type: string
+                        date_bucket:
+                          type: string
+                          format: date
+                  dashboard:
+                    type: object
+                    properties:
+                      total_users:
+                        type: number
+                      total_posts:
+                        type: number
+                      total_snippets:
+                        type: number
+                      total_ads_spent:
+                        type: number
+                      daily_active_users:
+                        type: number
+                      engagement_rate:
+                        type: number
+                      avg_session_duration:
+                        type: number
+                      conversion_rate:
+                        type: number
+
+  /analytics/dashboard:
+    get:
+      tags:
+        - Analytics
+      summary: Dashboard principal de analytics
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overview:
+                    type: object
+                    properties:
+                      total_users:
+                        type: number
+                      total_posts:
+                        type: number
+                      total_snippets:
+                        type: number
+                      total_ads_spent:
+                        type: number
+                  trends:
+                    type: object
+                    properties:
+                      user_growth:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                              format: date
+                            value:
+                              type: number
+                      engagement:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                              format: date
+                            value:
+                              type: number
+                  recent_events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AnalyticsEvent'

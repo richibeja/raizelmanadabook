@@ -12,29 +12,49 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:build": "docker-compose build --no-cache",
+    "migrate": "psql $DATABASE_URL -f migrations/001_initial_schema.sql",
+    "db:setup": "docker-compose up -d postgres redis minio && sleep 10 && npm run migrate",
+    "backend:dev": "cd backend && npm run start:dev",
+    "backend:build": "cd backend && npm run build",
+    "backend:test": "cd backend && npm run test"
   },
   "dependencies": {
     "@next/font": "^14.2.15",
     "@stripe/react-stripe-js": "^3.9.2",
     "@stripe/stripe-js": "^7.9.0",
+    "@types/pg": "^8.15.5",
+    "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "firebase": "^12.2.1",
     "framer-motion": "^12.23.12",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.542.0",
     "next": "15.5.2",
+    "pg": "^8.16.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "stripe": "^18.5.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "19.1.12",
     "@types/react-dom": "^18.0.0",
+    "@types/uuid": "^9.0.8",
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.0.0",
     "eslint-config-next": "15.5.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12",
     "typescript": "5.9.2"
   }
 }

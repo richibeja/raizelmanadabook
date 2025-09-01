@@ -1,362 +1,421 @@
-# 🚀 Raizel UI Revamp - Deliverables Summary
+# ManadaBook - Red Social Completa para Mascotas
+## Resumen de Entregables - Fase 2-3 Completa
 
-## 📋 Resumen del Proyecto
+### 🎯 Visión Ejecutiva
+ManadaBook es la red social más grande del mundo para mascotas de todo tipo (perros, gatos, aves, peces, reptiles, roedores, caballos, exóticas, etc.), con funcionalidades completas de social media, marketplace, short-video, publicidad y analytics.
 
-Se ha completado exitosamente el revamp completo de la UI de Raizel, transformando la aplicación en una plataforma moderna, optimizada y visualmente atractiva. El proyecto incluye un sistema de diseño completo, componentes reutilizables, animaciones fluidas y optimizaciones de performance.
+### 🚀 Features Implementadas
 
-## 🎯 Objetivos Cumplidos
+#### ✅ **PR1: Infraestructura Base** (`feature/infra-setup`)
+- Docker Compose con PostgreSQL, Redis, MinIO
+- GitHub Actions CI/CD
+- Variables de entorno (.env.example)
+- README con instrucciones de setup
 
-✅ **Diseño Visual Moderno** - Paleta de colores contemporánea y tipografía profesional  
-✅ **Componentes Reutilizables** - Biblioteca completa de componentes UI  
-✅ **Responsive Design** - Optimizado para móvil, tablet y desktop  
-✅ **Animaciones Fluidas** - Micro-interacciones con Framer Motion  
-✅ **Optimización de Performance** - Lighthouse score objetivo ≥90  
-✅ **Accesibilidad Completa** - WCAG 2.1 AA compliance  
-✅ **Documentación Exhaustiva** - Guías y documentación técnica  
+#### ✅ **PR2: Autenticación y Perfiles** (`feature/auth-profiles`)
+- JWT Authentication (register/login/logout)
+- Perfiles de usuarios y mascotas expandidos
+- Campos universales: species, breed (opcional), age, gender, personality, interests, location, bio
+- Soporte para múltiples mascotas por tutor
+- Privacidad básica (público/privado)
 
-## 📁 Estructura de Archivos Creados
+#### ✅ **PR3: Circles (Grupos)** (`feature/circles-core`)
+- Grupos públicos y privados
+- Roles: admin, moderador, miembro
+- Feed específico por grupo
+- Discovery por ciudad/tags
+- Invitaciones y gestión de miembros
 
-### 🎨 Design System
-```
-design/
-├── tokens.json              # Tokens de diseño (colores, tipografía, espaciado)
-├── STYLE_GUIDE.md           # Guía de estilos completa
-└── screenshots/             # Capturas de pantalla (preparado)
-```
+#### ✅ **PR4: Moments (Estados Efímeros)** (`feature/moments`)
+- Posts efímeros (24h de duración)
+- Carousel en la parte superior del feed
+- Indicadores de progreso
+- Sistema de expiración automática
 
-### 🧩 Componentes UI
-```
-components/ui/
-├── Button.tsx               # Botón con variantes y animaciones
-├── Card.tsx                 # Tarjeta con variantes
-├── Header.tsx               # Header responsive con navegación
-├── Hero.tsx                 # Sección hero animada
-├── CardMascota.tsx          # Tarjeta específica para mascotas
-└── Footer.tsx               # Footer completo con enlaces
-```
+#### ✅ **PR5: Mercaplace (Marketplace)** (`feature/mercaplace-mvp`)
+- Compra/venta/adopción de mascotas y productos
+- Categorías y filtros
+- Perfiles de vendedores
+- Integración con Stripe Checkout
+- Estados: activo, vendido, reservado
 
-### 🛠️ Utilidades
-```
-lib/
-└── utils.ts                 # Utilidades (cn, formatDate, etc.)
+#### ✅ **PR6: Snippets (Short-Video)** (`feature/snippets-mvp`)
+- Feed de videos estilo TikTok/Reels
+- Autoplay con mute/unmute
+- Likes y comentarios
+- Upload con presigned URLs
+- Worker stub para transcodificación con FFmpeg
 
-utils/
-└── image.ts                 # Optimización de imágenes completa
-```
+#### ✅ **PR7: Promos (Publicidad)** (`feature/promos-ads`)
+- Sistema de anuncios pagados
+- Tipos de bid: CPM, CPC, CPI
+- Segmentación por ubicación, raza, intereses
+- Workflow de aprobación admin
+- Integración con Stripe para pagos
 
-### 📄 Páginas
-```
-app/
-├── landing/
-│   └── page.tsx             # Landing page moderna
-└── feed/
-    └── page.tsx             # Feed con scroll infinito
-```
+#### ✅ **PR8: Mensajería en Tiempo Real** (`feature/realtime-msgs`)
+- Chat 1:1 y grupal
+- WebSocket/Socket.IO
+- Notificaciones en tiempo real
+- Conversaciones persistentes
+- Estados de lectura
 
-### 🔧 Scripts y Configuración
-```
-scripts/
-└── audit-performance.js     # Script de auditoría Lighthouse
+#### ✅ **PR9: Moderación y Administración** (`feature/moderation-admin`)
+- Sistema de reportes
+- Dashboard de moderación
+- Acciones: warning, ban temporal/permanente
+- Rate limiting y spam detection
+- Logs de administración
 
-package.json                 # Scripts actualizados
-global.css                   # Estilos globales modernos
-```
+#### ✅ **PR10: Analytics y Métricas** (`feature/analytics`)
+- Tracking de eventos en tiempo real
+- Dashboard con métricas clave
+- Funnels de conversión
+- Cohortes de usuarios
+- Export de datos
 
-### 📚 Documentación
-```
-README_UI.md                 # Documentación completa del sistema UI
-DELIVERABLES_SUMMARY.md      # Este archivo
-```
+### 🛠️ Stack Tecnológico
 
-## 🎨 Sistema de Diseño
+#### Frontend
+- **Framework**: Next.js 15.5.2 (App Router)
+- **UI**: React 18.2.0 + TypeScript 5.9.2
+- **Styling**: Tailwind CSS (JIT)
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
+- **State Management**: React Hooks + Context
 
-### Paleta de Colores
-- **Primario**: Azul eléctrico `#0F6FF6`
-- **Secundario**: Coral cálido `#FF7A59`
-- **Acento**: Verde menta `#00C2A8`
-- **Neutros**: Escala completa de grises
+#### Backend
+- **Runtime**: Node.js
+- **Framework**: Next.js API Routes
+- **Database**: PostgreSQL (Primary) + Redis (Cache)
+- **Storage**: MinIO (S3-compatible)
+- **Real-time**: WebSocket/Socket.IO
+- **Payments**: Stripe
 
-### Tipografía
-- **Familia**: Inter (Google Fonts)
-- **Jerarquía**: H1-H6 con pesos y tamaños optimizados
-- **Legibilidad**: Line-height y espaciado optimizados
+#### DevOps
+- **Containerization**: Docker + Docker Compose
+- **CI/CD**: GitHub Actions
+- **Testing**: Jest + @testing-library/react
+- **Monitoring**: Custom analytics + event tracking
 
-### Espaciado
-- **Sistema**: Basado en 8px
-- **Escala**: 4px, 8px, 16px, 24px, 32px, 48px, 64px, 96px
+### 📊 Data Model
 
-## 🧩 Componentes Implementados
+#### Entidades Principales
+```sql
+-- Usuarios y Autenticación
+users (id, name, email, phone, password_hash, avatar_url, role, created_at)
+pets (id, owner_id, name, species, breed, age, gender, personality, interests, location, bio, avatar_url, vaccines[], privacy)
 
-### 1. Button Component
-- **Variantes**: Primary, Secondary, Outline, Ghost, Danger
-- **Tamaños**: Small, Medium, Large
-- **Estados**: Loading, Disabled
-- **Animaciones**: Hover, Tap, Loading spinner
+-- Contenido Social
+posts (id, author_id, pet_id, content, media[], type, visibility, created_at)
+reactions (id, user_id, post_id, type)
+comments (id, post_id, user_id, parent_comment_id, content, created_at)
+follows (follower_id, followee_id, status)
 
-### 2. Card Component
-- **Variantes**: Default, Elevated, Outlined
-- **Subcomponentes**: Header, Content, Footer
-- **Animaciones**: Hover effects, Entrance animations
+-- Comunidad
+circles (id, name, slug, type, admin_id, description, location, created_at)
+circle_members (circle_id, user_id, role, joined_at)
 
-### 3. Header Component
-- **Navegación**: Responsive con hamburger menu
-- **Funcionalidades**: Search, Notifications, Auth
-- **Animaciones**: Smooth transitions
+-- Marketplace
+marketplace_items (id, seller_id, title, description, price, currency, photos[], status, category, location)
 
-### 4. Hero Component
-- **Contenido**: Headlines, CTAs, Statistics
-- **Animaciones**: Staggered entrance, Floating elements
-- **Responsive**: Adaptable a todos los dispositivos
+-- Multimedia
+snippets (id, author_id, title, description, video_url, thumbnail_url, duration, views, likes, created_at)
 
-### 5. CardMascota Component
-- **Específico**: Para mostrar mascotas
-- **Funcionalidades**: Like, Adopt, Share
-- **Optimización**: Lazy loading de imágenes
+-- Mensajería
+conversations (id, type, title, participants[])
+messages (id, conversation_id, sender_id, content, media[], created_at, read_at)
 
-### 6. Footer Component
-- **Enlaces**: Organizados por categorías
-- **Social**: Iconos de redes sociales
-- **Responsive**: Adaptable layout
+-- Publicidad
+ads (id, owner_id, title, description, target, budget, bid_type, start_date, end_date, creative[], status)
 
-## 🎭 Animaciones y Micro-interacciones
+-- Analytics
+analytics_events (id, user_id, session_id, event_type, event_category, event_data, created_at)
+analytics_metrics (id, metric_name, metric_value, metric_unit, dimension_key, dimension_value, date_bucket)
 
-### Framer Motion Integration
-- **Entrance Animations**: Fade in, Slide up, Scale in
-- **Hover Effects**: Scale, Translate, Shadow changes
-- **Transitions**: Smooth state changes
-- **AnimatePresence**: Exit animations
-
-### CSS Transitions
-- **Duration**: 0.2s - 0.5s
-- **Easing**: ease-in-out
-- **Properties**: Transform, opacity, color, shadow
-
-## 📱 Responsive Design
-
-### Breakpoints
-- **Mobile**: < 640px
-- **Tablet**: 640px - 1024px
-- **Desktop**: > 1024px
-
-### Implementación
-- **Mobile First**: Base styles for mobile
-- **Progressive Enhancement**: Features added for larger screens
-- **Touch Targets**: Minimum 44px for mobile
-- **Grid System**: Flexible layouts
-
-## 🖼️ Optimización de Imágenes
-
-### Utilidades Implementadas
-- **Format Optimization**: WebP, AVIF support
-- **Responsive Images**: srcSet y sizes
-- **Lazy Loading**: Intersection Observer
-- **Compression**: Client-side image compression
-- **Placeholders**: Generated placeholders
-
-### Funciones Disponibles
-```typescript
-optimizeImage(url, options)
-generateSrcSet(url, widths)
-createOptimizedImage(url, alt, options)
-lazyLoadImage(element, src)
-compressImage(file, options)
+-- Moderación
+reports (id, reporter_id, target_type, target_id, reason, status, created_at)
+moderation_actions (id, moderator_id, target_type, target_id, action_type, reason, created_at)
 ```
 
-## ♿ Accesibilidad
+### 🚀 Cómo Levantar Localmente
 
-### Implementaciones
-- **ARIA Labels**: Todos los elementos interactivos
-- **Focus Management**: Visible focus states
-- **Keyboard Navigation**: Complete keyboard support
-- **Color Contrast**: WCAG 2.1 AA compliance
-- **Screen Reader**: Semantic HTML structure
+#### Prerrequisitos
+- Docker y Docker Compose
+- Node.js 18+
+- npm o yarn
 
-### Contraste de Colores
-- **Texto Normal**: 4.5:1 mínimo
-- **Texto Pequeño**: 7:1 recomendado
-- **Botones**: 3:1 mínimo
+#### Pasos de Instalación
 
-## 🚀 Performance Optimizations
-
-### Implementadas
-- **Code Splitting**: Lazy loading de componentes
-- **Image Optimization**: WebP, lazy loading
-- **Bundle Optimization**: Tree shaking, minification
-- **Caching**: Static assets, API responses
-- **Lighthouse CI**: Automated performance testing
-
-### Scripts de Auditoría
+1. **Clonar y configurar**
 ```bash
-npm run audit:perf      # Lighthouse CI completo
-npm run audit:lighthouse # Lighthouse manual
-```
-
-## 📊 Métricas de Performance
-
-### Objetivos Lighthouse
-- **Performance**: ≥ 90
-- **Accessibility**: ≥ 90
-- **Best Practices**: ≥ 90
-- **SEO**: ≥ 90
-
-### Optimizaciones Específicas
-- **First Contentful Paint**: < 2s
-- **Largest Contentful Paint**: < 4s
-- **Cumulative Layout Shift**: < 0.1
-- **Total Blocking Time**: < 300ms
-
-## 🧪 Testing y Calidad
-
-### Implementado
-- **TypeScript**: Type safety completo
-- **ESLint**: Code quality
-- **Performance Testing**: Lighthouse CI
-- **Visual Testing**: Storybook ready
-
-### Scripts Disponibles
-```bash
-npm run type-check      # TypeScript checking
-npm run lint           # ESLint
-npm run audit:perf     # Performance audit
-npm run test           # Jest testing
-```
-
-## 📦 Dependencias Instaladas
-
-### Principales
-- **framer-motion**: Animaciones
-- **lucide-react**: Iconos
-- **clsx**: Class name utilities
-- **tailwind-merge**: Tailwind class merging
-
-### Desarrollo
-- **@types/react**: TypeScript types
-- **@types/node**: Node.js types
-
-## 🔧 Scripts NPM
-
-### Nuevos Scripts
-```bash
-npm run audit:perf          # Auditoría de performance
-npm run audit:lighthouse    # Lighthouse manual
-npm run type-check          # TypeScript checking
-npm run test                # Jest testing
-npm run test:watch          # Jest watch mode
-npm run storybook           # Storybook dev
-npm run build-storybook     # Storybook build
-```
-
-## 📚 Documentación Creada
-
-### Archivos de Documentación
-1. **README_UI.md** - Documentación completa del sistema
-2. **design/STYLE_GUIDE.md** - Guía de estilos visuales
-3. **design/tokens.json** - Tokens de diseño
-4. **DELIVERABLES_SUMMARY.md** - Este resumen
-
-### Contenido de Documentación
-- **Instalación y Configuración**
-- **Uso de Componentes**
-- **Sistema de Diseño**
-- **Animaciones**
-- **Responsive Design**
-- **Optimización de Imágenes**
-- **Accesibilidad**
-- **Performance**
-- **Testing**
-
-## 🎯 Páginas Implementadas
-
-### 1. Landing Page (`/landing`)
-- **Hero Section**: Con animaciones y estadísticas
-- **Features Section**: Características principales
-- **Mascotas Destacadas**: Grid de mascotas
-- **Testimonios**: Reviews de usuarios
-- **CTA Section**: Call-to-action final
-
-### 2. Feed Page (`/feed`)
-- **Search & Filters**: Búsqueda y filtros
-- **Posts**: Feed de publicaciones
-- **Skeletons**: Loading states
-- **Infinite Scroll**: Carga más contenido
-- **Interactions**: Like, comment, share
-
-## 🚀 Cómo Ejecutar el Proyecto
-
-### 1. Instalación
-```bash
-git clone <repository>
+git clone <repo-url>
 cd raizel
+cp .env.example .env
+# Editar .env con tus variables
+```
+
+2. **Levantar servicios con Docker**
+```bash
+docker-compose up -d
+```
+
+3. **Instalar dependencias**
+```bash
 npm install
 ```
 
-### 2. Desarrollo
+4. **Ejecutar migraciones**
+```bash
+# Las migraciones se ejecutan automáticamente al levantar PostgreSQL
+# O manualmente:
+docker-compose exec postgres psql -U postgres -d manadabook -f /migrations/*.sql
+```
+
+5. **Iniciar desarrollo**
 ```bash
 npm run dev
-# Abrir http://localhost:3000
 ```
 
-### 3. Páginas Disponibles
-- **Home**: `http://localhost:3000`
-- **Landing**: `http://localhost:3000/landing`
-- **Feed**: `http://localhost:3000/feed`
+6. **Acceder a la aplicación**
+- Frontend: http://localhost:3000
+- API: http://localhost:3000/api
+- MinIO Console: http://localhost:9001
+- PostgreSQL: localhost:5432
 
-### 4. Auditoría de Performance
+### 📡 Endpoints Principales
+
+#### Autenticación
+- `POST /api/auth/register` - Registro de usuarios
+- `POST /api/auth/login` - Login
+- `POST /api/auth/logout` - Logout
+
+#### Usuarios y Mascotas
+- `GET /api/users/:id` - Perfil de usuario
+- `PUT /api/users/:id` - Actualizar perfil
+- `POST /api/pets` - Crear mascota
+- `GET /api/pets/:id` - Perfil de mascota
+- `PUT /api/pets/:id` - Actualizar mascota
+
+#### Feed y Contenido
+- `GET /api/feed` - Feed principal
+- `POST /api/posts` - Crear post
+- `GET /api/posts/:id` - Ver post
+- `POST /api/posts/:id/react` - Reaccionar
+- `POST /api/posts/:id/comments` - Comentar
+
+#### Circles (Grupos)
+- `POST /api/circles` - Crear grupo
+- `GET /api/circles` - Listar grupos
+- `GET /api/circles/:id` - Ver grupo
+- `POST /api/circles/:id/join` - Unirse
+- `POST /api/circles/:id/leave` - Salir
+
+#### Mercaplace
+- `POST /api/market/items` - Crear item
+- `GET /api/market/items` - Listar items
+- `GET /api/market/items/:id` - Ver item
+- `POST /api/market/items/:id/purchase` - Iniciar compra
+
+#### Snippets (Videos)
+- `POST /api/snippets` - Subir video
+- `GET /api/snippets` - Feed de videos
+- `GET /api/snippets/:id` - Ver video
+- `POST /api/snippets/:id/react` - Reaccionar
+
+#### Promos (Publicidad)
+- `POST /api/ads` - Crear campaña
+- `GET /api/ads` - Listar campañas
+- `POST /api/ads/:id/pay` - Pagar campaña
+- `GET /api/ads/:id/stats` - Estadísticas
+
+#### Mensajería
+- `GET /api/conversations` - Listar conversaciones
+- `POST /api/conversations` - Crear conversación
+- `GET /api/conversations/:id/messages` - Mensajes
+- `POST /api/conversations/:id/messages` - Enviar mensaje
+
+#### Moderación
+- `POST /api/reports` - Reportar contenido
+- `GET /api/moderation/reports` - Listar reportes
+- `POST /api/moderation/actions` - Acción de moderación
+
+#### Analytics
+- `POST /api/analytics/events` - Trackear evento
+- `GET /api/analytics/metrics` - Obtener métricas
+- `GET /api/analytics/dashboard` - Dashboard
+
+### 🧪 Testing
+
+#### Ejecutar Tests
 ```bash
-npm run audit:perf
-# Genera reportes en ./lighthouse-reports/
+# Tests unitarios
+npm test
+
+# Tests de integración
+npm run test:integration
+
+# Tests E2E
+npm run test:e2e
+
+# Coverage
+npm run test:coverage
 ```
 
-## 📈 Métricas de Éxito
+#### Comandos de Desarrollo
+```bash
+# Desarrollo
+npm run dev
 
-### Diseño
-- ✅ Paleta de colores moderna implementada
-- ✅ Tipografía Inter configurada
-- ✅ Sistema de espaciado consistente
-- ✅ Componentes visualmente atractivos
+# Build de producción
+npm run build
 
-### Funcionalidad
-- ✅ Componentes reutilizables
-- ✅ Animaciones fluidas
-- ✅ Responsive design completo
-- ✅ Accesibilidad WCAG 2.1 AA
+# Start de producción
+npm start
 
-### Performance
-- ✅ Lighthouse score objetivo ≥90
-- ✅ Optimización de imágenes
-- ✅ Code splitting implementado
-- ✅ Bundle optimization
+# Linting
+npm run lint
 
-### Calidad
-- ✅ TypeScript completo
-- ✅ Documentación exhaustiva
-- ✅ Scripts de testing
-- ✅ Auditorías automatizadas
+# Type checking
+npm run type-check
+```
 
-## 🎉 Resultado Final
+### 📱 Páginas Implementadas
 
-El proyecto Raizel ha sido completamente transformado con:
+#### Páginas Principales
+- `/` - Landing page
+- `/manadabook` - Feed principal
+- `/pets` - Lista de mascotas
+- `/pets/[id]` - Perfil de mascota
+- `/circles` - Grupos
+- `/circles/[id]` - Grupo específico
+- `/snippets` - Videos cortos
+- `/snippets/[id]` - Video específico
+- `/mercaplace` - Marketplace
+- `/mercaplace/[id]` - Item específico
+- `/ads` - Publicidad
+- `/ads/[id]` - Campaña específica
+- `/conversations` - Chat
+- `/conversations/[id]` - Conversación específica
+- `/notifications` - Notificaciones
+- `/moderation` - Panel de moderación
+- `/moderation/actions` - Acciones de moderación
+- `/analytics` - Dashboard de analytics
+- `/analytics/events` - Eventos detallados
 
-1. **Sistema de Diseño Moderno**: Paleta de colores contemporánea, tipografía profesional
-2. **Componentes Reutilizables**: Biblioteca completa de componentes UI optimizados
-3. **Experiencia de Usuario Excepcional**: Animaciones fluidas, micro-interacciones
-4. **Performance Optimizada**: Lighthouse score ≥90 en todas las métricas
-5. **Accesibilidad Completa**: Cumple estándares WCAG 2.1 AA
-6. **Responsive Design**: Funciona perfectamente en todos los dispositivos
-7. **Documentación Exhaustiva**: Guías completas para desarrollo futuro
+### 🔧 Configuración de Variables de Entorno
 
-## 🔮 Próximos Pasos Recomendados
+```env
+# Database
+DATABASE_URL=postgresql://postgres:password@localhost:5432/manadabook
+REDIS_URL=redis://localhost:6379
 
-1. **Testing**: Implementar tests unitarios y de integración
-2. **Storybook**: Configurar Storybook para documentación visual
-3. **CI/CD**: Integrar auditorías de performance en el pipeline
-4. **Analytics**: Implementar tracking de métricas de UX
-5. **PWA**: Convertir en Progressive Web App
-6. **Internationalization**: Soporte multiidioma
+# Storage
+MINIO_ENDPOINT=localhost
+MINIO_PORT=9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=manadabook
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=7d
+
+# Payments (Stripe)
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Email (opcional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# Analytics
+ANALYTICS_ENABLED=true
+ANALYTICS_SAMPLE_RATE=1.0
+```
+
+### 🚀 TODO para Producción
+
+#### Infraestructura
+- [ ] CDN (CloudFront/Azure CDN) para assets estáticos
+- [ ] SSL/TLS con Let's Encrypt
+- [ ] Load balancer (ALB/Application Gateway)
+- [ ] Auto-scaling groups
+- [ ] Monitoring con Prometheus + Grafana
+- [ ] Logging centralizado (ELK Stack)
+
+#### Seguridad
+- [ ] WAF (Web Application Firewall)
+- [ ] Rate limiting avanzado
+- [ ] Moderación con ML (AWS Rekognition/Azure Computer Vision)
+- [ ] Backup automático de base de datos
+- [ ] Auditoría de seguridad
+
+#### Performance
+- [ ] Caching con Redis Cluster
+- [ ] Database sharding
+- [ ] Microservicios para video processing
+- [ ] CDN para videos
+- [ ] Optimización de imágenes (WebP/AVIF)
+
+#### Features Avanzadas
+- [ ] App móvil (React Native)
+- [ ] Push notifications
+- [ ] Live streaming
+- [ ] AI para recomendaciones
+- [ ] Gamificación (badges, achievements)
+- [ ] Marketplace multi-vendor con Stripe Connect
+
+### 📈 Métricas de Éxito
+
+#### KPIs Principales
+- **Usuarios**: DAU, MAU, crecimiento mensual
+- **Engagement**: tiempo en app, posts por usuario, likes/comentarios
+- **Retención**: D1, D7, D30
+- **Monetización**: ARPU, conversión de ads, revenue por usuario
+- **Técnico**: uptime, response time, error rate
+
+#### Funnels de Conversión
+1. Registro → Verificación de email
+2. Primer post → Primer like
+3. Seguir primera mascota → Engagement
+4. Crear grupo → Invitar amigos
+5. Subir video → Viralización
+6. Compra en marketplace → Recompra
+
+### 🤝 Contribución
+
+#### Estructura de Branches
+- `main` - Producción
+- `develop` - Desarrollo
+- `feature/*` - Features individuales
+- `hotfix/*` - Fixes críticos
+
+#### Proceso de PR
+1. Crear branch desde `develop`
+2. Implementar feature
+3. Tests y linting
+4. Crear PR
+5. Code review
+6. Merge a `develop`
+7. Deploy a staging
+8. Deploy a producción
+
+### 📞 Soporte
+
+#### Documentación
+- [API Documentation](./openapi.yaml)
+- [Component Library](./components/README.md)
+- [Database Schema](./migrations/README.md)
+
+#### Contacto
+- Issues: GitHub Issues
+- Email: support@manadabook.com
+- Discord: [Link al servidor]
 
 ---
 
-**🎯 Proyecto Completado Exitosamente**  
-**📅 Fecha de Entrega**: 31 de Agosto, 2025  
-**👨‍💻 Desarrollado por**: AI Assistant  
-**📊 Estado**: ✅ COMPLETADO
+**ManadaBook** - La red social más grande del mundo para mascotas 🐾

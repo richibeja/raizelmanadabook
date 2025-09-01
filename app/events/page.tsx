@@ -1,17 +1,18 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
 import Link from 'next/link';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import '../globals.css';
 
 interface Event {
   id: string;
   title: string;
-  summary: string;
-  date: Date;
+  description: string;
+  date: string;
   location: string;
   imageUrl?: string;
+  category: string;
 }
 
 const EventsPageContent = () => {
@@ -21,22 +22,28 @@ const EventsPageContent = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        // Mostrar eventos futuros, ordenados por fecha m谩s pr贸xima
-        const q = query(collection(db, 'events'), orderBy('date', 'asc'));
-        const querySnapshot = await getDocs(q);
-        const eventsData = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            title: data.title,
-            summary: data.summary,
-            date: (data.date as Timestamp).toDate(),
-            location: data.location,
-            imageUrl: data.imageUrl,
+        // Mock data since Firebase is not available
+        const mockEvents = [
+          {
+            id: '1',
+            title: 'Adopci贸n de Mascotas',
+            description: 'Evento de adopci贸n de mascotas rescatadas',
+            date: '2024-02-15',
+            location: 'Parque Central, Bogot谩',
+            imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=200&fit=crop',
+            category: 'adopcion'
+          },
+          {
+            id: '2',
+            title: 'Taller de Cuidado de Mascotas',
+            description: 'Aprende sobre el cuidado b谩sico de mascotas',
+            date: '2024-02-20',
+            location: 'Centro Comercial, Medell铆n',
+            imageUrl: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=300&h=200&fit=crop',
+            category: 'educacion'
           }
-        }).filter(event => event.date >= new Date()); // Filtrar solo eventos futuros
-        
-        setEvents(eventsData);
+        ];
+        setEvents(mockEvents);
       } catch (error) {
         console.error("Error fetching events: ", error);
       } finally {
@@ -49,33 +56,37 @@ const EventsPageContent = () => {
 
   return (
     <div className="events-page-container">
-      <h1>Eventos</h1>
-      <div className="events-grid">
-        {loading ? (
-          <p className="events-empty-message">Cargando eventos...</p>
-        ) : events.length === 0 ? (
-          <p className="events-empty-message">No hay eventos programados. n韒ate a crear el primero!</p>
-        ) : (
-          events.map(event => (
-            <Link key={event.id} href={`/events/${event.id}`} className="event-card">
-              {event.imageUrl && <img src={event.imageUrl} alt={event.title} className="event-image"/>}
-              <div className="event-info">
-                <p className="event-date">{event.date.toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <h3 className="event-title">{event.title}</h3>
-                <p className="event-location">{event.location}</p>
+      <Header />
+      <div className="events-content">
+        <h1>Eventos para Mascotas</h1>
+        
+        <div className="events-grid">
+          {loading ? (
+            <p className="events-empty-message">Cargando eventos...</p>
+          ) : events.length === 0 ? (
+            <p className="events-empty-message">No hay eventos programados en este momento.</p>
+          ) : (
+            events.map(event => (
+              <div key={event.id} className="event-card">
+                <div className="event-image" style={{ backgroundImage: `url(${event.imageUrl || 'https://via.placeholder.com/300x200.png?text=Evento'})` }} />
+                <div className="event-info">
+                  <h3>{event.title}</h3>
+                  <p className="event-description">{event.description}</p>
+                  <div className="event-meta">
+                    <p><strong>Fecha:</strong> {new Date(event.date).toLocaleDateString()}</p>
+                    <p><strong>Ubicaci贸n:</strong> {event.location}</p>
+                  </div>
+                </div>
               </div>
-            </Link>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
+      <Footer />
     </div>
   );
-}
+};
 
 export default function EventsPage() {
     return <EventsPageContent />;
 }
-
-
-
-

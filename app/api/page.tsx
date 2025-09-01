@@ -1,11 +1,10 @@
-import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
-import '../globals.css';
-export default function Page() {
+'use client';
+
+export default function ApiPage() {
   return (
     <div>
-      <h1> page</h1>
-      <p>This is a placeholder for route .</p>
+      <h1>API Documentation</h1>
+      <p>Esta es la página de documentación de la API.</p>
     </div>
   );
 }

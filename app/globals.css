@@ -1,4 +1,9 @@
-/* Reset y estilos base */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Reset y estilos base */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -9,11 +14,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 body {
@@ -31,75 +32,140 @@ a {
   text-decoration: none;
 }
 
-/* Estilos para la página principal */
+/* Estilos específicos para componentes */
 .home-page-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background: linear-gradient(135deg, #f5f8fa 0%, #e6f0ff 100%);
 }
 
-.home-page-container main {
+main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 2rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0b1220;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
-.home-page-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #333;
+p {
+  font-size: 1.1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  max-width: 600px;
 }
 
-.home-page-container p {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 2rem;
+section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
 }
 
-.home-page-container section {
-  padding: 2rem;
-  background-color: #f5f5f5;
+a {
+  color: #0f6ff6;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.home-page-container section h2 {
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.home-page-container section a {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.home-page-container section a:hover {
-  background-color: #45a049;
+a:hover {
+  color: #0c5cd9;
 }
 
 /* Estilos para el carrusel de sponsors */
 .sponsors-carousel {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #f9f9f9;
   overflow-x: auto;
+  gap: 2rem;
+  padding: 1rem 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sponsors-carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .sponsor {
   flex-shrink: 0;
+  width: 120px;
+  height: 60px;
+  background: white;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
-.sponsor img {
-  display: block;
-  width: 150px;
-  height: 100px;
-  object-fit: cover;
+.sponsor:hover {
+  transform: translateY(-2px);
+}
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.6s ease-out;
+}
+
+/* Estilos para modo oscuro (futuro) */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
 }

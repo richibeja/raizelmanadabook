@@ -1,34 +1,27 @@
-import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
-import '../globals.css';
-
 'use client';
 
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../../firebase';
 import Link from 'next/link';
-import Image from 'next/image'; // Importar el componente Image
-import CreateListingForm from '../../CreateListingForm'; 
-@/;
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import ProductCard from '@/components/ProductCard';
-import PostCard from '@/components/PostCard';
-import ChallengeCard from '@/components/ChallengeCard';
-
-import '@/; // Importar el archivo CSS
+import Image from 'next/image';
 
 interface Listing {
   id: string;
   title: string;
   price: number;
   category: string;
-  imageUrl?: string;
-  location?: string;
+  subcategory: string;
+  condition: string;
+  brand?: string;
+  photos: string[];
+  location: string;
+  seller_username: string;
+  seller_verified: boolean;
+  views_count: number;
+  likes_count: number;
+  created_at: string;
 }
 
-const categories = ["Todos", "Alimento", "Juguetes", "Accesorios", "Salud y Cuidado", "Servicios"];
+const categories = ["Todos", "accesorios", "adopcion", "alimentacion", "juguetes", "servicios"];
 
 const MarketplacePageContent = () => {
   const [listings, setListings] = useState<Listing[]>([]);
@@ -36,48 +29,37 @@ const MarketplacePageContent = () => {
   const [categoryFilter, setCategoryFilter] = useState('Todos');
   const [locationFilter, setLocationFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('createdAt_desc');
+  const [sortBy, setSortBy] = useState('created_at');
 
   useEffect(() => {
     const fetchListings = async () => {
       setLoading(true);
       try {
-        const listingsCollection = collection(db, 'marketplace_listings');
-        const queryConstraints = [];
-
-        // Filtro de búsqueda por palabra clave
-        if (searchQuery.trim() !== '') {
-          queryConstraints.push(where('keywords', 'array-contains', searchQuery.trim().toLowerCase()));
-        }
-
+        const params = new URLSearchParams();
         if (categoryFilter !== 'Todos') {
-          queryConstraints.push(where('category', '==', categoryFilter));
+          params.append('category', categoryFilter);
         }
-
-        if (locationFilter.trim() !== '') {
-          // Para búsquedas de ubicación insensibles a mayúsculas, se necesita una solución más avanzada
-          // o guardar la ubicación en minúsculas. Por ahora, será sensible a mayúsculas.
-          queryConstraints.push(where('location', '==', locationFilter.trim()));
+        if (locationFilter) {
+          params.append('location', locationFilter);
         }
+        if (searchQuery) {
+          params.append('search', searchQuery);
+        }
+        params.append('sort', sortBy);
+        params.append('order', 'desc');
 
-        if (sortBy === 'price_asc') {
-          queryConstraints.push(orderBy('price', 'asc'));
-        } else if (sortBy === 'price_desc') {
-          queryConstraints.push(orderBy('price', 'desc'));
+        const response = await fetch(`/api/market/items?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          setListings(data.data.items || []);
         } else {
-          // El orderBy por defecto debe ser diferente al campo de la consulta de desigualdad (keywords)
-          // si se usa uno. Si no hay búsqueda, podemos ordenar por fecha.
-          if(searchQuery.trim() === '') {
-            queryConstraints.push(orderBy('createdAt', 'desc'));
-          }
+          console.error('Error fetching listings:', data.error);
+          setListings([]);
         }
-
-        const q = query(listingsCollection, ...queryConstraints);
-        const querySnapshot = await getDocs(q);
-        const listingsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Listing[];
-        setListings(listingsData);
       } catch (error) {
-        console.error("Error fetching listings: ", error);
+        console.error("Error fetching listings:", error);
+        setListings([]);
       } finally {
         setLoading(false);
       }
@@ -89,7 +71,7 @@ const MarketplacePageContent = () => {
   return (
     <div className="marketplace-page-container">
       <aside className="marketplace-sidebar">
-        <h2>Marketplace</h2>
+        <h2>Mercaplace</h2>
         <hr />
         <div className="marketplace-filters">
             <div className="filter-group">
@@ -113,7 +95,7 @@ const MarketplacePageContent = () => {
                 <input 
                     type="text" 
                     id="location-filter" 
-                    placeholder="Ej: Bogotá"
+                    placeholder="Ej: Madrid, Barcelona"
                     value={locationFilter} 
                     onChange={(e) => setLocationFilter(e.target.value)} 
                 />
@@ -121,18 +103,27 @@ const MarketplacePageContent = () => {
             <div className="filter-group">
                 <label htmlFor="sort-by">Ordenar por</label>
                 <select id="sort-by" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                    <option value="createdAt_desc">Más recientes</option>
-                    <option value="price_asc">Precio: Menor a Mayor</option>
-                    <option value="price_desc">Precio: Mayor a Menor</option>
+                    <option value="created_at">Más recientes</option>
+                    <option value="price">Precio</option>
+                    <option value="views_count">Más vistos</option>
+                    <option value="likes_count">Más populares</option>
                 </select>
             </div>
         </div>
         <hr />
-        <CreateListingForm />
+        <div className="create-listing-section">
+          <h3>Crear Publicación</h3>
+          <p>¿Tienes algo para vender o adoptar?</p>
+          <Link href="/marketplace/create" className="create-listing-btn">
+            Crear Publicación
+          </Link>
+        </div>
       </aside>
       <main className="marketplace-main-content">
         <div className="marketplace-grid">
-          {loading ? <p className="marketplace-empty-message">Cargando productos y servicios...</p> : listings.length === 0 ? (
+          {loading ? (
+            <p className="marketplace-empty-message">Cargando productos y servicios...</p>
+          ) : listings.length === 0 ? (
             <p className="marketplace-empty-message">No se encontraron artículos con estos filtros.</p>
           ) : (
             listings.map(listing => (
@@ -140,23 +131,22 @@ const MarketplacePageContent = () => {
                 <div className="listing-card">
                   <div className="listing-image-container">
                     <Image 
-                      src={listing.imageUrl || 'https://via.placeholder.com/300x200.png?text=Producto'} 
+                      src={listing.photos[0] || 'https://via.placeholder.com/300x200.png?text=Producto'} 
                       alt={listing.title}
                       fill
                       style={{ objectFit: 'cover' }}
                     />
                   </div>
                   <div className="listing-info">
-                    <p className="price">${listing.price.toLocaleString('es-CO')}</p>
+                    <p className="price">€{listing.price.toLocaleString('es-ES')}</p>
                     <h3 className="listing-title">{listing.title}</h3>
                     {listing.location && <p className="listing-location">{listing.location}</p>}
-                    <div className="listing-@/app/components/Footer">
-                      <small>{listing.category}</small>
-                      <@/app/components/FavoriteButton 
-                          contentId={listing.id} 
-                          contentType="marketplace_listing"
-                          contentData={{ title: listing.title, imageUrl: listing.imageUrl }}
-                      />
+                    <div className="listing-footer">
+                      <small>{listing.category} • {listing.condition}</small>
+                      <div className="listing-stats">
+                        <span>👁️ {listing.views_count}</span>
+                        <span>❤️ {listing.likes_count}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -170,11 +160,7 @@ const MarketplacePageContent = () => {
 }
 
 export default function MarketplacePage() {
-    return (
-        <AuthProvider>
-            <MarketplacePageContent />
-        </AuthProvider>
-    )
+  return <MarketplacePageContent />;
 }
 
 

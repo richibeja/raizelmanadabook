@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+// import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+// import { db } from '../../firebaseConfig';
 import Link from 'next/link';
 import '../globals.css';
 

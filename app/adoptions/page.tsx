@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+// import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
+// import { db } from '../../firebaseConfig';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -23,21 +23,26 @@ const AdoptionsPageContent = () => {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const q = query(
-          collection(db, 'adoptions'), 
-          where('status', '==', 'available'), // Solo mostrar mascotas disponibles
-          orderBy('createdAt', 'desc')
-        );
-        const querySnapshot = await getDocs(q);
-        const petsData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          petName: doc.data().petName,
-          breed: doc.data().breed,
-          age: doc.data().age,
-          location: doc.data().location,
-          imageUrl: doc.data().imageUrl,
-        }));
-        setPets(petsData);
+        // Mock data since Firebase is not available
+        const mockPets = [
+          {
+            id: '1',
+            petName: 'Luna',
+            breed: 'Labrador',
+            age: '2 años',
+            location: 'Bogotá',
+            imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=250&fit=crop'
+          },
+          {
+            id: '2',
+            petName: 'Max',
+            breed: 'Golden Retriever',
+            age: '1 año',
+            location: 'Medellín',
+            imageUrl: 'https://images.unsplash.com/photo-1547407139-3c921a71905c?w=300&h=250&fit=crop'
+          }
+        ];
+        setPets(mockPets);
       } catch (error) {
         console.error("Error fetching pets for adoption: ", error);
       } finally {
@@ -52,17 +57,17 @@ const AdoptionsPageContent = () => {
     <div className="adoptions-page-container">
       <Header />
       <div className="adoptions-content">
-        <h1>Mascotas en Adopci�n</h1>
+        <h1>Mascotas en Adopción</h1>
         
         <div className="adoptions-grid">
           {loading ? (
             <p className="adoptions-empty-message">Cargando peluditos que buscan un hogar...</p>
           ) : pets.length === 0 ? (
-            <p className="adoptions-empty-message">�Buenas noticias! No hay mascotas en adopci�n en este momento.</p>
+            <p className="adoptions-empty-message">¡Buenas noticias! No hay mascotas en adopción en este momento.</p>
           ) : (
             pets.map(pet => (
               <Link key={pet.id} href={`/adoptions/${pet.id}`} className="adoption-card">
-                <div className="adoption-image" style={{ backgroundImage: `url(${pet.imageUrl || 'https://via.placeholder.com/300x250.png?text=Ad�ptame'})` }} />
+                <div className="adoption-image" style={{ backgroundImage: `url(${pet.imageUrl || 'https://via.placeholder.com/300x250.png?text=Adóptame'})` }} />
                 <div className="adoption-info">
                   <h3>{pet.petName}</h3>
                   <div className="adoption-details">
@@ -78,12 +83,8 @@ const AdoptionsPageContent = () => {
       <Footer />
     </div>
   );
-}
+};
 
 export default function AdoptionsPage() {
     return <AdoptionsPageContent />;
 }
-
-
-
-

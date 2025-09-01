@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Heart, MessageCircle, Share, MoreHorizontal, User, MapPin, Calendar } from 'lucide-react';
-import Header from '@/components/ui/Header';
-import Footer from '@/components/ui/Footer';
-import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { formatRelativeTime } from '@/lib/utils';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+// import { Card, CardContent, CardFooter } from '../components/ui/Card';
+// import Button from '../components/ui/Button';
+// import { formatRelativeTime } from '../lib/utils';
 
 // Mock data for posts
 const mockPosts = [
@@ -60,8 +60,8 @@ const mockPosts = [
 
 // Skeleton component for loading states
 const PostSkeleton = () => (
-  <Card className="mb-6">
-    <CardContent className="p-6">
+  <div className="card mb-6">
+    <div className="card-content p-6">
       <div className="flex items-center mb-4">
         <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse mr-4"></div>
         <div className="flex-1">
@@ -79,8 +79,8 @@ const PostSkeleton = () => (
         <div className="h-8 bg-gray-200 rounded animate-pulse w-20"></div>
         <div className="h-8 bg-gray-200 rounded animate-pulse w-20"></div>
       </div>
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 );
 
 // Post component
@@ -105,8 +105,8 @@ const Post = ({ post, onLike, onComment, onShare }: {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="mb-6">
-        <CardContent className="p-6">
+      <div className="card mb-6">
+        <div className="card-content p-6">
           {/* User header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
@@ -176,8 +176,8 @@ const Post = ({ post, onLike, onComment, onShare }: {
               <span className="text-sm font-medium">{post.shares}</span>
             </motion.button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 };
@@ -247,10 +247,10 @@ export default function FeedPage() {
                 className="w-full pl-10 pr-4 py-3 border border-[#E6EEF7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F6FF6] focus:border-transparent"
               />
             </div>
-            <Button variant="outline" className="flex items-center">
+            <button className="button button-outline flex items-center">
               <Filter className="w-4 h-4 mr-2" />
               Filtros
-            </Button>
+            </button>
           </div>
         </motion.div>
 
@@ -284,13 +284,13 @@ export default function FeedPage() {
               animate={{ opacity: 1 }}
               className="text-center"
             >
-              <Button
-                variant="outline"
+              <button
+                className="button button-outline"
                 onClick={loadMorePosts}
-                loading={loading}
+                disabled={loading}
               >
-                Cargar más publicaciones
-              </Button>
+                {loading ? 'Cargando...' : 'Cargar más publicaciones'}
+              </button>
             </motion.div>
           )}
 

@@ -3,12 +3,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, Users, Heart, Shield, Clock, MapPin } from 'lucide-react';
-import Header from '@/components/ui/Header';
-import Hero from '@/components/ui/Hero';
-import Footer from '@/components/ui/Footer';
-import { Card, CardContent } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import CardMascota from '@/components/ui/CardMascota';
+import Header from '../components/Header';
+// import Hero from '../components/ui/Hero';
+import Footer from '../components/Footer';
+// import { Card, CardContent } from '../components/ui/Card';
+// import Button from '../components/ui/Button';
+// import CardMascota from '../components/ui/CardMascota';
 
 // Mock data for mascotas
 const mascotasDestacadas = [
@@ -95,7 +95,13 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#FBFDFF]">
       <Header />
-      <Hero />
+      {/* Hero section placeholder */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>Bienvenido a Raízel</h1>
+          <p>Alimento natural para tus mascotas</p>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="py-20 bg-white">
@@ -123,8 +129,8 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card hover className="h-full text-center">
-                  <CardContent className="p-6">
+                <div className="card hover h-full text-center">
+                  <div className="card-content p-6">
                     <div className="w-16 h-16 bg-[#E6F0FF] rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <feature.icon className="w-8 h-8 text-[#0F6FF6]" />
                     </div>
@@ -134,8 +140,8 @@ export default function LandingPage() {
                     <p className="text-[#6B7280] text-sm">
                       {feature.description}
                     </p>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -168,7 +174,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <CardMascota
+                <div className="mascota-card"
                   mascota={mascota}
                   onLike={(id) => console.log('Liked:', id)}
                   onAdopt={(id) => console.log('Adopt:', id)}
@@ -183,10 +189,10 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center mt-12"
           >
-            <Button size="lg" className="group">
+            <button className="button button-lg group">
               Ver Todas las Mascotas
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            </button>
           </motion.div>
         </div>
       </section>
@@ -216,15 +222,15 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="h-full">
-                  <CardContent className="p-6">
+                <div className="card h-full">
+                  <div className="card-content p-6">
                     <div className="flex items-center mb-4">
                       {[...Array(testimonio.rating)].map((_, i) => (
                         <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
                     <p className="text-[#374151] mb-6 italic">
-                      "{testimonio.texto}"
+                      &ldquo;{testimonio.texto}&rdquo;
                     </p>
                     <div className="flex items-center">
                       <img
@@ -241,8 +247,8 @@ export default function LandingPage() {
                         </p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -266,12 +272,12 @@ export default function LandingPage() {
               a una mascota que lo necesita.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg">
+              <button className="button button-secondary button-lg">
                 Explorar Mascotas
-              </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#0F6FF6]">
+              </button>
+              <button className="button button-outline button-lg border-white text-white hover:bg-white hover:text-[#0F6FF6]">
                 Saber Más
-              </Button>
+              </button>
             </div>
           </motion.div>
         </div>

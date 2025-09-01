@@ -1,6 +1,3 @@
-import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
-import '../globals.css';
 import Link from 'next/link';
 
 export default function NotFound() {

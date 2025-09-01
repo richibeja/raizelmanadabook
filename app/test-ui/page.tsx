@@ -1,15 +1,21 @@
 'use client';
 
 import React from 'react';
-import Header from '@/components/ui/Header';
-import Hero from '@/components/ui/Hero';
-import { MascotasGrid, mascotasEjemplo } from '@/components/ui/CardMascota';
+import Header from '../components/Header';
+// import Hero from '../components/ui/Hero';
+// import { MascotasGrid, mascotasEjemplo } from '../components/ui/CardMascota';
 
 export default function TestUIPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Header />
-      <Hero />
+      {/* Hero section placeholder */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>Test UI - Raízel</h1>
+          <p>Página de prueba de componentes</p>
+        </div>
+      </section>
       
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
@@ -22,7 +28,10 @@ export default function TestUIPage() {
           </p>
         </div>
         
-        <MascotasGrid mascotas={mascotasEjemplo} />
+        {/* Mascotas grid placeholder */}
+        <div className="mascotas-grid">
+          <p>Grid de mascotas placeholder</p>
+        </div>
       </section>
 
       {/* Sección de características */}
