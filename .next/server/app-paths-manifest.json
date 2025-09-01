@@ -1,7 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/catalogo-perros/page": "app/catalogo-perros/page.js",
-  "/catalogo-gatos/page": "app/catalogo-gatos/page.js",
-  "/calculadora/page": "app/calculadora/page.js",
-  "/manadabook/page": "app/manadabook/page.js"
-}
