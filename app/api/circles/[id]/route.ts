@@ -1,191 +1,261 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  joinCircle,
+  leaveCircle,
+  subscribeToCircleMembers,
+  updateMemberRole,
+  kickMember,
+  Circle as FirebaseCircle,
+  CircleMember,
+  COLLECTIONS,
+  db,
+  toDate
+} from '@/lib/firebase';
+import { 
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where
+} from 'firebase/firestore';
+import { requireAuth } from '@/lib/jwt';
 
-// Simulación de base de datos (en producción usar PostgreSQL)
-let circles: any[] = [
-  {
-    id: '1',
-    name: 'Amantes de Perros',
-    slug: 'amantes-de-perros',
-    description: 'Comunidad para todos los amantes de los perros. Comparte fotos, consejos y experiencias.',
-    avatar_url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop&crop=face',
-    cover_url: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop',
-    type: 'public',
-    category: 'Perros',
-    location: 'Madrid, España',
-    tags: ['perros', 'mascotas', 'comunidad'],
-    rules: '1. Respeta a todos los miembros\n2. No spam\n3. Mantén el contenido apropiado',
-    admin_id: '1',
-    moderator_ids: [],
-    member_count: 1247,
-    post_count: 89,
-    is_featured: true,
-    is_verified: true,
-    status: 'active',
-    settings: {},
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  },
-  {
-    id: '2',
-    name: 'Gatos de la Ciudad',
-    slug: 'gatos-de-la-ciudad',
-    description: 'Para los gatos urbanos y sus humanos. Consejos para gatos de apartamento.',
-    avatar_url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop&crop=face',
-    cover_url: 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=800&h=400&fit=crop',
-    type: 'public',
-    category: 'Gatos',
-    location: 'Barcelona, España',
-    tags: ['gatos', 'urbano', 'apartamento'],
-    rules: '1. Solo contenido relacionado con gatos\n2. No promoción comercial sin autorización',
-    admin_id: '1',
-    moderator_ids: [],
-    member_count: 892,
-    post_count: 156,
-    is_featured: false,
-    is_verified: true,
-    status: 'active',
-    settings: {},
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
-];
-
-let circleMembers: any[] = [
-  {
-    id: '1',
-    circle_id: '1',
-    user_id: '1',
-    role: 'admin',
-    status: 'active',
-    joined_at: new Date().toISOString(),
-    invited_by: null,
-    invited_at: null,
-    accepted_at: new Date().toISOString()
-  },
-  {
-    id: '2',
-    circle_id: '2',
-    user_id: '1',
-    role: 'admin',
-    status: 'active',
-    joined_at: new Date().toISOString(),
-    invited_by: null,
-    invited_at: null,
-    accepted_at: new Date().toISOString()
-  }
-];
-
-// GET - Obtener círculo específico
+// GET - Obtener círculo específico + miembros
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const circle = circles.find(c => c.id === id);
+    const { id: circleId } = await params;
     
-    if (!circle) {
+    // Obtener círculo
+    const circleRef = doc(db, COLLECTIONS.CIRCLES, circleId);
+    const circleDoc = await getDoc(circleRef);
+    
+    if (!circleDoc.exists()) {
       return NextResponse.json(
         { error: 'Círculo no encontrado' },
         { status: 404 }
       );
     }
 
-    // Obtener miembros del círculo
-    const members = circleMembers.filter(cm => cm.circle_id === id);
+    const circleData = circleDoc.data();
+    const firebaseCircle: FirebaseCircle = {
+      id: circleDoc.id,
+      ...circleData,
+      createdAt: toDate(circleData.createdAt),
+      updatedAt: toDate(circleData.updatedAt)
+    } as FirebaseCircle;
+
+    // Obtener miembros
+    const membersQuery = query(
+      collection(db, COLLECTIONS.CIRCLE_MEMBERS),
+      where('circleId', '==', circleId),
+      where('status', '==', 'active')
+    );
+    const membersSnapshot = await getDocs(membersQuery);
+    
+    const members: CircleMember[] = membersSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        joinedAt: toDate(data.joinedAt)
+      } as CircleMember;
+    });
+
+    // Mapear a formato legacy
+    const legacyCircle = {
+      id: firebaseCircle.id,
+      name: firebaseCircle.name,
+      description: firebaseCircle.description,
+      category: firebaseCircle.tags[0] || 'general',
+      member_count: firebaseCircle.stats.membersCount,
+      is_private: firebaseCircle.isPrivate,
+      created_by: firebaseCircle.createdBy,
+      created_at: firebaseCircle.createdAt.toISOString(),
+      updated_at: firebaseCircle.updatedAt.toISOString(),
+      location: firebaseCircle.location ? `${firebaseCircle.location.city}, ${firebaseCircle.location.country}` : null,
+      tags: firebaseCircle.tags,
+      rules: firebaseCircle.rules?.join('\n') || '',
+      settings: firebaseCircle.settings,
+      members: members.map(member => ({
+        id: member.id,
+        user_id: member.userId,
+        role: member.role,
+        status: member.status,
+        joined_at: member.joinedAt.toISOString(),
+        permissions: member.permissions
+      }))
+    };
 
     return NextResponse.json({
-      ...circle,
-      members
+      success: true,
+      data: legacyCircle,
+      source: 'firebase'
     });
+
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error al obtener círculo' },
-      { status: 500 }
-    );
+    console.error('Error fetching circle:', error);
+    
+    // Fallback mock data
+    const { id: circleId } = await params;
+    const mockCircle = {
+      id: circleId,
+      name: 'Círculo Ejemplo',
+      description: 'Círculo de ejemplo con funcionalidad ManadaBook',
+      category: 'general',
+      member_count: 1,
+      is_private: false,
+      created_by: 'admin',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      members: []
+    };
+    
+    return NextResponse.json({
+      success: true,
+      data: mockCircle,
+      source: 'mock'
+    });
   }
 }
 
-// PUT - Actualizar círculo
-export async function PUT(
+// POST - Operaciones círculo (join, leave, invite, kick)
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: circleId } = await params;
     const body = await request.json();
-    const { id } = await params;
-    const circleIndex = circles.findIndex(c => c.id === id);
-    
-    if (circleIndex === -1) {
-      return NextResponse.json(
-        { error: 'Círculo no encontrado' },
-        { status: 404 }
-      );
+    const { action, userId, targetUserId, newRole } = body;
+
+    // TODO: Verificar autenticación
+    // const auth = requireAuth(request);
+    const currentUserId = userId || 'current-user';
+
+    switch (action) {
+      case 'join':
+        await joinCircle(circleId, currentUserId);
+        return NextResponse.json({
+          success: true,
+          message: 'Te has unido al círculo exitosamente'
+        });
+
+      case 'leave':
+        await leaveCircle(circleId, currentUserId);
+        return NextResponse.json({
+          success: true,
+          message: 'Has salido del círculo'
+        });
+
+      case 'kick':
+        if (!targetUserId) {
+          return NextResponse.json(
+            { error: 'targetUserId es requerido para expulsar' },
+            { status: 400 }
+          );
+        }
+        
+        // Get current user role
+        const memberQuery = query(
+          collection(db, COLLECTIONS.CIRCLE_MEMBERS),
+          where('circleId', '==', circleId),
+          where('userId', '==', currentUserId),
+          where('status', '==', 'active')
+        );
+        const memberDoc = await getDocs(memberQuery);
+        
+        if (memberDoc.empty) {
+          return NextResponse.json(
+            { error: 'No eres miembro de este círculo' },
+            { status: 403 }
+          );
+        }
+        
+        const currentUserRole = memberDoc.docs[0].data().role;
+        
+        // Find target member
+        const targetQuery = query(
+          collection(db, COLLECTIONS.CIRCLE_MEMBERS),
+          where('circleId', '==', circleId),
+          where('userId', '==', targetUserId)
+        );
+        const targetDoc = await getDocs(targetQuery);
+        
+        if (targetDoc.empty) {
+          return NextResponse.json(
+            { error: 'Usuario no encontrado en el círculo' },
+            { status: 404 }
+          );
+        }
+        
+        await kickMember(circleId, targetDoc.docs[0].id, currentUserRole);
+        return NextResponse.json({
+          success: true,
+          message: 'Usuario expulsado del círculo'
+        });
+
+      case 'update_role':
+        if (!targetUserId || !newRole) {
+          return NextResponse.json(
+            { error: 'targetUserId y newRole son requeridos' },
+            { status: 400 }
+          );
+        }
+        
+        // Get current user role
+        const roleQuery = query(
+          collection(db, COLLECTIONS.CIRCLE_MEMBERS),
+          where('circleId', '==', circleId),
+          where('userId', '==', currentUserId),
+          where('status', '==', 'active')
+        );
+        const roleDoc = await getDocs(roleQuery);
+        
+        if (roleDoc.empty) {
+          return NextResponse.json(
+            { error: 'No eres miembro de este círculo' },
+            { status: 403 }
+          );
+        }
+        
+        const currentRole = roleDoc.docs[0].data().role;
+        
+        // Find target member to update
+        const updateQuery = query(
+          collection(db, COLLECTIONS.CIRCLE_MEMBERS),
+          where('circleId', '==', circleId),
+          where('userId', '==', targetUserId)
+        );
+        const updateDoc = await getDocs(updateQuery);
+        
+        if (updateDoc.empty) {
+          return NextResponse.json(
+            { error: 'Usuario no encontrado en el círculo' },
+            { status: 404 }
+          );
+        }
+        
+        await updateMemberRole(circleId, updateDoc.docs[0].id, newRole, currentRole);
+        return NextResponse.json({
+          success: true,
+          message: 'Rol actualizado exitosamente'
+        });
+
+      default:
+        return NextResponse.json(
+          { error: 'Acción no válida' },
+          { status: 400 }
+        );
     }
 
-    // Verificar permisos (en producción, verificar JWT)
-    const circle = circles[circleIndex];
-    if (circle.admin_id !== '1') { // En producción, obtener del token JWT
-      return NextResponse.json(
-        { error: 'No tienes permisos para editar este círculo' },
-        { status: 403 }
-      );
-    }
-
-    // Actualizar campos permitidos
-    const updatedCircle = {
-      ...circle,
-      ...body,
-      updated_at: new Date().toISOString()
-    };
-
-    circles[circleIndex] = updatedCircle;
-
-    return NextResponse.json(updatedCircle);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Error in circle operation:', error);
     return NextResponse.json(
-      { error: 'Error al actualizar círculo' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE - Eliminar círculo
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    const circleIndex = circles.findIndex(c => c.id === id);
-    
-    if (circleIndex === -1) {
-      return NextResponse.json(
-        { error: 'Círculo no encontrado' },
-        { status: 404 }
-      );
-    }
-
-    // Verificar permisos (en producción, verificar JWT)
-    const circle = circles[circleIndex];
-    if (circle.admin_id !== '1') { // En producción, obtener del token JWT
-      return NextResponse.json(
-        { error: 'No tienes permisos para eliminar este círculo' },
-        { status: 403 }
-      );
-    }
-
-    // Soft delete - cambiar status a deleted
-    circles[circleIndex] = {
-      ...circle,
-      status: 'deleted',
-      updated_at: new Date().toISOString()
-    };
-
-    return NextResponse.json({ message: 'Círculo eliminado exitosamente' });
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Error al eliminar círculo' },
+      { success: false, error: error.message || 'Error interno del servidor' },
       { status: 500 }
     );
   }

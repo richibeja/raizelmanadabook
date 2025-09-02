@@ -1,253 +1,251 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  subscribeToCircles,
+  createCircle,
+  Circle as FirebaseCircle,
+  COLLECTIONS,
+  db,
+  toDate
+} from '@/lib/firebase';
+import { 
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit as firestoreLimit,
+  QueryConstraint
+} from 'firebase/firestore';
+import { requireAuth } from '@/lib/jwt';
 
-// Función para simular conexión a base de datos
-async function query(text: string, params?: any[]) {
-  // Simulación de base de datos para desarrollo
-  console.log('Simulated query:', text, params);
-  
-  // Simular datos de círculos
-  const mockCircles = [
-    {
-      id: '1',
-      name: 'Amantes de Perros',
-      slug: 'amantes-de-perros',
-      description: 'Comunidad para todos los amantes de los perros. Comparte fotos, consejos y experiencias.',
-      avatar_url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop&crop=face',
-      cover_url: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop',
-      type: 'public',
-      category: 'Perros',
-      location: 'Madrid, España',
-      tags: ['perros', 'mascotas', 'comunidad'],
-      rules: '1. Respeta a todos los miembros\n2. No spam\n3. Mantén el contenido apropiado',
-      admin_id: '1',
-      moderator_ids: [],
-      member_count: 1247,
-      post_count: 89,
-      is_featured: true,
-      is_verified: true,
-      status: 'active',
-      settings: {},
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      admin_username: 'maria_garcia'
-    },
-    {
-      id: '2',
-      name: 'Gatos de la Ciudad',
-      slug: 'gatos-de-la-ciudad',
-      description: 'Para los gatos urbanos y sus humanos. Consejos para gatos de apartamento.',
-      avatar_url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop&crop=face',
-      cover_url: 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=800&h=400&fit=crop',
-      type: 'public',
-      category: 'Gatos',
-      location: 'Barcelona, España',
-      tags: ['gatos', 'urbano', 'apartamento'],
-      rules: '1. Solo contenido relacionado con gatos\n2. No promoción comercial sin autorización',
-      admin_id: '1',
-      moderator_ids: [],
-      member_count: 892,
-      post_count: 156,
-      is_featured: false,
-      is_verified: true,
-      status: 'active',
-      settings: {},
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      admin_username: 'carlos_rodriguez'
-    }
-  ];
-
+// Mapear Firebase Circle a formato legacy
+function mapFirebaseCircleToLegacy(firebaseCircle: FirebaseCircle): any {
   return {
-    rows: mockCircles,
-    rowCount: mockCircles.length
+    id: firebaseCircle.id,
+    name: firebaseCircle.name,
+    slug: firebaseCircle.name.toLowerCase().replace(/\s+/g, '-'),
+    description: firebaseCircle.description,
+    avatar_url: firebaseCircle.photoURL || null,
+    cover_url: firebaseCircle.coverURL || null,
+    type: firebaseCircle.isPrivate ? 'private' : 'public',
+    category: firebaseCircle.tags[0] || 'general',
+    location: firebaseCircle.location ? `${firebaseCircle.location.city}, ${firebaseCircle.location.country}` : null,
+    tags: firebaseCircle.tags,
+    rules: firebaseCircle.rules?.join('\n') || '',
+    admin_id: firebaseCircle.createdBy,
+    moderator_ids: [], // TODO: Get from members
+    member_count: firebaseCircle.stats.membersCount,
+    post_count: firebaseCircle.stats.postsCount,
+    is_featured: firebaseCircle.tags.includes('featured'),
+    is_verified: firebaseCircle.tags.includes('verified'),
+    status: 'active',
+    settings: firebaseCircle.settings,
+    created_at: firebaseCircle.createdAt.toISOString(),
+    updated_at: firebaseCircle.updatedAt.toISOString(),
+    admin_username: 'usuario' // TODO: Join with user profile
   };
 }
 
-// GET - Obtener todos los círculos (versión simulada)
+// GET - Obtener círculos desde Firebase
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     const type = searchParams.get('type');
     const search = searchParams.get('search');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const city = searchParams.get('city');
+    const limitParam = parseInt(searchParams.get('limit') || '20');
     const featured = searchParams.get('featured');
 
-    // Simular query SQL
-    let sqlQuery = `
-      SELECT 
-        c.id,
-        c.name,
-        c.slug,
-        c.description,
-        c.avatar_url,
-        c.cover_url,
-        c.type,
-        c.category,
-        c.location,
-        c.tags,
-        c.rules,
-        c.admin_id,
-        c.moderator_ids,
-        c.member_count,
-        c.post_count,
-        c.is_featured,
-        c.is_verified,
-        c.status,
-        c.settings,
-        c.created_at,
-        c.updated_at,
-        u.first_name,
-        u.last_name,
-        u.username as admin_username
-      FROM circles c
-      LEFT JOIN users u ON c.admin_id = u.id
-      WHERE c.status = 'active'
-    `;
-
-    const params: any[] = [];
-    let paramIndex = 1;
-
-    // Filtrar por categoría
+    // Construir query Firebase
+    const constraints: QueryConstraint[] = [];
+    
+    // Filtros básicos
+    if (type === 'private') {
+      constraints.push(where('isPrivate', '==', true));
+    } else {
+      constraints.push(where('isPrivate', '==', false)); // Público por defecto
+    }
+    
+    if (city) {
+      constraints.push(where('location.city', '==', city));
+    }
+    
     if (category) {
-      sqlQuery += ` AND c.category = $${paramIndex}`;
-      params.push(category);
-      paramIndex++;
+      constraints.push(where('tags', 'array-contains', category.toLowerCase()));
     }
-
-    // Filtrar por tipo
-    if (type) {
-      sqlQuery += ` AND c.type = $${paramIndex}`;
-      params.push(type);
-      paramIndex++;
-    }
-
-    // Filtrar por featured
+    
     if (featured === 'true') {
-      sqlQuery += ` AND c.is_featured = true`;
+      constraints.push(where('tags', 'array-contains', 'featured'));
     }
+    
+    // Ordenar y limitar
+    constraints.push(orderBy('stats.membersCount', 'desc'));
+    constraints.push(firestoreLimit(limitParam));
 
-    // Buscar por nombre o descripción
+    const circlesQuery = query(collection(db, COLLECTIONS.CIRCLES), ...constraints);
+    const querySnapshot = await getDocs(circlesQuery);
+
+    // Convertir documentos Firebase
+    const firebaseCircles: FirebaseCircle[] = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: toDate(data.createdAt),
+        updatedAt: toDate(data.updatedAt)
+      } as FirebaseCircle;
+    });
+
+    // Mapear a formato legacy
+    let legacyCircles = firebaseCircles.map(mapFirebaseCircleToLegacy);
+
+    // Aplicar búsqueda textual (local)
     if (search) {
-      sqlQuery += ` AND (
-        c.name ILIKE $${paramIndex} OR 
-        c.description ILIKE $${paramIndex} OR 
-        c.tags::text ILIKE $${paramIndex}
-      )`;
-      params.push(`%${search}%`);
-      paramIndex++;
-    }
-
-    // Simular resultado de la base de datos
-    const result = await query(sqlQuery, params);
-    const circles = result.rows;
-
-    // Aplicar filtros simulados
-    let filteredCircles = [...circles];
-
-    if (category) {
-      filteredCircles = filteredCircles.filter(circle => circle.category === category);
-    }
-
-    if (type) {
-      filteredCircles = filteredCircles.filter(circle => circle.type === type);
-    }
-
-    if (featured === 'true') {
-      filteredCircles = filteredCircles.filter(circle => circle.is_featured);
-    }
-
-    if (search) {
-      const searchLower = search.toLowerCase();
-      filteredCircles = filteredCircles.filter(circle => 
-        circle.name.toLowerCase().includes(searchLower) ||
-        circle.description.toLowerCase().includes(searchLower) ||
-        circle.tags.some((tag: string) => tag.toLowerCase().includes(searchLower))
+      const searchTerm = search.toLowerCase();
+      legacyCircles = legacyCircles.filter(circle => 
+        circle.name.toLowerCase().includes(searchTerm) ||
+        circle.description.toLowerCase().includes(searchTerm) ||
+        circle.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm))
       );
     }
-
-    // Ordenar por featured primero, luego por member_count
-    filteredCircles.sort((a, b) => {
-      if (a.is_featured && !b.is_featured) return -1;
-      if (!a.is_featured && b.is_featured) return 1;
-      return b.member_count - a.member_count;
-    });
-
-    // Paginación
-    const total = filteredCircles.length;
-    const paginatedCircles = filteredCircles.slice(offset, offset + limit);
-
+    
     return NextResponse.json({
-      circles: paginatedCircles,
-      total,
-      limit,
-      offset,
-      hasMore: offset + limit < total
+      circles: legacyCircles,
+      total: legacyCircles.length,
+      limit: limitParam,
+      offset: 0,
+      hasMore: legacyCircles.length === limitParam,
+      source: 'firebase'
     });
+
   } catch (error) {
-    console.error('Error fetching circles:', error);
-    return NextResponse.json(
-      { error: 'Error al obtener círculos' },
-      { status: 500 }
-    );
+    console.error('Error fetching circles from Firebase:', error);
+    
+    // Fallback a mock data
+    const mockCircles = [
+      {
+        id: '1',
+        name: 'Amantes de Perros Bogotá',
+        slug: 'amantes-de-perros-bogota',
+        description: 'Comunidad para todos los amantes de los perros en Bogotá. Comparte experiencias con productos Raízel.',
+        avatar_url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop',
+        cover_url: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop',
+        type: 'public',
+        category: 'Perros',
+        location: 'Bogotá, Colombia',
+        tags: ['perros', 'mascotas', 'bogota', 'raizel'],
+        rules: '1. Respeta a todos los miembros\n2. Comparte experiencias con productos Raízel\n3. Mantén el contenido apropiado',
+        admin_id: '1',
+        moderator_ids: [],
+        member_count: 1247,
+        post_count: 89,
+        is_featured: true,
+        is_verified: true,
+        status: 'active',
+        settings: {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        admin_username: 'maria_garcia'
+      },
+      {
+        id: '2', 
+        name: 'Gatos Medellín BARF',
+        slug: 'gatos-medellin-barf',
+        description: 'Para gatos urbanos y alimentación BARF. Consejos sobre productos Raízel para felinos.',
+        avatar_url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+        cover_url: 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=800&h=400&fit=crop',
+        type: 'public',
+        category: 'Gatos',
+        location: 'Medellín, Colombia',
+        tags: ['gatos', 'barf', 'medellin', 'raizel'],
+        rules: '1. Solo contenido relacionado con gatos\n2. Fomentar alimentación natural Raízel',
+        admin_id: '2',
+        moderator_ids: [],
+        member_count: 892,
+        post_count: 156,
+        is_featured: false,
+        is_verified: true,
+        status: 'active',
+        settings: {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        admin_username: 'carlos_rodriguez'
+      }
+    ];
+    
+    return NextResponse.json({
+      circles: mockCircles,
+      total: mockCircles.length,
+      source: 'mock',
+      message: 'Datos de ejemplo - Firebase no disponible'
+    });
   }
 }
 
-// POST - Crear nuevo círculo (versión simulada)
+// POST - Crear nuevo círculo en Firebase
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Validación básica
-    if (!body.name || !body.description || !body.category || !body.type) {
+    // Validación campos requeridos
+    const { name, description, category, isPrivate = false, city, country, tags, rules } = body;
+    
+    if (!name || !description) {
       return NextResponse.json(
-        { error: 'Nombre, descripción, categoría y tipo son requeridos' },
+        { error: 'Nombre y descripción son requeridos' },
         { status: 400 }
       );
     }
 
-    // Generar slug único
-    const slug = body.name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
+    // TODO: Obtener userId del auth
+    const createdBy = body.userId || 'current-user';
 
-    // Simular creación de círculo
-    const newCircle = {
-      id: Date.now().toString(),
-      name: body.name,
-      slug,
-      description: body.description,
-      avatar_url: body.avatar_url || null,
-      cover_url: body.cover_url || null,
-      type: body.type,
-      category: body.category,
-      location: body.location || null,
-      tags: body.tags || [],
-      rules: body.rules || '',
-      admin_id: '1',
-      moderator_ids: [],
-      member_count: 1,
-      post_count: 0,
-      is_featured: false,
-      is_verified: false,
-      status: 'active',
-      settings: {},
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      admin_username: 'usuario_actual'
+    // Preparar datos del círculo
+    const circleData = {
+      name,
+      description,
+      photoURL: body.photoURL || '',
+      coverURL: body.coverURL || '',
+      isPrivate,
+      requiresApproval: isPrivate,
+      location: (city && country) ? { city, country } : undefined,
+      tags: [category?.toLowerCase(), ...(tags || [])].filter(Boolean),
+      rules: rules ? [rules] : [],
+      settings: {
+        allowPosts: true,
+        allowEvents: true,
+        allowMarketplace: true
+      },
+      createdBy
     };
 
-    console.log('Circle created (simulated):', newCircle);
+    // Crear círculo en Firebase
+    const circleId = await createCircle(circleData);
+    
+    // Convertir a formato legacy para respuesta
+    const newCircle = mapFirebaseCircleToLegacy({
+      id: circleId,
+      ...circleData,
+      stats: {
+        membersCount: 1,
+        postsCount: 0,
+        activeMembers: 1
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } as FirebaseCircle);
 
-    return NextResponse.json(newCircle, { status: 201 });
+    return NextResponse.json({
+      success: true,
+      data: newCircle,
+      message: 'Círculo creado exitosamente en ManadaBook'
+    }, { status: 201 });
+
   } catch (error) {
     console.error('Error creating circle:', error);
     return NextResponse.json(
-      { error: 'Error al crear círculo' },
+      { success: false, error: 'Error interno del servidor' },
       { status: 500 }
     );
   }

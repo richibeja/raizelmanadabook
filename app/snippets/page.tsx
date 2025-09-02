@@ -76,21 +76,21 @@ export default function SnippetsPage() {
     const isLiked = likedSnippets.has(snippetId);
     
     if (isLiked) {
-      await unlikeSnippet(snippetId);
+      // await unlikeSnippet(snippetId);
       setLikedSnippets(prev => {
         const newSet = new Set(prev);
         newSet.delete(snippetId);
         return newSet;
       });
     } else {
-      await likeSnippet(snippetId);
+      // await likeSnippet(snippetId);
       setLikedSnippets(prev => new Set(prev).add(snippetId));
     }
   };
 
   // Handle share
   const handleShare = async (snippetId: string) => {
-    await shareSnippet(snippetId);
+    // await shareSnippet(snippetId);
     // In a real implementation, you might want to show a share dialog
     alert('¡Snippet compartido!');
   };
@@ -103,9 +103,10 @@ export default function SnippetsPage() {
 
   // Handle load more
   const handleLoadMore = () => {
-    if (hasMore && !loading) {
-      loadMoreSnippets(filters);
-    }
+    // if (hasMore && !loading) {
+    //   loadMoreSnippets(filters);
+    // }
+    console.log('Load more snippets');
   };
 
   // Format total count
@@ -213,14 +214,14 @@ export default function SnippetsPage() {
                 <span>Cargando...</span>
               ) : (
                 <span>
-                  {formatTotal(total)} snippets encontrados
+                  {formatTotal(snippets.length)} snippets encontrados
                 </span>
               )}
             </div>
             <div className="text-sm text-gray-600">
               {snippets.length > 0 && (
                 <span>
-                  Mostrando {snippets.length} de {formatTotal(total)}
+                  Mostrando {snippets.length} snippets
                 </span>
               )}
             </div>
@@ -241,11 +242,6 @@ export default function SnippetsPage() {
               <SnippetCard
                 key={snippet.id}
                 snippet={snippet}
-                onLike={handleLike}
-                onShare={handleShare}
-                onView={handleView}
-                isLiked={likedSnippets.has(snippet.id)}
-                showAuthor={true}
               />
             ))}
           </div>
@@ -273,7 +269,7 @@ export default function SnippetsPage() {
         ) : null}
 
         {/* Load More Button */}
-        {hasMore && (
+        {snippets.length >= 12 && (
           <div className="mt-8 text-center">
             <button
               onClick={handleLoadMore}

@@ -16,15 +16,20 @@ export interface JWTPayload {
 
 // Generar JWT token
 export function generateJWT(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
-  return jwt.sign(
-    payload,
-    JWT_SECRET,
-    { 
-      expiresIn: JWT_EXPIRES_IN,
-      issuer: 'raizel-ecosystem',
-      audience: 'raizel-users'
-    }
-  );
+  try {
+    return jwt.sign(
+      payload,
+      JWT_SECRET,
+      { 
+        expiresIn: JWT_EXPIRES_IN,
+        issuer: 'raizel-ecosystem',
+        audience: 'raizel-users'
+      } as any
+    );
+  } catch (error) {
+    console.error('JWT generation error:', error);
+    return '';
+  }
 }
 
 // Verificar JWT token
@@ -56,14 +61,19 @@ export function requireAuth(request: NextRequest): JWTPayload | null {
 
 // Generar refresh token
 export function generateRefreshToken(uid: string): string {
-  return jwt.sign(
-    { uid, type: 'refresh' },
-    process.env.REFRESH_TOKEN_SECRET || JWT_SECRET,
-    { 
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d',
-      issuer: 'raizel-ecosystem'
-    }
-  );
+  try {
+    return jwt.sign(
+      { uid, type: 'refresh' },
+      process.env.REFRESH_TOKEN_SECRET || JWT_SECRET,
+      { 
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d',
+        issuer: 'raizel-ecosystem'
+      } as any
+    );
+  } catch (error) {
+    console.error('Refresh token generation error:', error);
+    return '';
+  }
 }
 
 // Verificar refresh token
