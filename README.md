@@ -322,7 +322,318 @@ npm run type-check
 npm run audit:perf
 ```
 
-El proyecto estará disponible en `http://localhost:3000` (o el puerto que esté libre).
+---
+
+## 🚀 **DESPLIEGUE EN VERCEL (PRODUCCIÓN)**
+
+### 🌐 **Arquitectura de Despliegue**
+```
+🏗️ RAÍZEL + MANADABOOK DEPLOYMENT:
+├── 🌐 Frontend (Next.js) → Vercel
+├── 🔥 Backend APIs → Servidor propio/Docker  
+├── 🗄️ PostgreSQL + Redis → Servidor propio
+├── 📁 MinIO/Storage → Servidor propio
+└── 🔥 Firebase → Google Cloud (ya configurado)
+```
+
+### ⚡ **Despliegue Rápido en Vercel**
+
+#### **Opción 1: Deploy desde Vercel Dashboard (Recomendado)**
+```bash
+# 1. Conectar repositorio en Vercel
+# Ve a: https://vercel.com/new
+# Importa tu repositorio GitHub
+
+# 2. Configurar variables de entorno
+# En Vercel Dashboard → Project Settings → Environment Variables
+# Agrega estas variables desde .env.example:
+```
+
+#### **Variables Requeridas en Vercel:**
+```bash
+# 🌐 FRONTEND URLS
+NEXT_PUBLIC_API_URL=https://api.manadabook.com
+NEXT_PUBLIC_WS_URL=wss://api.manadabook.com  
+NEXT_PUBLIC_MINIO_ENDPOINT=https://storage.manadabook.com
+
+# 🔥 FIREBASE (públicas)
+NEXT_PUBLIC_FIREBASE_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=raizel-ecosystem.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=raizel-ecosystem
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=raizel-ecosystem.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+
+# 💳 STRIPE (públicas + privadas)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# 🔐 JWT (privadas)
+JWT_SECRET=your-super-secret-jwt-key-production-xxxxxxxxxxxxx
+REFRESH_TOKEN_SECRET=your-refresh-token-secret-production-xxxxxxxxxxxxx
+
+# 🔧 WORKERS
+WORKER_SECRET_TOKEN=worker-secret-production-xxxxxxxxxxxxx
+```
+
+#### **Opción 2: Deploy desde CLI**
+```bash
+# 1. Instalar Vercel CLI
+npm i -g vercel
+
+# 2. Login y conectar proyecto
+vercel login
+vercel link --project-id prj_qJDrQV0qZzT8mfZQt9DKZtsmPamC
+
+# 3. Configurar variables de entorno
+vercel env add NEXT_PUBLIC_API_URL production
+vercel env add NEXT_PUBLIC_FIREBASE_API_KEY production
+vercel env add STRIPE_SECRET_KEY production
+# ... (agregar todas las variables del .env.example)
+
+# 4. Deploy
+vercel --prod
+```
+
+### ⚙️ **Configurar Backend (Servidor Propio)**
+
+#### **Backend APIs (mantener en servidor propio):**
+```bash
+# 1. Backend APIs seguirán en tu servidor:
+# https://api.manadabook.com
+
+# 2. Configurar CORS para Vercel:
+# En tu backend, permitir origen: https://raizel-manadabook.vercel.app
+
+# 3. Services que van en servidor propio:
+├── 🔥 Backend NestJS (puerto 3001)
+├── 🗄️ PostgreSQL (puerto 5432)  
+├── ⚡ Redis (puerto 6379)
+├── 📁 MinIO (puerto 9000)
+└── 🎬 Worker (procesamiento)
+```
+
+#### **Docker en Servidor (Backend):**
+```bash
+# En tu servidor de producción:
+git clone https://github.com/tu-usuario/raizel.git
+cd raizel
+
+# Configurar variables .env para servidor
+cp env.example .env
+# Editar .env con configuraciones de producción
+
+# Lanzar solo backend services
+docker-compose up -d postgres redis minio backend worker
+
+# Verificar estado
+docker-compose ps
+docker-compose logs -f backend
+```
+
+### 🔗 **Conectar Frontend (Vercel) ↔ Backend (Servidor)**
+
+#### **Configurar URLs de conexión:**
+```bash
+# En Vercel Environment Variables:
+NEXT_PUBLIC_API_URL=https://api.manadabook.com      # Tu servidor backend
+NEXT_PUBLIC_WS_URL=wss://api.manadabook.com         # WebSocket servidor
+NEXT_PUBLIC_MINIO_ENDPOINT=https://storage.manadabook.com  # Storage servidor
+
+# En tu servidor backend (.env):
+FRONTEND_URL=https://raizel-manadabook.vercel.app   # Frontend Vercel
+CORS_ORIGIN=https://raizel-manadabook.vercel.app    # CORS permitido
+```
+
+### 🧪 **Testing Despliegue**
+
+#### **Verificar conexión Frontend ↔ Backend:**
+```bash
+# 1. Test endpoints críticos
+curl https://raizel-manadabook.vercel.app/api/health
+curl https://api.manadabook.com/health
+
+# 2. Test Firebase connectivity  
+curl https://raizel-manadabook.vercel.app/api/pets
+
+# 3. Test Stripe integration
+curl https://raizel-manadabook.vercel.app/api/marketplace
+
+# 4. Test WebSocket connection
+# Verifica en browser DevTools → Network → WS
+```
+
+### 🎯 **URLs Finales**
+
+```
+🌐 PRODUCCIÓN:
+├── 📱 Frontend: https://raizel-manadabook.vercel.app
+├── 🔥 Backend: https://api.manadabook.com  
+├── 📁 Storage: https://storage.manadabook.com
+└── 🗄️ Firebase: Automático (Google Cloud)
+
+🧪 STAGING/PREVIEW:  
+├── 📱 Frontend: https://raizel-manadabook-git-[branch].vercel.app
+├── 🔥 Backend: https://staging-api.manadabook.com
+└── 🗄️ Firebase: Proyecto staging separado
+```
+
+El proyecto estará disponible en `http://localhost:3000` para desarrollo y `https://raizel-manadabook.vercel.app` en producción.
+
+---
+
+## 🛠️ **COMANDOS RÁPIDOS VERCEL**
+
+### ⚡ **Deploy Automático (Recomendado)**
+```bash
+# Script automático que verifica todo
+./scripts/deploy-vercel.sh
+```
+
+### 🔧 **Comandos Manuales**
+```bash
+# Deploy rápido a preview
+vercel
+
+# Deploy a producción
+vercel --prod
+
+# Ver logs en tiempo real
+vercel logs --follow
+
+# Listar deployments
+vercel ls
+
+# Ver variables de entorno
+vercel env ls
+
+# Agregar variable de entorno
+vercel env add NEXT_PUBLIC_API_URL production
+
+# Pull variables para desarrollo
+vercel env pull .env.local
+
+# Inspeccionar deployment
+vercel inspect https://raizel-manadabook.vercel.app
+```
+
+---
+
+## 🔧 **TROUBLESHOOTING**
+
+### ❌ **Problemas Comunes**
+
+#### **1. Error: "API routes not working"**
+```bash
+# Verificar que NEXT_PUBLIC_API_URL esté configurado
+vercel env ls | grep API_URL
+
+# Si falta, agregarlo:
+vercel env add NEXT_PUBLIC_API_URL production
+# Valor: https://api.manadabook.com
+```
+
+#### **2. Error: "Firebase not connecting"**
+```bash
+# Verificar variables Firebase
+vercel env ls | grep FIREBASE
+
+# Verificar que todas estén configuradas:
+NEXT_PUBLIC_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+```
+
+#### **3. Error: "Stripe checkout failing"**
+```bash
+# Verificar Stripe keys
+vercel env ls | grep STRIPE
+
+# Asegurarse de usar keys de producción:
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxx
+STRIPE_SECRET_KEY=sk_live_xxx
+```
+
+#### **4. Error: "CORS issues"**
+```bash
+# En tu backend, configurar CORS para Vercel:
+CORS_ORIGIN=https://raizel-manadabook.vercel.app
+
+# En NestJS main.ts:
+app.enableCors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true
+});
+```
+
+### 🔍 **Health Checks**
+
+#### **Verificar que todo funciona:**
+```bash
+# 1. Frontend responsive
+curl -I https://raizel-manadabook.vercel.app
+
+# 2. Backend APIs conectando
+curl https://api.manadabook.com/health
+
+# 3. Firebase tiempo real
+curl https://raizel-manadabook.vercel.app/api/pets
+
+# 4. Marketplace + Stripe
+curl https://raizel-manadabook.vercel.app/api/marketplace
+
+# 5. Moments + TTL
+curl https://raizel-manadabook.vercel.app/api/moments
+```
+
+### 📊 **Monitoreo Post-Despliegue**
+
+```bash
+# Ver performance
+vercel logs --follow
+
+# Ver métricas
+vercel analytics
+
+# Ver deployment status
+vercel ls
+
+# Ver errores en tiempo real
+vercel logs --filter error
+```
+
+---
+
+## 🎯 **RESULTADO FINAL**
+
+### ✅ **ECOSISTEMA COMPLETAMENTE DESPLEGADO**
+
+```
+🌐 PRODUCCIÓN LIVE:
+├── 📱 Frontend: https://raizel-manadabook.vercel.app
+│   ├── ✅ Next.js optimizado
+│   ├── ✅ Firebase tiempo real
+│   ├── ✅ Stripe checkout
+│   └── ✅ Auto-deploy GitHub
+│
+├── 🔥 Backend: https://api.manadabook.com
+│   ├── ✅ NestJS APIs
+│   ├── ✅ PostgreSQL + Redis
+│   ├── ✅ MinIO storage
+│   └── ✅ Worker jobs
+│
+└── 🔥 Firebase: Google Cloud
+    ├── ✅ Auth + profiles
+    ├── ✅ Anuncios tiempo real
+    ├── ✅ Circles + moments
+    └── ✅ Marketplace data
+```
+
+**🐾 Raízel + ManadaBook Ecosystem está completamente preparado para Vercel** 🚀
+
+---
 
 ## 👥 Sistema de Aliados/Distribuidores
 
