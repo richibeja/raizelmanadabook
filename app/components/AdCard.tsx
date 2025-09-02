@@ -11,7 +11,7 @@ interface Ad {
   budget: number;
   start_date: string;
   end_date: string;
-  status: 'active' | 'paused' | 'completed';
+  status: 'active' | 'paused' | 'completed' | 'pending' | 'rejected';
   impressions: number;
   clicks: number;
   ctr: number;
