@@ -136,12 +136,27 @@ export default function PetProfilePage() {
         </div>
 
         {/* Perfil de mascota */}
-        <PetProfileCard
-          pet={petForCard}
-          isOwner={false}
-          onFollow={() => console.log('Seguir mascota')}
-          isFollowing={false}
-        />
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="text-center">
+            <img
+              src="/api/placeholder/200/200"
+              alt={petForCard.name}
+              className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+            />
+            <h1 className="text-2xl font-bold text-gray-900">{petForCard.name}</h1>
+            <p className="text-gray-600">{petForCard.species} • {petForCard.breed}</p>
+            <p className="text-sm text-gray-500 mt-2">{petForCard.bio || 'Una mascota especial'}</p>
+            
+            <div className="flex justify-center gap-4 mt-6">
+              <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                Seguir
+              </button>
+              <button className="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50">
+                Mensaje
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

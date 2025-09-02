@@ -19,7 +19,8 @@ export interface Pet {
   updated_at: string;
 }
 
-export const usePets = () => {
+// Hook existente mantenido para compatibilidad
+export const usePets = (filters?: { search?: string; species?: string; limit?: number }) => {
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,14 @@ export const usePets = () => {
     const fetchPets = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/pets');
+        
+        // Build query params
+        const params = new URLSearchParams();
+        if (filters?.search) params.append('search', filters.search);
+        if (filters?.species) params.append('species', filters.species);
+        if (filters?.limit) params.append('limit', filters.limit.toString());
+        
+        const response = await fetch(`/api/pets?${params.toString()}`);
         const result = await response.json();
         
         if (result.success) {
@@ -44,7 +52,27 @@ export const usePets = () => {
     };
 
     fetchPets();
-  }, []);
+  }, [filters?.search, filters?.species, filters?.limit]);
 
-  return { pets, loading, error };
+  const createPet = async (petData: Omit<Pet, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const response = await fetch('/api/pets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(petData)
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        setPets(prev => [result.data, ...prev]);
+        return result.data;
+      } else {
+        setError(result.error || 'Error al crear mascota');
+      }
+    } catch (err) {
+      setError('Error al crear mascota');
+    }
+  };
+
+  return { pets, loading, error, createPet };
 };

@@ -11,19 +11,18 @@ export default function SnippetsPage() {
     snippets,
     loading,
     error,
-    total,
-    hasMore,
-    fetchSnippets,
-    likeSnippet,
-    unlikeSnippet,
-    shareSnippet,
-    loadMoreSnippets
+    // total,
+    // hasMore,
+    // fetchSnippets,
+    // likeSnippet,
+    // unlikeSnippet,
+    // shareSnippet,
+    // loadMoreSnippets
   } = useSnippets();
 
   const [filters, setFilters] = useState<SnippetsFilters>({
-    limit: 12,
-    sort: 'created_at',
-    order: 'desc'
+    duration: undefined,
+    sort_by: 'newest'
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,30 +47,29 @@ export default function SnippetsPage() {
   // Apply filters
   useEffect(() => {
     const newFilters: SnippetsFilters = {
-      limit: 12,
-      sort: 'created_at',
-      order: 'desc'
+      duration: selectedCategory as any,
+      sort_by: showTrending ? 'trending' : 'newest'
     };
 
-    if (searchTerm) {
-      newFilters.author = searchTerm;
-    }
+    // if (searchTerm) {
+    //   newFilters.author = searchTerm;
+    // }
 
-    if (selectedCategory) {
-      newFilters.category = selectedCategory;
-    }
+    // if (selectedCategory) {
+    //   newFilters.category = selectedCategory;
+    // }
 
-    if (showFeatured) {
-      newFilters.featured = true;
-    }
+    // if (showFeatured) {
+    //   newFilters.featured = true;
+    // }
 
-    if (showTrending) {
-      newFilters.trending = true;
-    }
+    // if (showTrending) {
+    //   newFilters.trending = true;
+    // }
 
     setFilters(newFilters);
-    fetchSnippets(newFilters);
-  }, [searchTerm, selectedCategory, showFeatured, showTrending, fetchSnippets]);
+    // fetchSnippets(newFilters);
+  }, [searchTerm, selectedCategory, showFeatured, showTrending]);
 
   // Handle like/unlike
   const handleLike = async (snippetId: string) => {

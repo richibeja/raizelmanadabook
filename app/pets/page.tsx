@@ -122,9 +122,9 @@ export default function PetsPage() {
             <div key={pet.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Imagen de portada */}
               <div className="relative h-48 bg-gradient-to-br from-blue-400 to-purple-500">
-                {pet.avatar_url ? (
+                {pet.profile_image_url ? (
                   <img 
-                    src={pet.avatar_url} 
+                    src={pet.profile_image_url} 
                     alt={pet.name}
                     className="w-full h-full object-cover"
                   />
@@ -158,11 +158,11 @@ export default function PetsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500">Edad:</span>
-                    <span className="font-medium">{pet.age_estimated || 'No especificada'}</span>
+                    <span className="font-medium">{pet.age} {pet.age_unit || 'años'}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500">Ubicación:</span>
-                    <span className="font-medium">{pet.pet_location || 'No especificada'}</span>
+                    <span className="font-medium">{'Colombia'}</span>
                   </div>
                 </div>
 
@@ -205,8 +205,8 @@ export default function PetsPage() {
                 {/* Stats y acciones */}
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                   <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span>{pet.followers_count} seguidores</span>
-                    <span>{pet.posts_count} posts</span>
+                    <span>0 seguidores</span>
+                    <span>0 posts</span>
                   </div>
                   <Link
                     href={`/pets/${pet.id}`}

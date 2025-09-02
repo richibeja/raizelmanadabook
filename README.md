@@ -199,40 +199,127 @@ firebase init firestore
 
 ## 🔧 Instalación y Configuración
 
-### Prerrequisitos
+### 🛠️ **Desarrollo Local Completo (Recomendado)**
+
+#### **Opción 1: Docker Compose (Más fácil)**
+```bash
+# 1. Clonar el repositorio
+git clone <url-del-repositorio>
+cd raizel
+
+# 2. Configurar variables de entorno
+cp env.example .env.local
+# Editar .env.local con tus configuraciones Firebase
+
+# 3. Iniciar todo el ecosistema
+docker-compose up -d
+
+# 4. Ver logs en tiempo real  
+docker-compose logs -f
+
+# 5. Acceder a la aplicación
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:3001  
+# MinIO: http://localhost:9001
+# PostgreSQL: localhost:5432
+```
+
+#### **Servicios Incluidos en Docker:**
+```
+🐳 RAÍZEL ECOSYSTEM STACK:
+├── 🗄️ PostgreSQL - Base de datos principal
+├── ⚡ Redis - Cache y sesiones  
+├── 📁 MinIO - Almacenamiento archivos (S3-compatible)
+├── 🔥 Backend API - NestJS + Express
+├── 📱 Frontend - Next.js (Raízel + ManadaBook)
+└── 🎬 Worker - Procesamiento videos/imágenes
+```
+
+#### **Comandos útiles Docker:**
+```bash
+# Iniciar servicios
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f [servicio]
+
+# Reiniciar un servicio  
+docker-compose restart [servicio]
+
+# Parar todo
+docker-compose down
+
+# Limpiar volúmenes (¡cuidado!)
+docker-compose down -v
+```
+
+### 🛠️ **Desarrollo Local Manual**
+
+#### **Prerrequisitos**
 - Node.js 18+
+- PostgreSQL 15+
+- Redis 7+
 - npm o yarn
-- PostgreSQL (opcional para desarrollo local)
 
-### Pasos de instalación
+#### **Pasos instalación manual**
 
-1. **Clonar el repositorio**
+1. **Clonar e instalar**
 ```bash
 git clone <url-del-repositorio>
 cd raizel
+npm install --legacy-peer-deps
 ```
 
-2. **Instalar dependencias**
+2. **Configurar servicios locales**
 ```bash
-npm install
+# PostgreSQL
+createdb manadabook
+psql manadabook -f migrations/001_initial_schema.sql
+
+# Redis (debe estar ejecutándose)
+redis-server
 ```
 
-3. **Configurar variables de entorno**
+3. **Variables de entorno**
 ```bash
-cp .env.example .env.local
-# Editar .env.local con tus configuraciones
+cp env.example .env.local
+# Configurar DATABASE_URL, REDIS_URL, Firebase, etc.
 ```
 
-4. **Ejecutar migraciones** (si tienes PostgreSQL)
+4. **Ejecutar migraciones**
 ```bash
-# Conectar a tu base de datos y ejecutar:
-# migrations/001_initial_schema.sql
-# migrations/002_affiliates.sql
+npm run migrate
 ```
 
-5. **Iniciar el servidor de desarrollo**
+5. **Iniciar desarrollo**
 ```bash
+# Frontend (Raízel + ManadaBook)
 npm run dev
+
+# Backend API (en otra terminal)
+npm run backend:dev
+```
+
+### 🧪 **Testing y Calidad**
+
+```bash
+# Tests unitarios
+npm run test
+
+# Tests con watch
+npm run test:watch
+
+# Coverage
+npm run test:coverage
+
+# Linting
+npm run lint
+
+# Type checking
+npm run type-check
+
+# Performance audit
+npm run audit:perf
 ```
 
 El proyecto estará disponible en `http://localhost:3000` (o el puerto que esté libre).

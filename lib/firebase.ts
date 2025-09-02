@@ -340,3 +340,193 @@ export function onAuthStateChange(callback: (user: any) => void) {
   return onAuthStateChanged(auth, callback);
 }
 
+// ========================================
+// USER PROFILES MANAGEMENT
+// ========================================
+
+export interface UserProfile {
+  id: string;
+  uid: string; // Firebase Auth UID
+  username: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  bio?: string;
+  location?: {
+    city: string;
+    country: string;
+  };
+  preferences: {
+    privacy: 'public' | 'friends' | 'private';
+    notifications: boolean;
+    language: string;
+  };
+  stats: {
+    followersCount: number;
+    followingCount: number;
+    petsCount: number;
+    postsCount: number;
+  };
+  isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Pet {
+  id: string;
+  ownerId: string;
+  name: string;
+  species: 'dog' | 'cat' | 'other';
+  breed?: string;
+  birthDate?: Date;
+  gender?: 'male' | 'female';
+  weight?: number; // kg
+  photoURL?: string;
+  bio?: string;
+  isPublic: boolean;
+  medicalInfo?: {
+    vaccinated: boolean;
+    spayed: boolean;
+    allergies?: string[];
+    conditions?: string[];
+  };
+  stats: {
+    followersCount: number;
+    postsCount: number;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Get user profile by UID
+export async function getUserProfile(uid: string): Promise<UserProfile | null> {
+  try {
+    const profileQuery = query(
+      collection(db, COLLECTIONS.USERS), 
+      where('uid', '==', uid)
+    );
+    const snapshot = await getDocs(profileQuery);
+    
+    if (snapshot.empty) {
+      return null;
+    }
+
+    const doc = snapshot.docs[0];
+    const data = doc.data();
+    
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: toDate(data.createdAt),
+      updatedAt: toDate(data.updatedAt)
+    } as UserProfile;
+  } catch (error) {
+    console.error('Error getting user profile:', error);
+    return null;
+  }
+}
+
+// Create user profile (called after Firebase Auth registration)
+export async function createUserProfile(userData: Omit<UserProfile, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+  try {
+    const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
+      ...userData,
+      createdAt: timestamp(),
+      updatedAt: timestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating user profile:', error);
+    throw new Error('Failed to create user profile');
+  }
+}
+
+// Update user profile
+export async function updateUserProfile(profileId: string, updates: Partial<UserProfile>): Promise<void> {
+  try {
+    const profileRef = doc(db, COLLECTIONS.USERS, profileId);
+    await updateDoc(profileRef, {
+      ...updates,
+      updatedAt: timestamp()
+    });
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw new Error('Failed to update user profile');
+  }
+}
+
+// ========================================
+// PETS MANAGEMENT
+// ========================================
+
+// Create pet
+export async function createPet(petData: Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+  try {
+    const docRef = await addDoc(collection(db, COLLECTIONS.PETS), {
+      ...petData,
+      createdAt: timestamp(),
+      updatedAt: timestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating pet:', error);
+    throw new Error('Failed to create pet');
+  }
+}
+
+// Get pets by owner
+export function subscribeToUserPets(
+  ownerId: string,
+  callback: (pets: Pet[]) => void
+): () => void {
+  try {
+    const petsQuery = query(
+      collection(db, COLLECTIONS.PETS),
+      where('ownerId', '==', ownerId),
+      orderBy('createdAt', 'desc')
+    );
+
+    return onSnapshot(petsQuery, (snapshot) => {
+      const pets: Pet[] = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          birthDate: data.birthDate ? toDate(data.birthDate) : undefined,
+          createdAt: toDate(data.createdAt),
+          updatedAt: toDate(data.updatedAt)
+        } as Pet;
+      });
+      callback(pets);
+    });
+  } catch (error) {
+    console.error('Error setting up pets subscription:', error);
+    return () => {};
+  }
+}
+
+// Update pet
+export async function updatePet(petId: string, updates: Partial<Pet>): Promise<void> {
+  try {
+    const petRef = doc(db, COLLECTIONS.PETS, petId);
+    await updateDoc(petRef, {
+      ...updates,
+      updatedAt: timestamp()
+    });
+  } catch (error) {
+    console.error('Error updating pet:', error);
+    throw new Error('Failed to update pet');
+  }
+}
+
+// Delete pet
+export async function deletePet(petId: string): Promise<void> {
+  try {
+    const petRef = doc(db, COLLECTIONS.PETS, petId);
+    await deleteDoc(petRef);
+  } catch (error) {
+    console.error('Error deleting pet:', error);
+    throw new Error('Failed to delete pet');
+  }
+}
+

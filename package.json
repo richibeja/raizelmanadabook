@@ -23,10 +23,10 @@
     "migrate": "psql $DATABASE_URL -f migrations/001_initial_schema.sql",
     "db:setup": "docker-compose up -d postgres redis minio && sleep 10 && npm run migrate",
     "backend:dev": "cd backend && npm run start:dev",
-    "backend:build": "cd backend && npm run build", 
+    "backend:build": "cd backend && npm run build",
     "backend:test": "cd backend && npm run test",
     "firebase:populate": "node scripts/populate-firebase.js",
-    "firebase:deploy": "firebase deploy", 
+    "firebase:deploy": "firebase deploy",
     "firebase:emulator": "firebase emulators:start",
     "firebase:setup": "scripts/setup-firebase.sh"
   },
@@ -50,6 +50,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.0.0",
     "@types/react": "19.1.12",
     "@types/react-dom": "^18.0.0",

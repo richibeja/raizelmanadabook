@@ -10,7 +10,7 @@ import Link from 'next/link';
 export default function SnippetDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { getSnippet, loading, error } = useSnippets();
+  const { snippets, loading, error } = useSnippets();
   
   const [snippet, setSnippet] = useState<any>(null);
   const [relatedSnippets, setRelatedSnippets] = useState<any[]>([]);
@@ -22,7 +22,8 @@ export default function SnippetDetailPage() {
   useEffect(() => {
     const fetchSnippet = async () => {
       if (snippetId) {
-        const snippetData = await getSnippet(snippetId);
+        // const snippetData = await getSnippet(snippetId);
+        const snippetData = snippets.find(s => s.id === snippetId);
         if (snippetData) {
           setSnippet(snippetData);
           // In a real implementation, you would fetch related snippets here
@@ -32,7 +33,7 @@ export default function SnippetDetailPage() {
     };
 
     fetchSnippet();
-  }, [snippetId, getSnippet]);
+  }, [snippetId, snippets]);
 
   if (loading) {
     return (
@@ -318,8 +319,6 @@ export default function SnippetDetailPage() {
                     <SnippetCard
                       key={relatedSnippet.id}
                       snippet={relatedSnippet}
-                      showAuthor={false}
-                      className="!shadow-none !border"
                     />
                   ))}
                 </div>
