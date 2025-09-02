@@ -6,38 +6,41 @@ import Footer from './Footer';
 import { Calculator, MessageCircle, Package, MapPin, Clock } from 'lucide-react';
 import '../globals.css';
 
-// Productos Raízel para pedidos
+// Productos BARF Raízel reales para pedidos
 const productosRaizel = [
   {
-    id: 'vital-barf-pollo',
-    name: 'Vital BARF Pollo',
-    price: 45000,
+    id: 'choribarf-helados',
+    name: 'Choribarf Helados',
+    price: 0,
     presentaciones: [
-      { peso: '500g', precio: 22500 },
-      { peso: '1kg', precio: 45000 },  
-      { peso: '2kg', precio: 85000 }
+      { peso: 'Consultar', precio: 'Precio por WhatsApp' }
     ],
-    descripcion: 'Alimentación BARF con pollo fresco colombiano'
+    descripcion: 'Chorizo BARF congelado, ideal para premios y entrenamiento'
   },
   {
-    id: 'vital-barf-res',
-    name: 'Vital BARF Res', 
-    price: 52000,
+    id: 'bandejas-higado-res',
+    name: 'Bandejas Hígado de Res',
+    price: 0,
     presentaciones: [
-      { peso: '1kg', precio: 52000 },
-      { peso: '2kg', precio: 98000 },
-      { peso: '5kg', precio: 235000 }
+      { peso: 'Diferentes tamaños', precio: 'Consultar disponibilidad' }
     ],
-    descripcion: 'BARF premium con res para perros grandes'
+    descripcion: 'Hígado de res fresco en bandejas, rico en hierro y vitaminas'
+  },
+  {
+    id: 'mista-visceras-res',
+    name: 'Mista con Vísceras de Res', 
+    price: 0,
+    presentaciones: [
+      { peso: 'Según mascota', precio: 'Consultar por WhatsApp' }
+    ],
+    descripcion: 'Mezcla balanceada vísceras de res (hígado, corazón, riñón)'
   },
   {
     id: 'vital-pellets',
     name: 'Vital Pellets Naturales',
-    price: 38000,
+    price: 0,
     presentaciones: [
-      { peso: '1kg', precio: 38000 },
-      { peso: '3kg', precio: 108000 },
-      { peso: '8kg', precio: 275000 }
+      { peso: 'Consultar', precio: 'Disponibles varias presentaciones' }
     ],
     descripcion: 'Pellets horneados sin químicos ni conservantes'
   }
