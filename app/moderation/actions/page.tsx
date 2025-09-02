@@ -226,7 +226,7 @@ export default function ModerationActionsPage() {
                   Acciones ({filteredActions.length})
                 </h2>
                 <p className="text-sm text-gray-500">
-                  Total: {total} acciones
+                  Total: {stats.total} acciones
                 </p>
               </div>
 
@@ -245,9 +245,9 @@ export default function ModerationActionsPage() {
                         <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getActionTypeColor(action.action_type)}`}>
                           {action.action_type.replace('_', ' ').toUpperCase()}
                         </span>
-                        {action.duration_hours && (
+                        {action.duration_days && (
                           <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200 rounded-full">
-                            {action.duration_hours}h
+                            {action.duration_days} días
                           </span>
                         )}
                       </div>
@@ -265,32 +265,18 @@ export default function ModerationActionsPage() {
                         <p className="text-sm text-gray-600">{action.reason}</p>
                       </div>
 
-                      {/* Evidence */}
-                      {action.evidence_urls && action.evidence_urls.length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Evidencia:</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {action.evidence_urls.map((url, index) => (
-                              <a
-                                key={index}
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800"
-                              >
-                                <span>Ver evidencia {index + 1}</span>
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      {/* Evidence placeholder */}
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Evidencia:</h4>
+                        <p className="text-xs text-gray-500">Disponible en sistema interno</p>
+                      </div>
 
                       {/* Target info */}
                       <div className="bg-gray-50 rounded-md p-3">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <span className="font-medium text-gray-700">Usuario objetivo:</span>
-                            <p className="text-gray-600">{action.target_user_id}</p>
+                            <span className="font-medium text-gray-700">Target ID:</span>
+                            <p className="text-gray-600">{action.target_id}</p>
                           </div>
                           {action.target_id && (
                             <div>

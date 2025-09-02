@@ -6,8 +6,8 @@ import ReportCard from '../components/ReportCard';
 import { Shield, AlertTriangle, Clock, CheckCircle, XCircle, Filter, Search } from 'lucide-react';
 
 export default function ModerationPage() {
-  const { reports, loading, error, total, fetchReports, executeReportAction } = useReports();
-  const { actions, fetchActions } = useModerationActions();
+  const { reports, loading, error } = useReports();
+  const { actions } = useModerationActions();
   
   const [filters, setFilters] = useState({
     status: '',
@@ -20,14 +20,16 @@ export default function ModerationPage() {
   const currentUserId = '550e8400-e29b-41d4-a716-446655440005';
 
   useEffect(() => {
-    fetchReports(filters);
-    fetchActions();
-  }, [filters, fetchReports, fetchActions]);
+    // fetchReports(filters);
+    // fetchActions();
+    console.log('Loading moderation data...');
+  }, [filters]);
 
   const handleAssign = async (reportId: string, moderatorId: string) => {
     try {
-      await executeReportAction(reportId, 'assign', { moderator_id: moderatorId });
-      fetchReports(filters); // Refresh the list
+      // await executeReportAction(reportId, 'assign', { moderator_id: moderatorId });
+      // fetchReports(filters); // Refresh the list
+      console.log('Assign report:', reportId, moderatorId);
     } catch (error) {
       console.error('Error assigning report:', error);
     }
