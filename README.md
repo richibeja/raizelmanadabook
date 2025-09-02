@@ -1,8 +1,29 @@
 # 🐾 Raízel - Ecosistema Completo para Mascotas
 
+## 🏆 **MILESTONES COMPLETADOS**
+
+### ✅ **Milestone 1: Definición Técnica y Funcional del Ecosistema Digital Raízel** *(Septiembre 2024)*
+- 🍖 **Productos definidos**: Vital BARF (Pollo y Res) + Vital Pellets Naturales
+- 📱 **App Android**: 85% completada con catálogo, calculadora, pedidos WhatsApp
+- 🎨 **Identidad de marca**: 100% natural, hecho en Colombia, sin químicos
+- 📞 **Canales establecidos**: WhatsApp +57 310 818 8723, redes sociales activas
+- 📍 **Ubicación**: Subía, Cundinamarca, Colombia
+
+### ✅ **Milestone 2: Migración Sistema de Anuncios a Firebase** *(Septiembre 2024)*
+- 🔥 **Firebase integrado**: Firestore + Auth + Storage completamente funcional  
+- ⚡ **Tiempo real**: onSnapshot para actualizaciones automáticas
+- 🔐 **Autenticación**: Email/password + Google OAuth implementada
+- 🛡️ **Seguridad**: Reglas granulares configuradas
+- 📊 **Analytics**: Métricas en tiempo real (CTR, impresiones, conversiones)
+
 ## 📋 Descripción
 
 Raízel es un ecosistema completo que combina **alimentos naturales para mascotas** con una **red social para dueños de mascotas** (ManadaBook). Ofrecemos productos BARF, pellets naturales y una comunidad donde compartir momentos con tu mascota.
+
+### 🍖 **Productos Principales**
+- **Vital BARF**: Alimentación cruda biológicamente apropiada (Pollo y Res)
+- **Vital Pellets Naturales**: Pellets horneados sin químicos ni conservantes  
+- **100% Natural**: Ingredientes frescos colombianos de alta calidad
 
 ## 🚀 Características Principales
 
@@ -345,12 +366,44 @@ Si quieres ser aliado oficial de Raízel:
 3. Recibe aprobación del equipo Raízel
 4. Se te agrega a la base de datos de aliados
 
-## 📞 Contacto
+## 📞 Contacto Oficial Raízel
 
-- **WhatsApp**: +57 310 818 8723
-- **Email**: info@raizel.com
-- **Ubicación**: Bogotá, Colombia
-- **Horarios**: Lunes a Viernes 8:00 AM - 6:00 PM
+### 📱 **Atención al Cliente**
+- **WhatsApp Business**: [+57 310 818 8723](https://wa.me/573108188723)
+- **Email**: contactoraizel@gmail.com  
+- **Ubicación**: Subía, Cundinamarca, Colombia 🇨🇴
+- **Horarios**: Lunes a Sábado 8:00 AM - 6:00 PM
+
+### 🌐 **Redes Sociales**
+- **📸 Instagram**: [@somosraizel](https://instagram.com/somosraizel) - Productos y consejos
+- **🎵 TikTok**: [@raizeloficial](https://tiktok.com/@raizeloficial) - Videos educativos  
+- **👥 Facebook**: [Raízel](https://facebook.com/raizel) - Comunidad mascotas
+
+### 📱 **Aplicación Móvil**
+- **Raízel App Android**: 85% completada
+- **Funcionalidades**: Catálogo + Calculadora + Pedidos WhatsApp
+- **Lanzamiento**: Próximas semanas (APK directo)
+
+## 🗺️ **Roadmap y Próximos Pasos**
+
+### 🚀 **FASE 1: Lanzamiento Digital** *(Próximas 4 semanas)*
+1. **📱 Finalizar Raízel App** - Completar 15% restante + testing
+2. **🏷️ Etiquetas finales** - Tabla nutricional + arte imprimible  
+3. **🎨 Material promocional** - Templates + contenido lanzamiento
+
+### 🏗️ **FASE 2: Infraestructura** *(1-2 meses)*  
+3. **🌐 Web landing oficial** - www.raizel.com.co
+4. **💳 Sistema pedidos/pagos** - E-commerce + PSE + inventario
+
+### 🔥 **FASE 3: Firebase Completa** *(2-3 meses)*
+5. **👥 Migrar perfiles usuario** - Firestore + tiempo real
+6. **💬 Chat tiempo real** - Soporte + ventas integrado
+
+### 📈 **FASE 4: Expansión** *(3-4 meses)*
+7. **📱 Marketing digital** - Influencers + comunidad
+8. **🌍 Expansion nacional** - 5+ ciudades Colombia
+
+> 📋 **Documentación completa**: Ver `/docs/` para especificaciones técnicas, roadmap detallado y milestones
 
 ## 🔥 Configuración Firebase Completa
 
