@@ -29,16 +29,28 @@ const CatalogoPageContent = () => {
         // Productos BARF Raízel reales - Catálogo actualizado
         const productosRaizel = [
           {
-            id: 'choribarf-helados',
-            name: 'Choribarf Helados',
+            id: 'choribarf',
+            name: 'Choribarf',
             price: 0, // Consultar precio
             category: 'barf',
-            description: 'Chorizo BARF congelado, ideal para premios y entrenamiento. 100% carne fresca sin aditivos.',
+            description: 'Chorizo BARF natural, ideal para premios y entrenamiento. 100% carne fresca sin aditivos.',
             benefits: ['Premio natural', 'Alto valor proteico', 'Fácil dosificación', 'Irresistible para perros'],
             presentaciones: ['Consultar disponibilidad y precios'],
             target: 'Perros todas las edades - Premios y recompensas',
             composicion: 'Carne fresca + vísceras naturales sin conservantes',
             imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop'
+          },
+          {
+            id: 'helados-barf',
+            name: 'Helados BARF',
+            price: 0, // Consultar precio
+            category: 'barf',
+            description: 'Helados naturales BARF para mascotas, refrescantes y nutritivos. Perfectos para días calurosos.',
+            benefits: ['Refrescante natural', 'Hidratación extra', 'Premio saludable', 'Ideal verano'],
+            presentaciones: ['Consultar sabores y tamaños disponibles'],
+            target: 'Perros todas las edades - Refrescante y nutritivo',
+            composicion: 'Base BARF natural congelada sin azúcares',
+            imageUrl: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=400&fit=crop'
           },
           {
             id: 'bandejas-higado-res',
