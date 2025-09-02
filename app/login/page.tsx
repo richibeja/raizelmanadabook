@@ -1,35 +1,42 @@
 'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-// import { doc, setDoc } from "firebase/firestore";
-// import { auth, db } from "../../firebaseConfig";
+import { useAuthContext } from '../contexts/AuthContext';
 import '../globals.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState("");
   const router = useRouter();
+  
+  const { signIn, register, signInGoogle, error, loading } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
     try {
       if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signIn(email, password);
       } else {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db, "users", userCredential.user.uid), {
-          email: email,
-          createdAt: new Date(),
+        await register(email, password, { 
+          username: email.split('@')[0],
+          displayName: email.split('@')[0] 
         });
       }
       router.push("/");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (err) {
+      // Error handling is managed by the auth context
+      console.error('Auth error:', err);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInGoogle();
+      router.push("/");
+    } catch (err) {
+      console.error('Google auth error:', err);
     }
   };
 
@@ -51,12 +58,31 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">
-          {isLogin ? "Iniciar Sesión" : "Registrarse"}
+        <button type="submit" disabled={loading}>
+          {loading ? "Cargando..." : (isLogin ? "Iniciar Sesión" : "Registrarse")}
         </button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button onClick={() => setIsLogin(!isLogin)}>
+      
+      {/* Google Login */}
+      <button 
+        onClick={handleGoogleLogin}
+        disabled={loading}
+        style={{ 
+          marginTop: '10px', 
+          backgroundColor: '#4285f4', 
+          color: 'white',
+          border: 'none',
+          padding: '10px',
+          borderRadius: '4px',
+          width: '100%'
+        }}
+      >
+        🔍 Continuar con Google
+      </button>
+      
+      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+      
+      <button onClick={() => setIsLogin(!isLogin)} style={{ marginTop: '10px' }}>
         {isLogin ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
       </button>
     </div>
