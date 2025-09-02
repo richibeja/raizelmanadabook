@@ -122,3 +122,4 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
 };
 
 export default AnalyticsCard;
+
