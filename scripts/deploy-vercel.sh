@@ -28,7 +28,7 @@ fi
 
 # Link project
 echo -e "${BLUE}🔗 Conectando proyecto...${NC}"
-vercel link --project-id prj_qJDrQV0qZzT8mfZQt9DKZtsmPamC --yes
+vercel link --yes
 
 # Check environment variables
 echo -e "${BLUE}📋 Verificando variables de entorno...${NC}"

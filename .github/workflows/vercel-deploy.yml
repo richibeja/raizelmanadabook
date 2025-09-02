@@ -90,10 +90,10 @@ jobs:
                 ✅ **Firebase**: Tiempo real funcionando
                 
                 ### 🔗 Links Rápidos:
-                - 🏠 [Landing](https://raizel-manadabook-git-${context.head_ref}.vercel.app)
-                - 👥 [ManadaBook Feed](https://raizel-manadabook-git-${context.head_ref}.vercel.app/feed)
-                - 🛒 [Marketplace](https://raizel-manadabook-git-${context.head_ref}.vercel.app/marketplace)
-                - 🔵 [Círculos](https://raizel-manadabook-git-${context.head_ref}.vercel.app/circles)
+                - 🏠 [Landing](https://raizel-manadabook.vercel.app)
+                - 👥 [ManadaBook Feed](https://raizel-manadabook.vercel.app/feed)
+                - 🛒 [Marketplace](https://raizel-manadabook.vercel.app/marketplace)
+                - 🔵 [Círculos](https://raizel-manadabook.vercel.app/circles)
                 
                 **Nota**: Backend APIs siguen funcionando desde servidor propio
                 `
