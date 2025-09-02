@@ -5,18 +5,20 @@ import { useModerationActions } from '../../hooks/useModeration';
 import { Shield, Clock, User, FileText, MessageCircle, Video, ShoppingBag, Filter, Search } from 'lucide-react';
 
 export default function ModerationActionsPage() {
-  const { actions, loading, error, total, fetchActions } = useModerationActions();
+  const { actions, loading, error } = useModerationActions();
   
   const [filters, setFilters] = useState({
     target_user_id: '',
     action_type: '',
-    moderator_id: ''
+    moderator_id: '',
+    target_type: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchActions(filters);
-  }, [filters, fetchActions]);
+    // fetchActions(filters);
+    console.log('Loading moderation actions with filters:', filters);
+  }, [filters]);
 
   const getActionTypeColor = (actionType: string) => {
     switch (actionType) {
@@ -52,11 +54,11 @@ export default function ModerationActionsPage() {
   const getStats = () => {
     const warnings = actions.filter(a => a.action_type === 'warning').length;
     const contentRemovals = actions.filter(a => a.action_type === 'content_removal').length;
-    const temporaryBans = actions.filter(a => a.action_type === 'temporary_ban').length;
-    const permanentBans = actions.filter(a => a.action_type === 'permanent_ban').length;
-    const unbans = actions.filter(a => a.action_type === 'unban').length;
+    const suspensions = actions.filter(a => a.action_type === 'suspension').length;
+    const bans = actions.filter(a => a.action_type === 'ban').length;
+    const total = actions.length;
 
-    return { warnings, contentRemovals, temporaryBans, permanentBans, unbans };
+    return { warnings, contentRemovals, suspensions, bans, total };
   };
 
   const stats = getStats();
@@ -116,7 +118,7 @@ export default function ModerationActionsPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Suspensiones</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.temporaryBans}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.suspensions}</p>
               </div>
             </div>
           </div>
@@ -128,7 +130,7 @@ export default function ModerationActionsPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Bans Permanentes</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.permanentBans}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.bans}</p>
               </div>
             </div>
           </div>
@@ -140,7 +142,7 @@ export default function ModerationActionsPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Unbans</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.unbans}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
               </div>
             </div>
           </div>

@@ -174,11 +174,16 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <div className="mascota-card"
-                  mascota={mascota}
-                  onLike={(id) => console.log('Liked:', id)}
-                  onAdopt={(id) => console.log('Adopt:', id)}
-                />
+                <div className="mascota-card p-4 bg-white rounded-lg">
+                  <img 
+                    src={mascota.imagen}
+                    alt={mascota.nombre}
+                    className="w-full h-48 object-cover rounded-lg mb-3"
+                  />
+                  <h3 className="font-semibold">{mascota.nombre}</h3>
+                  <p className="text-sm text-gray-600">{mascota.tipo} • {mascota.edad}</p>
+                  <p className="text-xs text-gray-500">{mascota.ubicacion}</p>
+                </div>
               </motion.div>
             ))}
           </div>

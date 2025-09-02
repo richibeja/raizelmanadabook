@@ -12,6 +12,10 @@ interface Product {
   imageUrl?: string;
   category: string;
   description?: string;
+  benefits?: string[];
+  presentaciones?: string[];
+  target?: string;
+  composicion?: string;
 }
 
 const CatalogoPageContent = () => {
@@ -22,34 +26,46 @@ const CatalogoPageContent = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Mock data since Firebase is not available
-        const mockProducts = [
+        // Productos Raízel reales - Catálogo oficial
+        const productosRaizel = [
           {
-            id: '1',
-            name: 'Alimento Natural para Perros',
-            price: 45000,
-            category: 'alimentos',
-            description: 'Alimento 100% natural para perros adultos',
-            imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=300&fit=crop'
+            id: 'vital-barf-pollo',
+            name: 'Vital BARF Pollo',
+            price: 45000, // Por kg  
+            category: 'barf',
+            description: 'Alimentación cruda biológicamente apropiada con pollo fresco colombiano. Sin químicos ni conservantes.',
+            benefits: ['Digestión óptima', 'Pelaje brillante', 'Energía sostenida', 'Sistema inmune fuerte'],
+            presentaciones: ['500g - $22,500', '1kg - $45,000', '2kg - $85,000'],
+            target: 'Perros todas las edades - Especial cachorros y adultos',
+            composicion: '65% carne pollo + 15% vísceras + 20% huesos carnosos',
+            imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop'
           },
           {
-            id: '2',
-            name: 'Alimento Natural para Gatos',
-            price: 38000,
-            category: 'alimentos',
-            description: 'Alimento 100% natural para gatos adultos',
-            imageUrl: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=300&h=300&fit=crop'
+            id: 'vital-barf-res',
+            name: 'Vital BARF Res', 
+            price: 52000, // Por kg
+            category: 'barf',
+            description: 'BARF con carne de res premium para perros grandes y muy activos. Desarrollo muscular superior.',
+            benefits: ['Desarrollo muscular', 'Huesos fuertes', 'Recuperación rápida', 'Ideal razas grandes'],
+            presentaciones: ['1kg - $52,000', '2kg - $98,000', '5kg - $235,000'],
+            target: 'Perros grandes (20kg+) - Razas trabajadoras y deportivas',
+            composicion: '68% carne res + 12% vísceras + 20% estructura ósea',
+            imageUrl: 'https://images.unsplash.com/photo-1601758228041-3caa3d3d3c1c?w=400&h=400&fit=crop'
           },
           {
-            id: '3',
-            name: 'Juguetes para Mascotas',
-            price: 15000,
-            category: 'juguetes',
-            description: 'Set de juguetes interactivos',
-            imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop'
+            id: 'vital-pellets',
+            name: 'Vital Pellets Naturales',
+            price: 38000, // Por kg
+            category: 'pellets', 
+            description: 'Pellets horneados a baja temperatura sin químicos, BHA, BHT ni conservantes artificiales.',
+            benefits: ['100% natural', 'Fácil digestión', 'Sin químicos', 'Hecho en Colombia'],
+            presentaciones: ['1kg - $38,000', '3kg - $108,000', '8kg - $275,000'],
+            target: 'Perros y gatos - Alternativa natural a pellets comerciales', 
+            composicion: '28% proteína + 35% carbohidratos complejos + 15% fibras naturales',
+            imageUrl: 'https://images.unsplash.com/photo-1587402092301-725e37c70fd8?w=400&h=400&fit=crop'
           }
         ];
-        setProducts(mockProducts);
+        setProducts(productosRaizel);
       } catch (error) {
         console.error("Error fetching products: ", error);
       } finally {

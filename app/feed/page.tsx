@@ -7,7 +7,17 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 // import { Card, CardContent, CardFooter } from '../components/ui/Card';
 // import Button from '../components/ui/Button';
-// import { formatRelativeTime } from '../lib/utils';
+// Función helper para formatear tiempo relativo
+const formatRelativeTime = (timestamp: string) => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+  
+  if (diffInHours < 1) return 'Hace menos de 1 hora';
+  if (diffInHours < 24) return `Hace ${diffInHours}h`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  return `Hace ${diffInDays}d`;
+};
 
 // Mock data for posts
 const mockPosts = [
