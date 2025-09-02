@@ -9,13 +9,22 @@ import '../globals.css';
 // Productos BARF Raízel reales para pedidos
 const productosRaizel = [
   {
-    id: 'choribarf-helados',
-    name: 'Choribarf Helados',
+    id: 'choribarf',
+    name: 'Choribarf',
     price: 0,
     presentaciones: [
       { peso: 'Consultar', precio: 'Precio por WhatsApp' }
     ],
-    descripcion: 'Chorizo BARF congelado, ideal para premios y entrenamiento'
+    descripcion: 'Chorizo BARF natural, ideal para premios y entrenamiento'
+  },
+  {
+    id: 'helados-mascotas',
+    name: 'Helados para Mascotas',
+    price: 0,
+    presentaciones: [
+      { peso: 'Varios sabores', precio: 'Consultar por WhatsApp' }
+    ],
+    descripcion: 'Helados refrescantes naturales para mascotas, perfectos para el calor'
   },
   {
     id: 'bandejas-higado-res',
