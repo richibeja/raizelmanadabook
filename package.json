@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --fix",
     "audit:perf": "node scripts/audit-performance.js",
     "audit:lighthouse": "npx lighthouse http://localhost:3000 --output html --output-path ./lighthouse-reports/landing.html",
     "type-check": "tsc --noEmit",
