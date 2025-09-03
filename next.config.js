@@ -44,13 +44,19 @@ const nextConfig = {
         ],
       },
       {
-        source: '/icon-192x192.png',
+        source: '/favicon.svg',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
-        source: '/icon-512x512.png',
+        source: '/icon-192x192.svg',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/icon-512x512.svg',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],

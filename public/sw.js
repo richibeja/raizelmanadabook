@@ -10,7 +10,9 @@ const DYNAMIC_CACHE = 'manadabook-dynamic-v1.0.0';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/logo.png',
+  '/favicon.svg',
+  '/icon-192x192.svg',
+  '/icon-512x512.svg',
   '/_next/static/css/',
   '/_next/static/js/',
   '/sponsor1.png',
@@ -192,28 +194,28 @@ self.addEventListener('message', (event) => {
 self.addEventListener('push', (event) => {
   if (event.data) {
     const data = event.data.json();
-    const options = {
-      body: data.body,
-      icon: '/logo.png',
-      badge: '/logo.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: data.primaryKey || 1
+      const options = {
+    body: data.body,
+    icon: '/icon-192x192.svg',
+    badge: '/icon-192x192.svg',
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: data.primaryKey || 1
+    },
+    actions: [
+      {
+        action: 'explore',
+        title: 'Ver en ManadaBook',
+        icon: '/icon-192x192.svg'
       },
-      actions: [
-        {
-          action: 'explore',
-          title: 'Ver en ManadaBook',
-          icon: '/logo.png'
-        },
-        {
-          action: 'close',
-          title: 'Cerrar',
-          icon: '/logo.png'
-        }
-      ]
-    };
+      {
+        action: 'close',
+        title: 'Cerrar',
+        icon: '/icon-192x192.svg'
+      }
+    ]
+  };
 
     event.waitUntil(
       self.registration.showNotification(data.title, options)
