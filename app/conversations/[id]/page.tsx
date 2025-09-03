@@ -34,9 +34,6 @@ export default function ConversationPage() {
   useEffect(() => {
     if (conversationId) {
       // Fetch conversation details
-      // fetchConversations({ user_id: currentUserId }).then(() => {
-      // Find the specific conversation
-      // In a real app, you'd have a separate endpoint for this
       const conv: Conversation = {
         id: conversationId,
         participants: [currentUserId, '550e8400-e29b-41d4-a716-446655440002'],
