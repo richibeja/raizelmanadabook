@@ -11,15 +11,7 @@ const nextConfig = {
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
-  // PWA Configuration
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-    disable: process.env.NODE_ENV === 'development',
-    buildExcludes: [/middleware-manifest\.json$/],
-    publicExcludes: ['!robots.txt', '!sitemap.xml'],
-  },
+  // PWA Configuration removed - using manual implementation
   async rewrites() {
     return [
       {
@@ -52,7 +44,13 @@ const nextConfig = {
         ],
       },
       {
-        source: '/icon-:size*.png',
+        source: '/icon-192x192.png',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/icon-512x512.png',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],

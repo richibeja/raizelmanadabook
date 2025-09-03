@@ -60,6 +60,16 @@
   }
 }
 
+/* CSS Variables para colores */
+:root {
+  --foreground-rgb: 11, 18, 32;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 240, 249, 255;
+  --primary-rgb: 15, 111, 246;
+  --secondary-rgb: 5, 150, 105;
+  --accent-rgb: 220, 38, 38;
+}
+
 /* CSS Reset y estilos base */
 * {
   box-sizing: border-box;
