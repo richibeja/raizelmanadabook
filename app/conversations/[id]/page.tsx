@@ -45,14 +45,6 @@ export default function ConversationPage() {
         updated_at: new Date().toISOString()
       };
       setConversation(conv);
-
-      // Fetch messages
-      // fetchMessages({ 
-      //   conversation_id: conversationId,
-      //   limit: 50,
-      //   sort: 'created_at',
-      //   order: 'desc'
-      // })
     }
   }, [conversationId, currentUserId]);
 
