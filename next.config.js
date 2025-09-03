@@ -4,9 +4,9 @@ const nextConfig = {
   // VERCEL OPTIMIZATION
   // ========================================
   
-  // Enable experimental features for better performance
+  // Vercel optimization
   experimental: {
-    // Remove deprecated configs - Next.js 15 handles these automatically
+    optimizePackageImports: ['lucide-react', 'framer-motion']
   },
 
   // ========================================
