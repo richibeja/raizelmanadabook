@@ -100,7 +100,7 @@ export async function GET(
     console.error('Error fetching circle:', error);
     
     // Fallback mock data
-    const { id: circleId } = params;
+    const { id: circleId } = await params;
     const mockCircle = {
       id: circleId,
       name: 'Círculo Ejemplo',

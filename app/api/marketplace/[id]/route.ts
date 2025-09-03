@@ -58,7 +58,7 @@ export async function GET(
     console.error('Error fetching marketplace item:', error);
     
     // Fallback mock data
-    const { id: itemId } = params;
+    const { id: itemId } = await params;
     const mockItem = {
       id: itemId,
       title: 'Artículo de Ejemplo',
