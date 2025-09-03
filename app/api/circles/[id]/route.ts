@@ -24,10 +24,10 @@ import { requireAuth } from '@/lib/jwt';
 // GET - Obtener círculo específico + miembros
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: circleId } = await params;
+    const { id: circleId } = params;
     
     // Obtener círculo
     const circleRef = doc(db, COLLECTIONS.CIRCLES, circleId);
@@ -100,7 +100,7 @@ export async function GET(
     console.error('Error fetching circle:', error);
     
     // Fallback mock data
-    const { id: circleId } = await params;
+    const { id: circleId } = params;
     const mockCircle = {
       id: circleId,
       name: 'Círculo Ejemplo',
@@ -125,10 +125,10 @@ export async function GET(
 // POST - Operaciones círculo (join, leave, invite, kick)
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: circleId } = await params;
+    const { id: circleId } = params;
     const body = await request.json();
     const { action, userId, targetUserId, newRole } = body;
 

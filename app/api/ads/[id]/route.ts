@@ -12,9 +12,9 @@ import {
 } from '../../../../lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     
     const adRef = doc(db, COLLECTIONS.ADS, id);
     const adSnapshot = await getDoc(adRef);
@@ -46,9 +46,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const body = await request.json();
     
     // Verificar que el anuncio existe
@@ -115,9 +115,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     
     // Verificar que el anuncio existe antes de eliminarlo
     const adRef = doc(db, COLLECTIONS.ADS, id);
@@ -146,9 +146,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 }
 
 // PATCH - Procesar acciones del anuncio (aprobar, rechazar, pausar, etc.)
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const body = await request.json();
     const { action, rejection_reason, payment_intent_id } = body;
 

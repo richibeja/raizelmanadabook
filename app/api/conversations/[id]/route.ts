@@ -49,9 +49,9 @@ let conversations = [
   }
 ];
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const conversation = conversations.find(conv => conv.id === id);
 
     if (!conversation) {

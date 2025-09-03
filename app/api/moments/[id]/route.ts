@@ -10,10 +10,10 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 // GET - Obtener moment específico
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: momentId } = await params;
+    const { id: momentId } = params;
     
     // Obtener moment
     const momentRef = doc(db, COLLECTIONS.MOMENTS, momentId);
@@ -64,10 +64,10 @@ export async function GET(
 // POST - Registrar view/like en moment
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: momentId } = await params;
+    const { id: momentId } = params;
     const body = await request.json();
     const { action, userId, completed } = body;
 
@@ -123,10 +123,10 @@ export async function POST(
 // DELETE - Eliminar moment (solo autor)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: momentId } = await params;
+    const { id: momentId } = params;
     const body = await request.json();
     const { userId } = body;
 

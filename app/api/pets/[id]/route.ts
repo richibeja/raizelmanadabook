@@ -40,10 +40,10 @@ let pets = [
 // GET - Obtener mascota por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const pet = pets.find(p => p.id === id);
     
     if (!pet) {
