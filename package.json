@@ -24,7 +24,17 @@
     "db:setup": "docker-compose up -d postgres redis minio && sleep 10 && npm run migrate",
     "backend:dev": "cd backend && npm run start:dev",
     "backend:build": "cd backend && npm run build",
-    "backend:test": "cd backend && npm run test"
+    "backend:test": "cd backend && npm run test",
+    "build:firebase": "next build && next export",
+    "deploy:firebase": "npm run build:firebase && firebase deploy",
+    "deploy:firebase:hosting": "npm run build:firebase && firebase deploy --only hosting",
+    "firebase:init": "firebase init hosting",
+    "firebase:login": "firebase login",
+    "firebase:projects": "firebase projects:list",
+    "deploy:vercel": "vercel --prod",
+    "deploy:vercel:preview": "vercel",
+    "vercel:env": "vercel env pull .env.local",
+    "test:vercel-config": "node scripts/test-vercel-config.js"
   },
   "dependencies": {
     "@next/font": "^14.2.15",
@@ -47,8 +57,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "@types/react": "19.1.12",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
     "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.0.0",
