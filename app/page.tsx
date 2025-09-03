@@ -5,7 +5,7 @@ import './globals.css';
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+        <div className="min-h-screen">
             <NavigationHub />
         </div>
     );

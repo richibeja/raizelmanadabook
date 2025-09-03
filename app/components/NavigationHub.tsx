@@ -32,46 +32,60 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
   bgColor 
 }) => {
   return (
-    <Link href={href} className="block">
-      <div 
-        className="group relative overflow-hidden rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl min-h-[200px] sm:min-h-[220px]"
-        style={{ 
-          backgroundColor: bgColor,
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-        }}
-      >
-        {/* Icono - Responsive */}
+    <Link href={href} className="block group">
+      <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 p-6 h-full border border-gray-100">
+        {/* Icono con fondo moderno */}
         <div 
-          className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg sm:rounded-xl"
-          style={{ backgroundColor: `${color}20` }}
+          className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl shadow-md"
+          style={{ 
+            backgroundColor: `${color}15`,
+            border: `2px solid ${color}30`
+          }}
         >
-          <div style={{ color }} className="scale-90 sm:scale-100">
+          <div style={{ color }} className="text-2xl">
             {icon}
           </div>
         </div>
 
-        {/* Contenido - Responsive */}
-        <div className="space-y-2">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 leading-tight">{title}</h3>
-          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">{description}</p>
+        {/* Contenido con tipografía mejorada */}
+        <div className="space-y-3">
+          <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-gray-700 transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+            {description}
+          </p>
         </div>
 
-        {/* Botón de acción - Responsive */}
-        <div className="mt-3 sm:mt-4 flex items-center justify-between">
-          <span className="text-xs sm:text-sm font-medium" style={{ color }}>
-            Ver más
+        {/* Botón de acción moderno */}
+        <div className="mt-6 flex items-center justify-between">
+          <span 
+            className="text-sm font-semibold px-3 py-1.5 rounded-full transition-all duration-200"
+            style={{ 
+              color: color,
+              backgroundColor: `${color}10`
+            }}
+          >
+            Explorar
           </span>
-          <ArrowRight 
-            size={14} 
-            style={{ color }}
-            className="sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" 
-          />
+          <div 
+            className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 group-hover:scale-110"
+            style={{ backgroundColor: `${color}20` }}
+          >
+            <ArrowRight 
+              size={16} 
+              style={{ color }}
+              className="transition-transform group-hover:translate-x-0.5" 
+            />
+          </div>
         </div>
 
-        {/* Efecto de hover */}
+        {/* Gradiente sutil en hover */}
         <div 
-          className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-10"
-          style={{ backgroundColor: color }}
+          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"
+          style={{ 
+            background: `linear-gradient(135deg, ${color}20, ${color}10)`
+          }}
         />
       </div>
     </Link>
@@ -131,66 +145,91 @@ export default function NavigationHub() {
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-      {/* Header - Optimizado para móviles */}
-      <div className="text-center mb-8 sm:mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-3 sm:mb-4 leading-tight">
-          Bienvenido a <span className="text-green-600">Raízel</span>
-        </h1>
-        <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
-          El ecosistema completo para el bienestar de tu mascota. 
-          Alimentos naturales y una comunidad que ama a los animales.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-3xl shadow-lg mb-6">
+            <span className="text-3xl">🐾</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+            Bienvenido a{' '}
+            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              Raízel
+            </span>
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+            El ecosistema completo para el bienestar de tu mascota. 
+            Alimentos naturales y una comunidad que ama a los animales.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              Explorar Productos
+            </button>
+            <button className="px-8 py-4 bg-white text-gray-700 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-200">
+              Unirse a la Comunidad
+            </button>
+          </div>
+        </div>
 
-      {/* Grid de tarjetas - Responsive mejorado */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {navigationCards.map((card, index) => (
-          <NavigationCard
-            key={index}
-            icon={card.icon}
-            title={card.title}
-            description={card.description}
-            href={card.href}
-            color={card.color}
-            bgColor={card.bgColor}
-          />
-        ))}
-      </div>
+        {/* Grid de tarjetas con diseño moderno */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+          {navigationCards.map((card, index) => (
+            <NavigationCard
+              key={index}
+              icon={card.icon}
+              title={card.title}
+              description={card.description}
+              href={card.href}
+              color={card.color}
+              bgColor={card.bgColor}
+            />
+          ))}
+        </div>
 
-      {/* Sección de beneficios - Responsive optimizado */}
-      <div className="mt-12 sm:mt-16 lg:mt-20 text-center">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800 mb-6 sm:mb-8">
-          ¿Por qué elegir Raízel?
-        </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <Heart size={20} className="text-green-600 sm:w-6 sm:h-6" />
-            </div>
-            <h3 className="font-medium text-gray-800 text-sm sm:text-base">100% Natural</h3>
-            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Sin conservantes ni químicos</p>
+        {/* Sección de beneficios con cards modernas */}
+        <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              ¿Por qué elegir Raízel?
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Descubre las ventajas que nos hacen únicos en el cuidado de mascotas
+            </p>
           </div>
-          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <Camera size={20} className="text-blue-600 sm:w-6 sm:h-6" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center group">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Heart size={24} className="text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">100% Natural</h3>
+              <p className="text-gray-600 leading-relaxed">Sin conservantes ni químicos artificiales</p>
             </div>
-            <h3 className="font-medium text-gray-800 text-sm sm:text-base">Comunidad</h3>
-            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Conecta con otros dueños</p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <Globe size={20} className="text-purple-600 sm:w-6 sm:h-6" />
+            
+            <div className="text-center group">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Camera size={24} className="text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Comunidad</h3>
+              <p className="text-gray-600 leading-relaxed">Conecta con otros dueños de mascotas</p>
             </div>
-            <h3 className="font-medium text-gray-800 text-sm sm:text-base">Todas las mascotas</h3>
-            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Perros, gatos y más</p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <Phone size={20} className="text-red-600 sm:w-6 sm:h-6" />
+            
+            <div className="text-center group">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Globe size={24} className="text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Todas las mascotas</h3>
+              <p className="text-gray-600 leading-relaxed">Perros, gatos y muchas más especies</p>
             </div>
-            <h3 className="font-medium text-gray-800 text-sm sm:text-base">Soporte</h3>
-            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Atención personalizada</p>
+            
+            <div className="text-center group">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Phone size={24} className="text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Soporte</h3>
+              <p className="text-gray-600 leading-relaxed">Atención personalizada 24/7</p>
+            </div>
           </div>
         </div>
       </div>
