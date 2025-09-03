@@ -1,38 +1,36 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Vercel-optimized config
+  // Remove static export for Vercel deployment
+  // output: 'export',
+  // trailingSlash: true,
   images: {
-    remotePatterns: [
+    unoptimized: true,
+    domains: ['images.unsplash.com', 'localhost', 'your-backend-api.com']
+  },
+  // distDir: 'out',
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
+  async rewrites() {
+    return [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
+        source: '/api/backend/:path*',
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:3001'}/api/:path*`
       }
-    ],
+    ]
   },
-  
-  // TypeScript/ESLint settings for Vercel
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  
-  // Vercel-specific
-  poweredByHeader: false,
-  reactStrictMode: false,
-};
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+        ],
+      },
+    ]
+  }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

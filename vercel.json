@@ -1,39 +1,27 @@
 {
   "version": 2,
-  "name": "raizel-manadabook",
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "installCommand": "npm install --legacy-peer-deps",
-  "regions": ["iad1"],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_API_URL": "@api_url",
-      "NEXT_PUBLIC_WS_URL": "@ws_url",
-      "NEXT_PUBLIC_MINIO_ENDPOINT": "@storage_url",
-      "NEXT_PUBLIC_FIREBASE_API_KEY": "@firebase_api_key",
-      "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "@firebase_auth_domain",
-      "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "@firebase_project_id",
-      "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "@firebase_storage_bucket",
-      "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "@firebase_messaging_sender_id",
-      "NEXT_PUBLIC_FIREBASE_APP_ID": "@firebase_app_id",
-      "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "@firebase_measurement_id",
-      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "@stripe_publishable_key",
-      "STRIPE_SECRET_KEY": "@stripe_secret_key",
-      "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret",
-      "JWT_SECRET": "@jwt_secret",
-      "WORKER_SECRET_TOKEN": "@worker_secret_token"
-    }
   },
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
-    },
-    "app/api/moments/cleanup/*.ts": {
-      "maxDuration": 300
     }
   },
   "headers": [
@@ -45,7 +33,7 @@
           "value": "*"
         },
         {
-          "key": "Access-Control-Allow-Methods", 
+          "key": "Access-Control-Allow-Methods",
           "value": "GET, POST, PUT, DELETE, OPTIONS"
         },
         {
@@ -55,22 +43,10 @@
       ]
     }
   ],
-  "redirects": [
-    {
-      "source": "/home",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/market",
-      "destination": "/marketplace",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
-      "source": "/backend-api/:path*",
-      "destination": "https://api.manadabook.com/:path*"
+      "source": "/api/backend/(.*)",
+      "destination": "https://your-backend-api.com/api/$1"
     }
   ]
 }
