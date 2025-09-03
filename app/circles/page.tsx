@@ -112,22 +112,23 @@ export default function CirclesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header - Responsive */}
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Círculos</h1>
-              <p className="text-gray-600 mt-1">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Círculos</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">
                 Únete a comunidades de mascotas y conecta con otros amantes de animales
               </p>
             </div>
             <Link
               href="/circles/create"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
             >
               <Plus className="w-4 h-4" />
-              Crear Círculo
+              <span className="hidden sm:inline">Crear Círculo</span>
+              <span className="sm:hidden">Crear</span>
             </Link>
           </div>
         </div>
@@ -169,15 +170,15 @@ export default function CirclesPage() {
 
       {/* Search and Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Search Bar */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        {/* Search Bar - Responsive */}
+        <div className="relative mb-4 sm:mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
           <input
             type="text"
             placeholder={`Buscar ${activeTab === 'discover' ? 'círculos...' : 'en mis círculos...'}`}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
           />
         </div>
 

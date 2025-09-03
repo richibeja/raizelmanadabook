@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { Camera, Video, X, Upload, Clock, Globe, Users } from 'lucide-react';
 import { useMoments } from '../hooks/useMoments';
 import { useAuthContext } from '../contexts/AuthContext';
@@ -154,10 +155,13 @@ const UploadMoment: React.FC<UploadMomentProps> = ({
           ) : (
             <div className="relative">
               {mediaType === 'image' ? (
-                <img
+                <Image
                   src={mediaPreview}
                   alt="Preview"
+                  width={400}
+                  height={256}
                   className="w-full h-64 object-cover rounded-lg"
+                  sizes="(max-width: 768px) 100vw, 400px"
                 />
               ) : (
                 <video

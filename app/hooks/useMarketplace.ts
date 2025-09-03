@@ -33,14 +33,7 @@ export const useMarketplace = (filters?: {
     });
 
     return unsubscribe;
-  }, [
-    filters?.category, 
-    filters?.city, 
-    filters?.priceMin, 
-    filters?.priceMax, 
-    filters?.search,
-    filters?.limit
-  ]);
+  }, [filters]); // Simplificar dependencias para evitar warnings
 
   return { items, loading, error };
 };

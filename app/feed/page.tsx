@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Heart, MessageCircle, Share, MoreHorizontal, User, MapPin, Calendar } from 'lucide-react';
+import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MomentsCarousel from '../components/MomentsCarousel';
@@ -119,55 +120,62 @@ const Post = ({ post, onLike, onComment, onShare }: {
     >
       <div className="card mb-6">
         <div className="card-content p-6">
-          {/* User header */}
+          {/* User header - Responsive */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <img
-                src={post.user.avatar}
-                alt={post.user.name}
-                className="w-12 h-12 rounded-full mr-4"
-              />
-              <div>
-                <h3 className="font-semibold text-[#0B1220]">{post.user.name}</h3>
-                <div className="flex items-center text-[#6B7280] text-sm">
-                  <MapPin className="w-3 h-3 mr-1" />
-                  {post.user.location}
-                  <span className="mx-2">•</span>
-                  <Calendar className="w-3 h-3 mr-1" />
-                  {formatRelativeTime(post.timestamp)}
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full mr-3 sm:mr-4 overflow-hidden">
+                <Image
+                  src={post.user.avatar}
+                  alt={post.user.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 40px, 48px"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold text-[#0B1220] text-sm sm:text-base truncate">{post.user.name}</h3>
+                <div className="flex items-center text-[#6B7280] text-xs sm:text-sm">
+                  <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="truncate">{post.user.location}</span>
+                  <span className="mx-1 sm:mx-2">•</span>
+                  <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="truncate">{formatRelativeTime(post.timestamp)}</span>
                 </div>
               </div>
             </div>
-            <button className="p-2 text-[#6B7280] hover:text-[#0F6FF6] transition-colors">
-              <MoreHorizontal className="w-5 h-5" />
+            <button className="p-1 sm:p-2 text-[#6B7280] hover:text-[#0F6FF6] transition-colors flex-shrink-0">
+              <MoreHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
-          {/* Content */}
-          <p className="text-[#374151] mb-4 leading-relaxed">
+          {/* Content - Responsive */}
+          <p className="text-[#374151] mb-4 leading-relaxed text-sm sm:text-base">
             {post.content}
           </p>
 
-          {/* Image */}
+          {/* Image - Optimizada con Next.js Image */}
           {post.image && (
-            <div className="mb-4">
-              <img
+            <div className="mb-4 relative w-full h-48 sm:h-64 rounded-xl overflow-hidden">
+              <Image
                 src={post.image}
                 alt="Post content"
-                className="w-full h-64 object-cover rounded-xl"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={false}
               />
             </div>
           )}
 
-          {/* Actions */}
+          {/* Actions - Responsive */}
           <div className="flex items-center justify-between pt-4 border-t border-[#E6EEF7]">
             <motion.button
               onClick={handleLike}
               className="flex items-center text-[#6B7280] hover:text-[#FF7A59] transition-colors"
               whileTap={{ scale: 0.95 }}
             >
-              <Heart className={`w-5 h-5 mr-2 ${isLiked ? 'text-[#FF7A59] fill-current' : ''}`} />
-              <span className="text-sm font-medium">{likesCount}</span>
+              <Heart className={`w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 ${isLiked ? 'text-[#FF7A59] fill-current' : ''}`} />
+              <span className="text-xs sm:text-sm font-medium">{likesCount}</span>
             </motion.button>
 
             <motion.button
@@ -175,8 +183,8 @@ const Post = ({ post, onLike, onComment, onShare }: {
               className="flex items-center text-[#6B7280] hover:text-[#0F6FF6] transition-colors"
               whileTap={{ scale: 0.95 }}
             >
-              <MessageCircle className="w-5 h-5 mr-2" />
-              <span className="text-sm font-medium">{post.comments}</span>
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm font-medium">{post.comments}</span>
             </motion.button>
 
             <motion.button
@@ -184,8 +192,8 @@ const Post = ({ post, onLike, onComment, onShare }: {
               className="flex items-center text-[#6B7280] hover:text-[#00C2A8] transition-colors"
               whileTap={{ scale: 0.95 }}
             >
-              <Share className="w-5 h-5 mr-2" />
-              <span className="text-sm font-medium">{post.shares}</span>
+              <Share className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm font-medium">{post.shares}</span>
             </motion.button>
           </div>
         </div>
@@ -244,28 +252,29 @@ export default function FeedPage() {
       {/* Moments Carousel - Top del Feed */}
       <MomentsCarousel onUploadClick={() => setShowUploadMoment(true)} />
       
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Filters */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* Search and Filters - Responsive */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6B7280] w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6B7280] w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Buscar en el feed..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-[#E6EEF7] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F6FF6] focus:border-transparent"
+                className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-[#E6EEF7] rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F6FF6] focus:border-transparent text-sm sm:text-base"
               />
             </div>
-            <button className="button button-outline flex items-center">
+            <button className="button button-outline flex items-center justify-center py-2.5 sm:py-3 px-4 text-sm sm:text-base">
               <Filter className="w-4 h-4 mr-2" />
-              Filtros
+              <span className="hidden sm:inline">Filtros</span>
+              <span className="sm:hidden">Filtrar</span>
             </button>
           </div>
         </motion.div>

@@ -3,6 +3,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* PWA Styles */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* PWA Safe Area Support */
+@supports (padding: max(0px)) {
+  .safe-area-inset-top {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+  
+  .safe-area-inset-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+  
+  .safe-area-inset-left {
+    padding-left: max(env(safe-area-inset-left), 0px);
+  }
+  
+  .safe-area-inset-right {
+    padding-right: max(env(safe-area-inset-right), 0px);
+  }
+}
+
+/* PWA Standalone Mode Styles */
+@media (display-mode: standalone) {
+  body {
+    /* Ocultar scrollbar en modo standalone */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  body::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Ajustar para notch en dispositivos móviles */
+  .pwa-header {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .pwa-footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* CSS Reset y estilos base */
 * {
   box-sizing: border-box;

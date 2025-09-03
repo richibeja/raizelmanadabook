@@ -25,7 +25,7 @@ export const useMoments = (filters?: { circleId?: string; limit?: number }) => {
     });
 
     return unsubscribe;
-  }, [filters?.circleId, filters?.limit]);
+  }, [filters]); // Incluir filters completo para evitar warnings
 
   const upload = async (momentData: {
     content?: string;

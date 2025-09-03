@@ -34,43 +34,43 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
   return (
     <Link href={href} className="block">
       <div 
-        className="group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+        className="group relative overflow-hidden rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl min-h-[200px] sm:min-h-[220px]"
         style={{ 
           backgroundColor: bgColor,
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}
       >
-        {/* Icono */}
+        {/* Icono - Responsive */}
         <div 
-          className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
+          className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg sm:rounded-xl"
           style={{ backgroundColor: `${color}20` }}
         >
-          <div style={{ color }}>
+          <div style={{ color }} className="scale-90 sm:scale-100">
             {icon}
           </div>
         </div>
 
-        {/* Contenido */}
+        {/* Contenido - Responsive */}
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-          <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 leading-tight">{title}</h3>
+          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">{description}</p>
         </div>
 
-        {/* Botón de acción */}
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm font-medium" style={{ color }}>
+        {/* Botón de acción - Responsive */}
+        <div className="mt-3 sm:mt-4 flex items-center justify-between">
+          <span className="text-xs sm:text-sm font-medium" style={{ color }}>
             Ver más
           </span>
           <ArrowRight 
-            size={16} 
+            size={14} 
             style={{ color }}
-            className="transition-transform group-hover:translate-x-1" 
+            className="sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" 
           />
         </div>
 
         {/* Efecto de hover */}
         <div 
-          className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+          className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-10"
           style={{ backgroundColor: color }}
         />
       </div>
@@ -131,20 +131,20 @@ export default function NavigationHub() {
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      {/* Header - Optimizado para móviles */}
+      <div className="text-center mb-8 sm:mb-12">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-3 sm:mb-4 leading-tight">
           Bienvenido a <span className="text-green-600">Raízel</span>
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
           El ecosistema completo para el bienestar de tu mascota. 
           Alimentos naturales y una comunidad que ama a los animales.
         </p>
       </div>
 
-      {/* Grid de tarjetas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Grid de tarjetas - Responsive mejorado */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {navigationCards.map((card, index) => (
           <NavigationCard
             key={index}
@@ -158,39 +158,39 @@ export default function NavigationHub() {
         ))}
       </div>
 
-      {/* Sección de beneficios */}
-      <div className="mt-16 text-center">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-8">
+      {/* Sección de beneficios - Responsive optimizado */}
+      <div className="mt-12 sm:mt-16 lg:mt-20 text-center">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800 mb-6 sm:mb-8">
           ¿Por qué elegir Raízel?
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <Heart size={24} className="text-green-600" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <Heart size={20} className="text-green-600 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-medium text-gray-800">100% Natural</h3>
-            <p className="text-sm text-gray-600 text-center">Sin conservantes ni químicos</p>
+            <h3 className="font-medium text-gray-800 text-sm sm:text-base">100% Natural</h3>
+            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Sin conservantes ni químicos</p>
           </div>
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <Camera size={24} className="text-blue-600" />
+          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <Camera size={20} className="text-blue-600 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-medium text-gray-800">Comunidad</h3>
-            <p className="text-sm text-gray-600 text-center">Conecta con otros dueños</p>
+            <h3 className="font-medium text-gray-800 text-sm sm:text-base">Comunidad</h3>
+            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Conecta con otros dueños</p>
           </div>
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <Globe size={24} className="text-purple-600" />
+          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center">
+              <Globe size={20} className="text-purple-600 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-medium text-gray-800">Todas las mascotas</h3>
-            <p className="text-sm text-gray-600 text-center">Perros, gatos y más</p>
+            <h3 className="font-medium text-gray-800 text-sm sm:text-base">Todas las mascotas</h3>
+            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Perros, gatos y más</p>
           </div>
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <Phone size={24} className="text-red-600" />
+          <div className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <Phone size={20} className="text-red-600 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-medium text-gray-800">Soporte</h3>
-            <p className="text-sm text-gray-600 text-center">Atención personalizada</p>
+            <h3 className="font-medium text-gray-800 text-sm sm:text-base">Soporte</h3>
+            <p className="text-xs sm:text-sm text-gray-600 text-center leading-tight">Atención personalizada</p>
           </div>
         </div>
       </div>

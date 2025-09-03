@@ -60,7 +60,7 @@ export const useCircles = (filters?: { city?: string; tags?: string[]; limit?: n
     });
 
     return unsubscribe;
-  }, [filters?.city, filters?.tags?.join(','), filters?.limit]);
+  }, [filters]); // Simplificar dependencias para evitar warnings complejos
 
   const createNew = async (circleData: Omit<FirebaseCircle, 'id' | 'createdAt' | 'updatedAt' | 'stats'>) => {
     try {

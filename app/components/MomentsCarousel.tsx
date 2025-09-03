@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { Play, Pause, Heart, Eye, Clock, X, Plus } from 'lucide-react';
 import { useMoments } from '../hooks/useMoments';
 import { useAuthContext } from '../contexts/AuthContext';
@@ -260,10 +261,13 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
             {/* Media Content */}
             <div className="relative bg-black rounded-lg overflow-hidden">
               {selectedMoment.mediaType === 'image' ? (
-                <img
+                <Image
                   src={selectedMoment.mediaUrl}
                   alt="Moment"
+                  width={400}
+                  height={384}
                   className="w-full h-auto max-h-96 object-cover"
+                  sizes="(max-width: 768px) 100vw, 400px"
                 />
               ) : (
                 <video

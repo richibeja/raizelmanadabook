@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { Eye, Heart, Share2, Calendar, MapPin, DollarSign } from 'lucide-react';
 
 interface Ad {
@@ -62,12 +63,15 @@ const AdCard: React.FC<AdCardProps> = ({ ad, onEdit, onPause, onDelete }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-      {/* Imagen del anuncio */}
+      {/* Imagen del anuncio - Optimizada con next/image */}
       <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50">
-        <img
+        <Image
           src={ad.image_url || '/placeholder-ad.jpg'}
           alt={ad.title}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={false}
         />
         <div className="absolute top-3 right-3">
           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(ad.status)}`}>

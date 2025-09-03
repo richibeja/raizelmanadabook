@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { Clock, Check, CheckCheck } from 'lucide-react';
 
 interface Message {
@@ -67,11 +68,14 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             {message.message_type === 'text' ? (
               <p className="text-sm leading-relaxed">{message.content}</p>
             ) : message.message_type === 'image' ? (
-              <div className="relative">
-                <img
+              <div className="relative w-full max-w-xs">
+                <Image
                   src={message.content}
                   alt="Imagen del mensaje"
-                  className="w-full h-auto rounded-lg max-w-xs"
+                  width={300}
+                  height={200}
+                  className="w-full h-auto rounded-lg"
+                  sizes="(max-width: 768px) 100vw, 300px"
                 />
               </div>
             ) : (

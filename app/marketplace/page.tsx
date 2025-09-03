@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Search, Filter, Grid, List, Plus, Heart, Eye, MapPin, 
   Clock, Star, ShoppingCart, Truck, User
@@ -93,31 +94,33 @@ export default function MarketplacePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header - Responsive */}
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">ManadaBook Marketplace</h1>
-              <p className="text-gray-600 mt-1">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">ManadaBook Marketplace</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">
                 Compra y vende productos para mascotas en la comunidad Raízel
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Link
                 href="/marketplace/sell"
-                className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
               >
                 <Plus className="w-4 h-4" />
-                Vender Artículo
+                <span className="hidden sm:inline">Vender Artículo</span>
+                <span className="sm:hidden">Vender</span>
               </Link>
               {user && (
                 <Link
                   href="/marketplace/my-listings"
-                  className="inline-flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50"
+                  className="inline-flex items-center justify-center gap-2 border border-gray-300 text-gray-700 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 text-sm sm:text-base"
                 >
                   <User className="w-4 h-4" />
-                  Mis Publicaciones
+                  <span className="hidden sm:inline">Mis Publicaciones</span>
+                  <span className="sm:hidden">Mis Posts</span>
                 </Link>
               )}
             </div>
@@ -126,15 +129,15 @@ export default function MarketplacePage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Search Bar */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        {/* Search Bar - Responsive */}
+        <div className="relative mb-4 sm:mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
           <input
             type="text"
             placeholder="Buscar productos para mascotas..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
           />
         </div>
 
@@ -298,12 +301,15 @@ export default function MarketplacePage() {
                   viewMode === 'list' ? 'flex gap-4 p-4' : 'overflow-hidden'
                 }`}
               >
-                {/* Image */}
+                {/* Image - Optimizada con Next.js Image */}
                 <div className={viewMode === 'grid' ? 'relative h-48' : 'w-32 h-32 flex-shrink-0'}>
-                  <img
+                  <Image
                     src={item.photos[0] || '/api/placeholder/300/200'}
                     alt={item.title}
-                    className="w-full h-full object-cover rounded-lg"
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes={viewMode === 'grid' ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" : "128px"}
+                    priority={false}
                   />
                   
                   {/* Favorite Heart */}
