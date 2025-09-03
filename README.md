@@ -367,15 +367,15 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 
 # 💳 STRIPE (públicas + privadas)
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_[tu-key-aquí]
-STRIPE_SECRET_KEY=sk_live_[tu-key-aquí]
-STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_SECRET_KEY=sk_live_[REEMPLAZAR]
+STRIPE_WEBHOOK_SECRET=whsec_[REEMPLAZAR]
 
 # 🔐 JWT (privadas)
-JWT_SECRET=your-super-secret-jwt-key-production-xxxxxxxxxxxxx
-REFRESH_TOKEN_SECRET=your-refresh-token-secret-production-xxxxxxxxxxxxx
+JWT_SECRET=your-super-secret-jwt-key-[REEMPLAZAR]
+REFRESH_TOKEN_SECRET=your-refresh-token-secret-[REEMPLAZAR]
 
 # 🔧 WORKERS
-WORKER_SECRET_TOKEN=worker-secret-production-xxxxxxxxxxxxx
+WORKER_SECRET_TOKEN=worker-secret-[REEMPLAZAR]
 ```
 
 #### **Opción 2: Deploy desde CLI**
