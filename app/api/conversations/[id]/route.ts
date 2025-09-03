@@ -74,9 +74,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const body = await request.json();
     const { title, description, avatar_url } = body;
 
@@ -122,9 +122,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const conversationIndex = conversations.findIndex(conv => conv.id === id);
 
     if (conversationIndex === -1) {
@@ -153,9 +153,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const body = await request.json();
     const { action, user_id, role } = body;
 

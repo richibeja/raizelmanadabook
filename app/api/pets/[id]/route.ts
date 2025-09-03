@@ -65,11 +65,11 @@ export async function GET(
 // PUT - Actualizar mascota
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const body = await request.json();
-    const { id } = await params;
+    const { id } = params;
     const petIndex = pets.findIndex(p => p.id === id);
     
     if (petIndex === -1) {
@@ -106,10 +106,10 @@ export async function PUT(
 // DELETE - Eliminar mascota
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const petIndex = pets.findIndex(p => p.id === id);
     
     if (petIndex === -1) {
