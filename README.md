@@ -366,8 +366,8 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 
 # 💳 STRIPE (públicas + privadas)
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-STRIPE_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_[tu-key-aquí]
+STRIPE_SECRET_KEY=sk_live_[tu-key-aquí]
 STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # 🔐 JWT (privadas)
