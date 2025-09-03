@@ -45,7 +45,6 @@ export default function ConversationPage() {
         updated_at: new Date().toISOString()
       };
       setConversation(conv);
-      // });
 
       // Fetch messages
       // fetchMessages({ 
