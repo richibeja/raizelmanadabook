@@ -14,7 +14,10 @@ import { doc, getDoc } from 'firebase/firestore';
 
 // API route for individual ad operations
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const { id } = params;
     
