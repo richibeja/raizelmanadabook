@@ -37,7 +37,6 @@
     "test:vercel-config": "node scripts/test-vercel-config.js"
   },
   "dependencies": {
-    "@next/font": "^14.2.15",
     "@stripe/react-stripe-js": "^3.9.2",
     "@stripe/stripe-js": "^7.9.0",
     "@tailwindcss/postcss": "^4.1.12",

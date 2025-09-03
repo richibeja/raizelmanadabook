@@ -10,10 +10,7 @@ const DYNAMIC_CACHE = 'manadabook-dynamic-v1.0.0';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
-  '/icon-144x144.png',
-  '/icon-96x96.png',
+  '/logo.png',
   '/_next/static/css/',
   '/_next/static/js/',
   '/sponsor1.png',
@@ -197,8 +194,8 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: '/icon-192x192.png',
-      badge: '/icon-96x96.png',
+      icon: '/logo.png',
+      badge: '/logo.png',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
@@ -208,12 +205,12 @@ self.addEventListener('push', (event) => {
         {
           action: 'explore',
           title: 'Ver en ManadaBook',
-          icon: '/icon-96x96.png'
+          icon: '/logo.png'
         },
         {
           action: 'close',
           title: 'Cerrar',
-          icon: '/icon-96x96.png'
+          icon: '/logo.png'
         }
       ]
     };
