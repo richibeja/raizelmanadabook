@@ -17,10 +17,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 // GET - Obtener artículo específico
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: itemId } = params;
+    const { id: itemId } = await params;
     
     // Obtener artículo
     const itemRef = doc(db, COLLECTIONS.MARKETPLACE, itemId);
@@ -82,10 +82,10 @@ export async function GET(
 // POST - Operaciones artículo (favorite, purchase, inquiry)
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: itemId } = params;
+    const { id: itemId } = await params;
     const body = await request.json();
     const { action, userId, message } = body;
 
@@ -229,10 +229,10 @@ export async function POST(
 // PUT - Actualizar estado del artículo
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: itemId } = params;
+    const { id: itemId } = await params;
     const body = await request.json();
     const { status, userId } = body;
 

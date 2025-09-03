@@ -24,10 +24,10 @@ import { requireAuth } from '@/lib/jwt';
 // GET - Obtener círculo específico + miembros
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: circleId } = params;
+    const { id: circleId } = await params;
     
     // Obtener círculo
     const circleRef = doc(db, COLLECTIONS.CIRCLES, circleId);
@@ -125,10 +125,10 @@ export async function GET(
 // POST - Operaciones círculo (join, leave, invite, kick)
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: circleId } = params;
+    const { id: circleId } = await params;
     const body = await request.json();
     const { action, userId, targetUserId, newRole } = body;
 
