@@ -35,17 +35,17 @@ export default function ConversationPage() {
     if (conversationId) {
       // Fetch conversation details
       // fetchConversations({ user_id: currentUserId }).then(() => {
-        // Find the specific conversation
-        // In a real app, you'd have a separate endpoint for this
-        const conv: Conversation = {
-          id: conversationId,
-          participants: [currentUserId, '550e8400-e29b-41d4-a716-446655440002'],
-          unread_count: 0,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-        setConversation(conv);
-      });
+      // Find the specific conversation
+      // In a real app, you'd have a separate endpoint for this
+      const conv: Conversation = {
+        id: conversationId,
+        participants: [currentUserId, '550e8400-e29b-41d4-a716-446655440002'],
+        unread_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      setConversation(conv);
+      // });
 
       // Fetch messages
       // fetchMessages({ 
