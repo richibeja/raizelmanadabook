@@ -1,10 +1,16 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import CheckoutForm from '../components/CheckoutForm';
 import '../globals.css';
+
+// Dynamic import del CheckoutForm para evitar SSR issues con Stripe
+const CheckoutForm = dynamic(() => import('../components/CheckoutForm'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-48 rounded-lg"></div>
+});
 
 interface CartItem {
   id: string;

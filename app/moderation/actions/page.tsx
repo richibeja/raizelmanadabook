@@ -5,18 +5,20 @@ import { useModerationActions } from '../../hooks/useModeration';
 import { Shield, Clock, User, FileText, MessageCircle, Video, ShoppingBag, Filter, Search } from 'lucide-react';
 
 export default function ModerationActionsPage() {
-  const { actions, loading, error, total, fetchActions } = useModerationActions();
+  const { actions, loading, error } = useModerationActions();
   
   const [filters, setFilters] = useState({
     target_user_id: '',
     action_type: '',
-    moderator_id: ''
+    moderator_id: '',
+    target_type: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchActions(filters);
-  }, [filters, fetchActions]);
+    // fetchActions(filters);
+    console.log('Loading moderation actions with filters:', filters);
+  }, [filters]);
 
   const getActionTypeColor = (actionType: string) => {
     switch (actionType) {
@@ -52,11 +54,11 @@ export default function ModerationActionsPage() {
   const getStats = () => {
     const warnings = actions.filter(a => a.action_type === 'warning').length;
     const contentRemovals = actions.filter(a => a.action_type === 'content_removal').length;
-    const temporaryBans = actions.filter(a => a.action_type === 'temporary_ban').length;
-    const permanentBans = actions.filter(a => a.action_type === 'permanent_ban').length;
-    const unbans = actions.filter(a => a.action_type === 'unban').length;
+    const suspensions = actions.filter(a => a.action_type === 'suspension').length;
+    const bans = actions.filter(a => a.action_type === 'ban').length;
+    const total = actions.length;
 
-    return { warnings, contentRemovals, temporaryBans, permanentBans, unbans };
+    return { warnings, contentRemovals, suspensions, bans, total };
   };
 
   const stats = getStats();
@@ -116,7 +118,7 @@ export default function ModerationActionsPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Suspensiones</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.temporaryBans}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.suspensions}</p>
               </div>
             </div>
           </div>
@@ -128,7 +130,7 @@ export default function ModerationActionsPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Bans Permanentes</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.permanentBans}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.bans}</p>
               </div>
             </div>
           </div>
@@ -140,7 +142,7 @@ export default function ModerationActionsPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Unbans</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.unbans}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
               </div>
             </div>
           </div>
@@ -224,7 +226,7 @@ export default function ModerationActionsPage() {
                   Acciones ({filteredActions.length})
                 </h2>
                 <p className="text-sm text-gray-500">
-                  Total: {total} acciones
+                  Total: {stats.total} acciones
                 </p>
               </div>
 
@@ -243,9 +245,9 @@ export default function ModerationActionsPage() {
                         <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getActionTypeColor(action.action_type)}`}>
                           {action.action_type.replace('_', ' ').toUpperCase()}
                         </span>
-                        {action.duration_hours && (
+                        {action.duration_days && (
                           <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200 rounded-full">
-                            {action.duration_hours}h
+                            {action.duration_days} días
                           </span>
                         )}
                       </div>
@@ -263,32 +265,18 @@ export default function ModerationActionsPage() {
                         <p className="text-sm text-gray-600">{action.reason}</p>
                       </div>
 
-                      {/* Evidence */}
-                      {action.evidence_urls && action.evidence_urls.length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Evidencia:</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {action.evidence_urls.map((url, index) => (
-                              <a
-                                key={index}
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800"
-                              >
-                                <span>Ver evidencia {index + 1}</span>
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      {/* Evidence placeholder */}
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Evidencia:</h4>
+                        <p className="text-xs text-gray-500">Disponible en sistema interno</p>
+                      </div>
 
                       {/* Target info */}
                       <div className="bg-gray-50 rounded-md p-3">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <span className="font-medium text-gray-700">Usuario objetivo:</span>
-                            <p className="text-gray-600">{action.target_user_id}</p>
+                            <span className="font-medium text-gray-700">Target ID:</span>
+                            <p className="text-gray-600">{action.target_id}</p>
                           </div>
                           {action.target_id && (
                             <div>

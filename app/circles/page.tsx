@@ -4,22 +4,30 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Search, Filter, Plus, Users, Star, MapPin } from 'lucide-react';
 import CircleCard from '../components/CircleCard';
-import { useCircles } from '../hooks/useCircles';
+import { useCircles, useUserCircles } from '../hooks/useCircles';
 
 const categories = [
   { name: 'Todos', value: '' },
-  { name: 'Perros', value: 'Perros' },
-  { name: 'Gatos', value: 'Gatos' },
-  { name: 'Aves', value: 'Aves' },
-  { name: 'Peces', value: 'Peces' },
-  { name: 'Reptiles', value: 'Reptiles' },
-  { name: 'Roedores', value: 'Roedores' },
-  { name: 'Caballos', value: 'Caballos' },
-  { name: 'Adopción', value: 'Adopción' },
-  { name: 'Salud', value: 'Salud' },
-  { name: 'Entrenamiento', value: 'Entrenamiento' },
-  { name: 'Eventos', value: 'Eventos' },
-  { name: 'Comercio', value: 'Comercio' },
+  { name: 'Perros', value: 'perros' },
+  { name: 'Gatos', value: 'gatos' },
+  { name: 'BARF', value: 'barf' },
+  { name: 'Adopción', value: 'adopcion' },
+  { name: 'Salud', value: 'salud' },
+  { name: 'Entrenamiento', value: 'entrenamiento' },
+  { name: 'Eventos', value: 'eventos' },
+  { name: 'Raízel', value: 'raizel' },
+  { name: 'Local', value: 'local' },
+];
+
+const cities = [
+  { name: 'Todas las ciudades', value: '' },
+  { name: 'Bogotá', value: 'Bogotá' },
+  { name: 'Medellín', value: 'Medellín' },
+  { name: 'Cali', value: 'Cali' },
+  { name: 'Barranquilla', value: 'Barranquilla' },
+  { name: 'Cartagena', value: 'Cartagena' },
+  { name: 'Bucaramanga', value: 'Bucaramanga' },
+  { name: 'Pereira', value: 'Pereira' },
 ];
 
 const types = [
@@ -32,28 +40,62 @@ const types = [
 export default function CirclesPage() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [showFeatured, setShowFeatured] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [activeTab, setActiveTab] = useState<'discover' | 'my-circles'>('discover');
 
-  const { circles, loading, error } = useCircles();
+  // Filtros tiempo real Firebase
+  const circleFilters = {
+    city: selectedCity || undefined,
+    tags: selectedCategory ? [selectedCategory] : undefined,
+    limit: 20
+  };
+
+  const { circles, loading, error } = useCircles(circleFilters);
+  const { circles: userCircles, loading: userLoading, join, leave } = useUserCircles();
 
   const handleJoinCircle = async (circle: any) => {
     try {
-      // await joinCircle(circle.id);
-      console.log('Joining circle:', circle.id);
-      // El hook ya actualiza el estado automáticamente
+      const success = await join(circle.id);
+      if (success) {
+        console.log('Joined circle successfully:', circle.name);
+      }
     } catch (error) {
       console.error('Error al unirse al círculo:', error);
+    }
+  };
+
+  const handleLeaveCircle = async (circle: any) => {
+    try {
+      const success = await leave(circle.id);
+      if (success) {
+        console.log('Left circle successfully:', circle.name);
+      }
+    } catch (error) {
+      console.error('Error al salir del círculo:', error);
     }
   };
 
   const clearFilters = () => {
     setSearch('');
     setSelectedCategory('');
+    setSelectedCity('');
     setSelectedType('');
     setShowFeatured(false);
   };
+
+  // Filtrar círculos por búsqueda local
+  const filteredCircles = (activeTab === 'discover' ? circles : userCircles).filter(circle => {
+    if (!search) return true;
+    const searchTerm = search.toLowerCase();
+    return (
+      circle.name.toLowerCase().includes(searchTerm) ||
+      circle.description.toLowerCase().includes(searchTerm) ||
+      (circle as any).tags?.some((tag: string) => tag.toLowerCase().includes(searchTerm))
+    );
+  });
 
   if (error) {
     return (
@@ -91,6 +133,40 @@ export default function CirclesPage() {
         </div>
       </div>
 
+      {/* Tabs Navigation */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab('discover')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'discover'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Descubrir Círculos
+              <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs">
+                {circles.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('my-circles')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'my-circles'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Mis Círculos
+              <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs">
+                {userCircles.length}
+              </span>
+            </button>
+          </nav>
+        </div>
+      </div>
+
       {/* Search and Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search Bar */}
@@ -98,7 +174,7 @@ export default function CirclesPage() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Buscar círculos..."
+            placeholder={`Buscar ${activeTab === 'discover' ? 'círculos...' : 'en mis círculos...'}`}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -125,7 +201,7 @@ export default function CirclesPage() {
         {/* Filters */}
         {showFilters && (
           <div className="bg-white rounded-lg p-6 mb-6 shadow-sm border">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Category Filter */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -143,6 +219,26 @@ export default function CirclesPage() {
                   ))}
                 </select>
               </div>
+
+              {/* City Filter (Discovery only) */}
+              {activeTab === 'discover' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ciudad
+                  </label>
+                  <select
+                    value={selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    {cities.map((city) => (
+                      <option key={city.value} value={city.value}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               {/* Type Filter */}
               <div>
@@ -167,17 +263,24 @@ export default function CirclesPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Opciones
                 </label>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="featured"
-                    checked={showFeatured}
-                    onChange={(e) => setShowFeatured(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label htmlFor="featured" className="ml-2 text-sm text-gray-700">
-                    Solo destacados
-                  </label>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      checked={showFeatured}
+                      onChange={(e) => setShowFeatured(e.target.checked)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <label htmlFor="featured" className="ml-2 text-sm text-gray-700">
+                      Solo destacados
+                    </label>
+                  </div>
+                  {activeTab === 'discover' && (
+                    <p className="text-xs text-gray-500">
+                      🔄 Resultados en tiempo real
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -185,7 +288,7 @@ export default function CirclesPage() {
         )}
 
         {/* Results */}
-        {loading ? (
+        {(loading || userLoading) ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-white rounded-xl shadow-md animate-pulse">
@@ -198,18 +301,25 @@ export default function CirclesPage() {
               </div>
             ))}
           </div>
-        ) : circles.length === 0 ? (
+        ) : filteredCircles.length === 0 ? (
           <div className="text-center py-12">
             <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No se encontraron círculos
+              {activeTab === 'my-circles' 
+                ? 'No tienes círculos aún'
+                : 'No se encontraron círculos'
+              }
             </h3>
             <p className="text-gray-600 mb-6">
-              {search || selectedCategory || selectedType || showFeatured
-                ? 'Intenta ajustar tus filtros de búsqueda'
-                : 'Aún no hay círculos creados. ¡Sé el primero en crear uno!'}
+              {activeTab === 'my-circles' ? (
+                search ? 'No hay círculos que coincidan con tu búsqueda' : '¡Únete a tu primer círculo o crea uno nuevo!'
+              ) : (
+                search || selectedCategory || selectedCity || selectedType || showFeatured
+                  ? 'Intenta ajustar tus filtros de búsqueda'
+                  : 'Aún no hay círculos creados. ¡Sé el primero en crear uno!'
+              )}
             </p>
-            {!search && !selectedCategory && !selectedType && !showFeatured && (
+            {(activeTab === 'discover' && !search && !selectedCategory && !selectedCity) && (
               <Link
                 href="/circles/create"
                 className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -223,28 +333,37 @@ export default function CirclesPage() {
           <>
             {/* Stats */}
             <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-600">
-                {circles.length} círculo{circles.length !== 1 ? 's' : ''} encontrado{circles.length !== 1 ? 's' : ''}
-              </p>
+              <div>
+                <p className="text-gray-600">
+                  {filteredCircles.length} círculo{filteredCircles.length !== 1 ? 's' : ''} 
+                  {activeTab === 'my-circles' ? ' tuyo' : ' encontrado'}{filteredCircles.length !== 1 ? 's' : ''}
+                </p>
+                {activeTab === 'discover' && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    🔄 Actualizando en tiempo real {selectedCity && `• ${selectedCity}`}
+                  </p>
+                )}
+              </div>
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4" />
-                  <span>{circles.filter(c => (c as any).is_featured).length} destacados</span>
+                  <span>{filteredCircles.filter(c => (c as any).is_featured).length} destacados</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <MapPin className="w-4 h-4" />
-                  <span>{circles.filter(c => (c as any).location).length} con ubicación</span>
+                  <span>{filteredCircles.filter(c => (c as any).location).length} con ubicación</span>
                 </div>
               </div>
             </div>
 
             {/* Circles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {circles.map((circle) => (
+              {filteredCircles.map((circle) => (
                 <CircleCard
                   key={circle.id}
                   circle={circle}
-                  onJoin={handleJoinCircle}
+                  onJoin={activeTab === 'discover' ? handleJoinCircle : undefined}
+                  onView={(c) => window.location.href = `/circles/${c.id}`}
                 />
               ))}
             </div>

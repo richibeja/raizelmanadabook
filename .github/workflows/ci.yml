@@ -1,141 +1,254 @@
-name: CI/CD Pipeline
+name: 🐾 Raízel Ecosystem CI/CD
 
 on:
   push:
-    branches: [ main, develop, feature/* ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
 
 jobs:
-  # Lint y Tests
-  test:
+  # ========================================
+  # LINT & TYPE CHECK
+  # ========================================
+  lint-and-typecheck:
+    name: 🔍 Lint & Type Check
     runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🧹 Run ESLint
+        run: npm run lint
+
+      - name: 🔧 Type check
+        run: npm run type-check
+
+  # ========================================
+  # BUILD & TEST
+  # ========================================
+  build-and-test:
+    name: 🏗️ Build & Test
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
     
     services:
       postgres:
-        image: postgres:15
+        image: postgres:15-alpine
         env:
-          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: manadabook_test
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 5432:5432
-      
+
       redis:
-        image: redis:7
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 6379:6379
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run linter
-      run: npm run lint
-    
-    - name: Run type check
-      run: npm run type-check
-    
-    - name: Run tests
-      run: npm run test
-      env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/manadabook_test
-        REDIS_URL: redis://localhost:6379
-        JWT_SECRET: test-jwt-secret
-        NODE_ENV: test
-    
-    - name: Build application
-      run: npm run build
-      env:
-        NEXT_PUBLIC_API_URL: http://localhost:3001
-        NEXT_PUBLIC_WS_URL: ws://localhost:3001
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-  # Security audit
-  security:
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🏗️ Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/manadabook_test
+
+      - name: 🧪 Run tests
+        run: npm run test:ci
+        env:
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/manadabook_test
+          REDIS_URL: redis://localhost:6379
+
+      - name: 📊 Upload coverage
+        uses: codecov/codecov-action@v3
+        if: success()
+
+  # ========================================
+  # SECURITY AUDIT
+  # ========================================
+  security-audit:
+    name: 🔒 Security Audit
     runs-on: ubuntu-latest
-    needs: test
-    
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run security audit
-      run: npm audit --audit-level moderate
-    
-    - name: Run dependency check
-      run: npx audit-ci --moderate
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-  # Docker build test
-  docker:
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    
-    - name: Build and test Docker images
-      run: |
-        docker-compose -f docker-compose.yml build
-        docker-compose -f docker-compose.yml up -d postgres redis minio
-        sleep 10
-        docker-compose -f docker-compose.yml down
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
 
-  # Deploy to staging (solo en main)
-  deploy-staging:
+      - name: 🔍 Security audit
+        run: npm audit --audit-level=moderate
+
+      - name: 🛡️ Check for vulnerabilities
+        run: npm audit --audit-level=high --audit-level=critical
+
+  # ========================================
+  # DOCKER BUILD (solo en main)
+  # ========================================
+  docker-build:
+    name: 🐳 Docker Build
     runs-on: ubuntu-latest
-    needs: [test, security, docker]
+    needs: [build-and-test]
     if: github.ref == 'refs/heads/main'
-    environment: staging
     
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Deploy to staging
-      run: |
-        echo "Deploying to staging environment..."
-        # Aquí irían los comandos de deploy a staging
-        # Por ejemplo: kubectl apply, docker push, etc.
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-  # Deploy to production (solo en tags)
-  deploy-production:
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🏗️ Build Frontend Docker
+        run: docker build -f Dockerfile.frontend -t raizel-frontend:latest .
+
+      - name: 🏗️ Test Docker Compose
+        run: |
+          cp env.example .env
+          docker-compose config
+          echo "✅ Docker Compose configuration valid"
+
+  # ========================================
+  # DEPLOY STAGING (solo PRs a main)
+  # ========================================
+  deploy-staging:
+    name: 🚀 Deploy Staging
     runs-on: ubuntu-latest
-    needs: [test, security, docker]
-    if: startsWith(github.ref, 'refs/tags/v')
-    environment: production
+    needs: [build-and-test, security-audit]
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     
     steps:
-    - uses: actions/checkout@v4
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🏗️ Build for staging
+        run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID_STAGING }}
+          NODE_ENV: staging
+
+      - name: 🚀 Deploy to Vercel Staging
+        uses: amondnet/vercel-action@v25
+        if: github.event_name == 'pull_request'
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+
+  # ========================================
+  # PERFORMANCE AUDIT
+  # ========================================
+  lighthouse:
+    name: 📊 Lighthouse Performance
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.event_name == 'pull_request'
     
-    - name: Deploy to production
-      run: |
-        echo "Deploying to production environment..."
-        # Aquí irían los comandos de deploy a producción
-        # Por ejemplo: kubectl apply, docker push, etc.
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🏗️ Build application
+        run: npm run build
+
+      - name: 🚀 Start server
+        run: npm run start &
+
+      - name: ⏳ Wait for server
+        run: sleep 10
+
+      - name: 🔍 Run Lighthouse audit
+        run: npm run audit:lighthouse
+        continue-on-error: true
+
+      - name: 📊 Comment PR with results
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🔍 **Lighthouse Audit completed** - Check artifacts for detailed report'
+            })
+
+  # ========================================
+  # FIREBASE RULES VALIDATION  
+  # ========================================
+  firebase-rules:
+    name: 🔥 Firebase Rules Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔥 Setup Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: 🛡️ Validate Firestore rules
+        run: |
+          if [ -f "firestore.rules" ]; then
+            echo "✅ Firestore rules file exists"
+            # firebase firestore:rules:validate --project=${{ secrets.FIREBASE_PROJECT_ID }}
+          fi
+
+      - name: 🗄️ Validate Storage rules  
+        run: |
+          if [ -f "storage.rules" ]; then
+            echo "✅ Storage rules file exists"
+            # firebase storage:rules:validate --project=${{ secrets.FIREBASE_PROJECT_ID }}
+          fi

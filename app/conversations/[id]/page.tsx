@@ -17,7 +17,7 @@ export default function ConversationPage() {
     messages, 
     loading, 
     error
-  } = useMessages();
+  } = useMessages(conversationId);
   
   const [currentUserId] = useState('550e8400-e29b-41d4-a716-446655440001'); // Mock user ID
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -35,27 +35,20 @@ export default function ConversationPage() {
     if (conversationId) {
       // Fetch conversation details
       // fetchConversations({ user_id: currentUserId }).then(() => {
-        // Find the specific conversation
-        // In a real app, you'd have a separate endpoint for this
-        const conv = {
-          id: conversationId,
-          type: 'direct' as 'direct' | 'group',
-          title: 'Conversación',
-          participants: [
-            { user_id: currentUserId, role: 'member', unread_count: 0 },
-            { user_id: '550e8400-e29b-41d4-a716-446655440002', role: 'member', unread_count: 0 }
-          ],
-          last_message_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_active: true,
-          metadata: {}
-        };
-        setConversation(conv);
-      });
+      // Find the specific conversation
+      // In a real app, you'd have a separate endpoint for this
+      const conv: Conversation = {
+        id: conversationId,
+        participants: [currentUserId, '550e8400-e29b-41d4-a716-446655440002'],
+        unread_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      setConversation(conv);
+      // });
 
       // Fetch messages
-            // fetchMessages({ 
+      // fetchMessages({ 
       //   conversation_id: conversationId,
       //   limit: 50,
       //   sort: 'created_at',
@@ -70,26 +63,27 @@ export default function ConversationPage() {
   }, [messages]);
 
   useEffect(() => {
-    // Handle real-time messages
-    if (lastMessage && lastMessage.data?.conversation_id === conversationId) {
-      // Add new message to the list
-      // In a real app, you'd update the messages state
-      console.log('New real-time message:', lastMessage);
-    }
-  }, [lastMessage, conversationId]);
+    // Handle real-time messages (placeholder)
+    // if (lastMessage && lastMessage.data?.conversation_id === conversationId) {
+    //   Add new message to the list
+    //   In a real app, you'd update the messages state
+    //   console.log('New real-time message:', lastMessage);
+    // }
+  }, [conversationId]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !conversationId) return;
 
     try {
-      await sendMessage({
-        conversation_id: conversationId,
-        sender_id: currentUserId,
-        content: newMessage,
-        message_type: 'text',
-        reply_to_id: replyToMessage?.id
-      });
+      // await sendMessage({
+      //   conversation_id: conversationId,
+      //   sender_id: currentUserId,
+      //   content: newMessage,
+      //   message_type: 'text',
+      //   reply_to_id: replyToMessage?.id
+      // });
       
+      console.log('Mensaje enviado (mock):', newMessage);
       setNewMessage('');
       setReplyToMessage(null);
       inputRef.current?.focus();
@@ -122,34 +116,23 @@ export default function ConversationPage() {
 
   const handleLoadMore = () => {
     if (conversationId) {
-      loadMoreMessages({ 
-        conversation_id: conversationId, 
-        limit: 20, 
-        sort: 'created_at', 
-        order: 'desc' 
-      });
+      // loadMoreMessages({ 
+      //   conversation_id: conversationId, 
+      //   limit: 20, 
+      //   sort: 'created_at', 
+      //   order: 'desc' 
+      // });
+      console.log('Cargar más mensajes (mock)');
     }
   };
 
   const getDisplayName = () => {
     if (!conversation) return 'Conversación';
-    
-    if (conversation.type === 'group') {
-      return conversation.title || 'Grupo sin nombre';
-    } else {
-      // For direct conversations, show the other participant's name
-      const otherParticipant = conversation.participants.find(p => p.user_id !== currentUserId);
-      return otherParticipant ? `Usuario ${otherParticipant.user_id.slice(-4)}` : 'Usuario';
-    }
+    return 'Conversación'; // Simplificado para compatibilidad
   };
 
   const getDisplayAvatar = () => {
-    if (!conversation) return '/api/placeholder/32/32';
-    
-    if (conversation.avatar_url) {
-      return conversation.avatar_url;
-    }
-    return conversation.type === 'group' ? '/api/placeholder/32/32' : '/api/placeholder/32/32';
+    return '/api/placeholder/32/32'; // Simplificado para compatibilidad
   };
 
   if (loading && !conversation) {
@@ -198,28 +181,21 @@ export default function ConversationPage() {
             <div>
               <h1 className="text-lg font-semibold text-gray-900">{getDisplayName()}</h1>
               <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                <span>{isConnected ? 'En línea' : 'Desconectado'}</span>
-                {conversation?.type === 'group' && (
-                  <>
-                    <span>•</span>
-                    <span>{conversation.participants.length} participantes</span>
-                  </>
-                )}
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                <span>En línea</span>
+                <span>•</span>
+                <span>Conversación directa</span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center space-x-2">
-            {conversation?.type === 'group' && (
-              <button
-                onClick={() => setShowParticipants(!showParticipants)}
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                title="Ver participantes"
-              >
-                <Users className="w-5 h-5" />
-              </button>
-            )}
+            <button
+              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              title="Opciones"
+            >
+              <Users className="w-5 h-5" />
+            </button>
             
             <button
               onClick={() => setShowSettings(!showSettings)}
@@ -266,11 +242,7 @@ export default function ConversationPage() {
                 key={message.id}
                 message={message}
                 isOwnMessage={message.sender_id === currentUserId}
-                showAvatar={conversation?.type === 'group'}
-                onReply={handleReply}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                replyToMessage={message.reply_to_id ? messages.find(m => m.id === message.reply_to_id) || undefined : undefined}
+                showTimestamp={true}
               />
             ))}
           </div>
@@ -313,8 +285,7 @@ export default function ConversationPage() {
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-              rows={1}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           
@@ -346,7 +317,7 @@ export default function ConversationPage() {
       </div>
 
       {/* Participants Sidebar */}
-      {showParticipants && conversation?.type === 'group' && (
+      {false && (
         <div className="fixed inset-y-0 right-0 w-80 bg-white shadow-lg border-l border-gray-200 z-40">
           <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
@@ -361,8 +332,8 @@ export default function ConversationPage() {
           </div>
           
           <div className="p-4 space-y-3">
-            {conversation.participants.map((participant) => (
-              <div key={participant.user_id} className="flex items-center space-x-3">
+            {conversation.participants.map((participantId) => (
+              <div key={participantId} className="flex items-center space-x-3">
                 <img
                   src="/api/placeholder/32/32"
                   alt="Avatar"
@@ -370,9 +341,9 @@ export default function ConversationPage() {
                 />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-900">
-                    Usuario {participant.user_id.slice(-4)}
+                    Usuario {participantId.slice(-4)}
                   </p>
-                  <p className="text-xs text-gray-500 capitalize">{participant.role}</p>
+                  <p className="text-xs text-gray-500 capitalize">Participante</p>
                 </div>
               </div>
             ))}

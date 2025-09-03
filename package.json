@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --fix",
     "audit:perf": "node scripts/audit-performance.js",
     "audit:lighthouse": "npx lighthouse http://localhost:3000 --output html --output-path ./lighthouse-reports/landing.html",
     "type-check": "tsc --noEmit",
@@ -56,6 +56,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",

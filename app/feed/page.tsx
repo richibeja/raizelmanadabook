@@ -5,9 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Heart, MessageCircle, Share, MoreHorizontal, User, MapPin, Calendar } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import MomentsCarousel from '../components/MomentsCarousel';
+import UploadMoment from '../components/UploadMoment';
 // import { Card, CardContent, CardFooter } from '../components/ui/Card';
 // import Button from '../components/ui/Button';
-// import { formatRelativeTime } from '../lib/utils';
+// Función helper para formatear tiempo relativo
+const formatRelativeTime = (timestamp: string) => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+  
+  if (diffInHours < 1) return 'Hace menos de 1 hora';
+  if (diffInHours < 24) return `Hace ${diffInHours}h`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  return `Hace ${diffInDays}d`;
+};
 
 // Mock data for posts
 const mockPosts = [
@@ -187,6 +199,7 @@ export default function FeedPage() {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showUploadMoment, setShowUploadMoment] = useState(false);
 
   // Simulate loading posts
   useEffect(() => {
@@ -227,6 +240,9 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen bg-[#FBFDFF]">
       <Header />
+      
+      {/* Moments Carousel - Top del Feed */}
+      <MomentsCarousel onUploadClick={() => setShowUploadMoment(true)} />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filters */}
@@ -308,6 +324,12 @@ export default function FeedPage() {
       </main>
 
       <Footer />
+      
+      {/* Upload Moment Modal */}
+      <UploadMoment
+        isOpen={showUploadMoment}
+        onClose={() => setShowUploadMoment(false)}
+      />
     </div>
   );
 }
