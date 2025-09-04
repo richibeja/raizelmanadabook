@@ -6,6 +6,7 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://raizelmanadabook.vercel.app'),
     title: 'Raízel - Ecosistema para Mascotas',
     description: 'Ecosistema completo para el bienestar de tu mascota con red social y marketplace',
     keywords: ['mascotas', 'perros', 'gatos', 'alimentos naturales', 'red social', 'BARF', 'pellets'],
