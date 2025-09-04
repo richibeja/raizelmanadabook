@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     creator: 'Raízel',
     publisher: 'Raízel',
     // PWA Meta Tags
-    manifest: '/manifest.json',
+    manifest: '/api/manifest',
     appleWebApp: {
       capable: true,
       statusBarStyle: 'default',
