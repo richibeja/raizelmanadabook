@@ -37,13 +37,18 @@ export default function PWAInstallPrompt() {
 
     // Escuchar el evento beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {
+      // Prevenir el comportamiento por defecto para evitar warnings
       e.preventDefault();
+      
+      // Guardar el evento para uso posterior
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
       // Mostrar prompt después de un delay para mejor UX
       setTimeout(() => {
         setShowInstallPrompt(true);
       }, 3000);
+      
+      console.log('PWA install prompt disponible');
     };
 
     // Escuchar cuando la app se instala
@@ -63,22 +68,31 @@ export default function PWAInstallPrompt() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    // Mostrar el prompt de instalación
-    deferredPrompt.prompt();
-    
-    // Esperar la respuesta del usuario
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('Usuario aceptó instalar la PWA');
-    } else {
-      console.log('Usuario rechazó instalar la PWA');
+    if (!deferredPrompt) {
+      console.warn('No hay prompt de instalación disponible');
+      return;
     }
-    
-    setDeferredPrompt(null);
-    setShowInstallPrompt(false);
+
+    try {
+      // Mostrar el prompt de instalación
+      await deferredPrompt.prompt();
+      
+      // Esperar la respuesta del usuario
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('✅ Usuario aceptó instalar la PWA');
+        // El evento appinstalled se disparará automáticamente
+      } else {
+        console.log('❌ Usuario rechazó instalar la PWA');
+      }
+    } catch (error) {
+      console.error('Error al mostrar el prompt de instalación:', error);
+    } finally {
+      // Limpiar el estado
+      setDeferredPrompt(null);
+      setShowInstallPrompt(false);
+    }
   };
 
   const handleDismiss = () => {

@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* PWA Styles */
+/* PWA Install Prompt Animation */
 @keyframes slide-up {
   from {
     transform: translateY(100%);
@@ -18,6 +18,8 @@
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
+/* PWA Styles - Additional */
 
 /* PWA Safe Area Support */
 @supports (padding: max(0px)) {

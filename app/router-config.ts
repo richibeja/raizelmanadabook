@@ -7,26 +7,28 @@ function suppressReactRouterWarnings() {
 
   // Guardar la función original de console.warn
   const originalWarn = console.warn;
-  
+
   // Reemplazar console.warn con una versión filtrada
   console.warn = (...args: any[]) => {
     const message = args[0];
-    
+
     // Verificar si es un warning de React Router
     if (typeof message === 'string') {
-      const isReactRouterWarning = 
+      const isReactRouterWarning =
         message.includes('React Router Future Flag Warning') ||
         message.includes('v7_startTransition') ||
         message.includes('v7_relativeSplatPath') ||
         message.includes('React Router will begin wrapping state updates') ||
-        message.includes('Relative route resolution within Splat routes');
-      
+        message.includes('Relative route resolution within Splat routes') ||
+        message.includes('React Router will begin wrapping state updates in `React.startTransition`') ||
+        message.includes('Relative route resolution within Splat routes is changing');
+
       if (isReactRouterWarning) {
         // Suprimir este warning específico
         return;
       }
     }
-    
+
     // Mostrar otros warnings normalmente
     originalWarn.apply(console, args);
   };
