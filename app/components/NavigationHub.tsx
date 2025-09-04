@@ -146,34 +146,34 @@ export default function NavigationHub() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
         {/* Hero Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-3xl shadow-lg mb-6">
-            <span className="text-3xl">🐾</span>
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-3xl shadow-lg mb-4 sm:mb-6">
+            <span className="text-2xl sm:text-3xl">🐾</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             Bienvenido a{' '}
             <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
               Raízel
             </span>
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 px-4">
             El ecosistema completo para el bienestar de tu mascota. 
             Alimentos naturales y una comunidad que ama a los animales.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+            <button className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-sm sm:text-base">
               Explorar Productos
             </button>
-            <button className="px-8 py-4 bg-white text-gray-700 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-200">
+            <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-gray-700 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-200 text-sm sm:text-base">
               Unirse a la Comunidad
             </button>
           </div>
         </div>
 
         {/* Grid de tarjetas con diseño moderno */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20">
           {navigationCards.map((card, index) => (
             <NavigationCard
               key={index}
@@ -188,47 +188,47 @@ export default function NavigationHub() {
         </div>
 
         {/* Sección de beneficios con cards modernas */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               ¿Por qué elegir Raízel?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Descubre las ventajas que nos hacen únicos en el cuidado de mascotas
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             <div className="text-center group">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Heart size={24} className="text-white" />
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-lg mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Heart size={20} className="sm:w-6 sm:h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">100% Natural</h3>
-              <p className="text-gray-600 leading-relaxed">Sin conservantes ni químicos artificiales</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">100% Natural</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">Sin conservantes ni químicos artificiales</p>
             </div>
             
             <div className="text-center group">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Camera size={24} className="text-white" />
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl shadow-lg mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Camera size={20} className="sm:w-6 sm:h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Comunidad</h3>
-              <p className="text-gray-600 leading-relaxed">Conecta con otros dueños de mascotas</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Comunidad</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">Conecta con otros dueños de mascotas</p>
             </div>
             
             <div className="text-center group">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Globe size={24} className="text-white" />
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-500 to-violet-500 rounded-2xl shadow-lg mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Globe size={20} className="sm:w-6 sm:h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Todas las mascotas</h3>
-              <p className="text-gray-600 leading-relaxed">Perros, gatos y muchas más especies</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Todas las mascotas</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">Perros, gatos y muchas más especies</p>
             </div>
             
             <div className="text-center group">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Phone size={24} className="text-white" />
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl shadow-lg mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Phone size={20} className="sm:w-6 sm:h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Soporte</h3>
-              <p className="text-gray-600 leading-relaxed">Atención personalizada 24/7</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Soporte</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">Atención personalizada 24/7</p>
             </div>
           </div>
         </div>
