@@ -64,19 +64,25 @@ const nextConfig = {
         ],
       },
       {
+        source: '/icon-32x32.png',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
         source: '/icon-144x144.png',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
-        source: '/icon-192.png',
+        source: '/icon-192x192.png',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
-        source: '/icon-512.png',
+        source: '/icon-512x512.png',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
