@@ -30,11 +30,11 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
         ],
       },
-      // PWA Headers - Simplified to avoid 401 errors
+      // PWA Headers - Minimal configuration
       {
         source: '/manifest.json',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400' },
+          { key: 'Cache-Control', value: 'public, max-age=3600, must-revalidate' },
         ],
       },
       {
