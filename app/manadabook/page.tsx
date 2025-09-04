@@ -279,7 +279,7 @@ export default function ManadaBookPage() {
                       <span style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>{post.tiempo}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#6B7280' }}>
-                      📍 <span>{post.usuario.ubicacion}</span>
+                      📍 <span>{typeof post.usuario.ubicacion === 'string' ? post.usuario.ubicacion : JSON.stringify(post.usuario.ubicacion)}</span>
                     </div>
                   </div>
                 </div>
@@ -351,13 +351,13 @@ export default function ManadaBookPage() {
                       onClick={() => handleLike(post.id)}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
                     >
-                      ❤️ <span>{post.likes}</span>
+                      ❤️ <span>{typeof post.likes === 'number' ? post.likes : JSON.stringify(post.likes)}</span>
                     </button>
                     <button 
                       onClick={() => handleComentar(post.id)}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
                     >
-                      💬 <span>{post.comentarios}</span>
+                      💬 <span>{typeof post.comentarios === 'number' ? post.comentarios : JSON.stringify(post.comentarios)}</span>
                     </button>
                     <button 
                       onClick={() => handleCompartir(post.id)}
