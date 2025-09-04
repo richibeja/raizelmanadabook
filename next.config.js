@@ -30,7 +30,7 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
         ],
       },
-      // PWA Headers
+      // PWA Headers - Manifest served directly from public/
       {
         source: '/manifest.json',
         headers: [
@@ -49,6 +49,12 @@ const nextConfig = {
         source: '/sw.js',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/favicon.ico',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {

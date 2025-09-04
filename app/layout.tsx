@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     creator: 'Raízel',
     publisher: 'Raízel',
     // PWA Meta Tags
-    manifest: '/api/manifest',
+    manifest: '/manifest.json',
     appleWebApp: {
       capable: true,
       statusBarStyle: 'default',
@@ -55,6 +55,7 @@ export const metadata: Metadata = {
     },
     icons: {
       icon: [
+        { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
         { url: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
         { url: '/icon-192x192.svg', sizes: '192x192', type: 'image/svg+xml' },
         { url: '/icon-512x512.svg', sizes: '512x512', type: 'image/svg+xml' },
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
         { url: '/icon-192x192.svg', sizes: '192x192', type: 'image/svg+xml' },
         { url: '/icon-512x512.svg', sizes: '512x512', type: 'image/svg+xml' },
       ],
-      shortcut: '/favicon.svg',
+      shortcut: '/favicon.ico',
     },
     robots: {
       index: true,

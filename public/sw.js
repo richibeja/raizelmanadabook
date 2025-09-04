@@ -10,13 +10,14 @@ const DYNAMIC_CACHE = 'manadabook-dynamic-v1.0.0';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
+  '/favicon.ico',
   '/favicon.svg',
-  '/icon-192x192.svg',
-  '/icon-512x512.svg',
   '/icon-32x32.png',
   '/icon-144x144.png',
   '/icon-192x192.png',
-  '/icon-512x512.png'
+  '/icon-512x512.png',
+  '/icon-192x192.svg',
+  '/icon-512x512.svg'
 ];
 
 // Rutas que deben funcionar offline
