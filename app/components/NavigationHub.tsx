@@ -11,7 +11,8 @@ import {
   Heart,
   Camera,
   Globe,
-  Phone
+  Phone,
+  BookOpen
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -141,6 +142,14 @@ export default function NavigationHub() {
       href: "/contacto",
       color: "#059669", // verde
       bgColor: "#f0fdf4"
+    },
+    {
+      icon: <BookOpen size={24} />,
+      title: "Raizelmanada Book",
+      description: "Una experiencia literaria única que combina tradición y modernidad en cada página.",
+      href: "/raizelmanada-book",
+      color: "#3a6ea5", // azul literario
+      bgColor: "#f0f9ff"
     }
   ];
 
