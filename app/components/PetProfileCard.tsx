@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { Heart, MapPin, Calendar, Edit, Share2, MessageCircle } from 'lucide-react';
 
 interface Pet {
@@ -80,10 +81,11 @@ const PetProfileCard: React.FC<PetProfileCardProps> = ({
       {/* Header con imagen */}
       <div className="relative h-48 bg-gradient-to-br from-green-50 to-blue-50">
         {pet.profile_image_url ? (
-          <img
+          <Image
             src={pet.profile_image_url}
             alt={pet.name}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

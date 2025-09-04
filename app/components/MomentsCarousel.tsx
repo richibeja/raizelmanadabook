@@ -24,36 +24,33 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-play when moment is selected
-  useEffect(() => {
-    if (selectedMoment && selectedMoment.mediaType === 'video') {
-      setIsPlaying(true);
-      startProgress();
-    }
-  }, [selectedMoment]);
-
   const startProgress = () => {
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current);
     }
 
     const duration = selectedMoment?.mediaType === 'video' 
-      ? (selectedMoment.duration || 15) * 1000 // Convert to ms
-      : 5000; // 5 seconds for images
-
-    const interval = 50; // Update every 50ms
-    const increment = interval / duration;
+      ? (selectedMoment.duration || 15) * 1000 
+      : 5000;
 
     progressIntervalRef.current = setInterval(() => {
-      setViewProgress(prev => {
-        const newProgress = prev + increment;
-        if (newProgress >= 1) {
-          handleMomentComplete();
-          return 1;
+      setProgress(prev => {
+        const newProgress = prev + (100 / (duration / 100));
+        if (newProgress >= 100) {
+          handleNext();
+          return 0;
         }
         return newProgress;
       });
-    }, interval);
+    }, 100);
   };
+
+  useEffect(() => {
+    if (selectedMoment && selectedMoment.mediaType === 'video') {
+      setIsPlaying(true);
+      startProgress();
+    }
+  }, [selectedMoment]);
 
   const handleMomentComplete = () => {
     if (progressIntervalRef.current) {

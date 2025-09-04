@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { Play, Heart, MessageCircle, Share2, Eye, Clock } from 'lucide-react';
 
 interface Snippet {
@@ -54,9 +55,11 @@ const SnippetCard: React.FC<SnippetCardProps> = ({ snippet, onPlay, onLike, onSh
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
       {/* Thumbnail con overlay de play */}
       <div className="relative group cursor-pointer" onClick={() => onPlay?.(snippet)}>
-        <img
+        <Image
           src={snippet.thumbnail_url || '/placeholder-video.jpg'}
           alt={snippet.title}
+          width={400}
+          height={192}
           className="w-full h-48 object-cover"
         />
         
