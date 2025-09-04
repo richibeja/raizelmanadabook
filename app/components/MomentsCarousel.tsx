@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Play, Pause, Heart, Eye, Clock, X, Plus } from 'lucide-react';
 import { useMoments } from '../hooks/useMoments';
@@ -20,39 +20,11 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
   const [selectedMoment, setSelectedMoment] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewProgress, setViewProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-play when moment is selected
-  const startProgress = () => {
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current);
-    }
-
-    const duration = selectedMoment?.mediaType === 'video' 
-      ? (selectedMoment.duration || 15) * 1000 
-      : 5000;
-
-    progressIntervalRef.current = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev + (100 / (duration / 100));
-        if (newProgress >= 100) {
-          handleNext();
-          return 0;
-        }
-        return newProgress;
-      });
-    }, 100);
-  };
-
-  useEffect(() => {
-    if (selectedMoment && selectedMoment.mediaType === 'video') {
-      setIsPlaying(true);
-      startProgress();
-    }
-  }, [selectedMoment]);
-
-  const handleMomentComplete = () => {
+  const handleMomentComplete = useCallback(() => {
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current);
     }
@@ -73,7 +45,36 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
       setSelectedMoment(null);
       setViewProgress(0);
     }
-  };
+  }, [selectedMoment, user, view, moments]);
+
+  // Auto-play when moment is selected
+  const startProgress = useCallback(() => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+    }
+
+    const duration = selectedMoment?.mediaType === 'video' 
+      ? (selectedMoment.duration || 15) * 1000 
+      : 5000;
+
+    progressIntervalRef.current = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = prev + (100 / (duration / 100));
+        if (newProgress >= 100) {
+          handleMomentComplete();
+          return 0;
+        }
+        return newProgress;
+      });
+    }, 100);
+  }, [selectedMoment, handleMomentComplete]);
+
+  useEffect(() => {
+    if (selectedMoment && selectedMoment.mediaType === 'video') {
+      setIsPlaying(true);
+      startProgress();
+    }
+  }, [selectedMoment, startProgress]);
 
   const handleMomentClick = (moment: any) => {
     setSelectedMoment(moment);

@@ -1,24 +1,47 @@
 // Configuración para suprimir warnings de React Router
 // Estos warnings vienen de Next.js internamente y no afectan la funcionalidad
 
-// Configuración de supresión de warnings
-if (typeof window !== 'undefined') {
-  // Suprimir warnings de React Router en desarrollo
+// Función para suprimir warnings específicos
+function suppressReactRouterWarnings() {
+  if (typeof window === 'undefined') return;
+
+  // Guardar la función original de console.warn
   const originalWarn = console.warn;
+  
+  // Reemplazar console.warn con una versión filtrada
   console.warn = (...args: any[]) => {
     const message = args[0];
-    if (
-      typeof message === 'string' && 
-      (message.includes('React Router Future Flag Warning') || 
-       message.includes('v7_startTransition') || 
-       message.includes('v7_relativeSplatPath'))
-    ) {
-      // Suprimir estos warnings específicos
-      return;
+    
+    // Verificar si es un warning de React Router
+    if (typeof message === 'string') {
+      const isReactRouterWarning = 
+        message.includes('React Router Future Flag Warning') ||
+        message.includes('v7_startTransition') ||
+        message.includes('v7_relativeSplatPath') ||
+        message.includes('React Router will begin wrapping state updates') ||
+        message.includes('Relative route resolution within Splat routes');
+      
+      if (isReactRouterWarning) {
+        // Suprimir este warning específico
+        return;
+      }
     }
+    
     // Mostrar otros warnings normalmente
     originalWarn.apply(console, args);
   };
+}
+
+// Aplicar la supresión inmediatamente
+suppressReactRouterWarnings();
+
+// También aplicar cuando el DOM esté listo
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', suppressReactRouterWarnings);
+  } else {
+    suppressReactRouterWarnings();
+  }
 }
 
 export {};

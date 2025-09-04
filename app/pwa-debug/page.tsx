@@ -6,6 +6,9 @@ export default function PWADebugPage() {
   const [manifestStatus, setManifestStatus] = useState<string>('checking');
 
   useEffect(() => {
+    // Solo ejecutar en el cliente
+    if (typeof window === 'undefined') return;
+
     // Verificar estado de iconos
     const checkIcons = async () => {
       const icons = [
@@ -84,9 +87,9 @@ export default function PWADebugPage() {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Información del Navegador</h2>
           <div className="space-y-2 text-sm">
-            <p><strong>User Agent:</strong> {navigator.userAgent}</p>
-            <p><strong>PWA Support:</strong> {('serviceWorker' in navigator) ? '✅ Sí' : '❌ No'}</p>
-            <p><strong>Install Prompt:</strong> {('beforeinstallprompt' in window) ? '✅ Disponible' : '❌ No disponible'}</p>
+            <p><strong>User Agent:</strong> {typeof window !== 'undefined' ? navigator.userAgent : 'No disponible en SSR'}</p>
+            <p><strong>PWA Support:</strong> {typeof window !== 'undefined' && 'serviceWorker' in navigator ? '✅ Sí' : '❌ No'}</p>
+            <p><strong>Install Prompt:</strong> {typeof window !== 'undefined' && 'beforeinstallprompt' in window ? '✅ Disponible' : '❌ No disponible'}</p>
           </div>
         </div>
 
