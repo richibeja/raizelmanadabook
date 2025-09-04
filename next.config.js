@@ -30,13 +30,8 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
         ],
       },
-      // PWA Headers - Minimal configuration
-      {
-        source: '/manifest.json',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, must-revalidate' },
-        ],
-      },
+      // PWA Headers - Removed to avoid 401 errors
+      // Let Next.js serve manifest.json with default headers
       {
         source: '/browserconfig.xml',
         headers: [
