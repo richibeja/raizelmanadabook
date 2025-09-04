@@ -32,6 +32,28 @@ function suppressReactRouterWarnings() {
     // Mostrar otros warnings normalmente
     originalWarn.apply(console, args);
   };
+
+  // También filtrar errores de Vercel API (opcional)
+  const originalError = console.error;
+  console.error = (...args: any[]) => {
+    const message = args[0];
+    
+    if (typeof message === 'string') {
+      const isVercelAPIError = 
+        message.includes('CustomFetchError') ||
+        message.includes('unauthorized') ||
+        message.includes('vercel.com/api') ||
+        message.includes('The request is missing an authentication token');
+      
+      if (isVercelAPIError) {
+        // Silenciar errores de API de Vercel
+        return;
+      }
+    }
+    
+    // Mostrar otros errores normalmente
+    originalError.apply(console, args);
+  };
 }
 
 // Aplicar la supresión inmediatamente
