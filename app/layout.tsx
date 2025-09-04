@@ -1,4 +1,5 @@
 import './globals.css';
+import './router-config'; // Suprimir warnings de React Router
 import type { Metadata } from 'next';
 import { AuthProvider } from './contexts/AuthContext';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
