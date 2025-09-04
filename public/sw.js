@@ -13,12 +13,10 @@ const STATIC_ASSETS = [
   '/favicon.svg',
   '/icon-192x192.svg',
   '/icon-512x512.svg',
-  '/_next/static/css/',
-  '/_next/static/js/',
-  '/sponsor1.png',
-  '/sponsor2.png',
-  '/sponsor3.png',
-  '/sponsor4.png'
+  '/icon-32x32.png',
+  '/icon-144x144.png',
+  '/icon-192x192.png',
+  '/icon-512x512.png'
 ];
 
 // Rutas que deben funcionar offline
@@ -39,7 +37,15 @@ self.addEventListener('install', (event) => {
     caches.open(STATIC_CACHE)
       .then((cache) => {
         console.log('[SW] Cacheando recursos estáticos...');
-        return cache.addAll(STATIC_ASSETS);
+        // Cachear recursos uno por uno para evitar errores
+        return Promise.allSettled(
+          STATIC_ASSETS.map(url => 
+            cache.add(url).catch(err => {
+              console.warn(`[SW] No se pudo cachear ${url}:`, err);
+              return null;
+            })
+          )
+        );
       })
       .then(() => {
         console.log('[SW] Service Worker instalado correctamente');
@@ -47,6 +53,8 @@ self.addEventListener('install', (event) => {
       })
       .catch((error) => {
         console.error('[SW] Error durante la instalación:', error);
+        // Continuar aunque haya errores
+        return self.skipWaiting();
       })
   );
 });
