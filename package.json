@@ -35,7 +35,8 @@
     "deploy:vercel:preview": "vercel",
     "vercel:env": "vercel env pull .env.local",
     "test:vercel-config": "node scripts/test-vercel-config.js",
-    "vercel:pre-build": "node scripts/vercel-pre-build.js"
+    "vercel:pre-build": "node scripts/vercel-pre-build.js",
+    "vercel:verify-env": "node scripts/verify-vercel-env.js"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.9.2",

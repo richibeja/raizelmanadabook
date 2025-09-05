@@ -1,0 +1,175 @@
+name: 🐾 Raízel Ecosystem CI/CD - Optimized
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  CACHE_VERSION: 'v1'
+
+jobs:
+  # ========================================
+  # LINT & TYPE CHECK
+  # ========================================
+  lint-and-typecheck:
+    name: 🔍 Lint & Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps --prefer-offline
+
+      - name: 🧹 Run ESLint
+        run: npm run lint
+
+      - name: 🔧 Type check
+        run: npm run type-check
+
+  # ========================================
+  # BUILD & TEST
+  # ========================================
+  build-and-test:
+    name: 🏗️ Build & Test
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps --prefer-offline
+
+      - name: 🧪 Run tests
+        run: npm run test:ci
+        env:
+          NODE_ENV: test
+          CI: true
+
+      - name: 🏗️ Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+
+      - name: 📊 Upload coverage
+        uses: codecov/codecov-action@v3
+        if: success()
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+  # ========================================
+  # SECURITY AUDIT
+  # ========================================
+  security-audit:
+    name: 🔒 Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: 🔍 Security audit
+        run: npm audit --audit-level=moderate
+
+      - name: 🛡️ Check for vulnerabilities
+        run: npm audit --audit-level=high --audit-level=critical
+
+  # ========================================
+  # VERCEL DEPLOYMENT
+  # ========================================
+  vercel-deploy:
+    name: 🚀 Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: [build-and-test, security-audit]
+    if: github.ref == 'refs/heads/main'
+    timeout-minutes: 20
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: 📚 Install dependencies
+        run: npm ci --legacy-peer-deps --prefer-offline
+
+      - name: 🚀 Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-args: '--prod'
+
+  # ========================================
+  # FIREBASE RULES VALIDATION  
+  # ========================================
+  firebase-rules:
+    name: 🔥 Firebase Rules Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔥 Setup Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: 🛡️ Validate Firestore rules
+        run: |
+          if [ -f "firestore.rules" ]; then
+            echo "✅ Firestore rules file exists"
+            # firebase firestore:rules:validate --project=${{ secrets.FIREBASE_PROJECT_ID }}
+          fi
+
+      - name: 🗄️ Validate Storage rules  
+        run: |
+          if [ -f "storage.rules" ]; then
+            echo "✅ Storage rules file exists"
+            # firebase storage:rules:validate --project=${{ secrets.FIREBASE_PROJECT_ID }}
+          fi

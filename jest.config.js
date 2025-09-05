@@ -36,6 +36,24 @@ const customJestConfig = {
       statements: 0,
     },
   },
+  // Configuración específica para CI/CD
+  testMatch: [
+    '<rootDir>/__tests__/**/*.{js,jsx,ts,tsx}',
+    '<rootDir>/app/**/*.{test,spec}.{js,jsx,ts,tsx}'
+  ],
+  testTimeout: 10000,
+  // Configuración para manejar módulos ES6
+  transformIgnorePatterns: [
+    'node_modules/(?!(.*\\.mjs$|lucide-react))'
+  ],
+  // Configuración para CI
+  ci: true,
+  watchAll: false,
+  // Configuración de coverage
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'html'],
+  // Configuración de verbose para CI
+  verbose: true,
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
