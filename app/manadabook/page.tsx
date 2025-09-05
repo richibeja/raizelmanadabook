@@ -3,7 +3,10 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { usePosts } from '@/hooks/usePosts';
 import ManadaBookAuth from '@/components/ManadaBookAuth';
+import PostComposer from '@/components/PostComposer';
+import PetProfileManager from '@/components/PetProfileManager';
 
 // Datos de ejemplo para posts
 const postsEjemplo = [
@@ -62,32 +65,51 @@ const postsEjemplo = [
 
 export default function ManadaBookPage() {
   const { user, userProfile, loading, logout } = useManadaBookAuth();
-  const [posts, setPosts] = useState(postsEjemplo);
-  const [nuevoPost, setNuevoPost] = useState('');
+  const { posts, loading: postsLoading, likePost, sharePost, deletePost } = usePosts();
   const [mostrarComposer, setMostrarComposer] = useState(false);
   const [mostrarAuth, setMostrarAuth] = useState(false);
+  const [mostrarPetManager, setMostrarPetManager] = useState(false);
 
-  const handleLike = (postId: number) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { ...post, likes: post.likes + 1 }
-        : post
-    ));
+  const handleLike = async (postId: string) => {
+    try {
+      await likePost(postId);
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
   };
 
-  const handleComentar = (postId: number) => {
+  const handleComentar = (postId: string) => {
     console.log('Comentar en post:', postId);
+    // TODO: Implementar sistema de comentarios
   };
 
-  const handleCompartir = (postId: number) => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Post de ManadaBook',
-        text: 'Mira este post interesante en ManadaBook',
-        url: `/manadabook/post/${postId}`
-      });
-    } else {
-      navigator.clipboard.writeText(`${window.location.origin}/manadabook/post/${postId}`);
+  const handleCompartir = async (postId: string) => {
+    try {
+      await sharePost(postId);
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Post de ManadaBook',
+          text: 'Mira este post interesante en ManadaBook',
+          url: `${window.location.origin}/manadabook/post/${postId}`
+        });
+      } else {
+        navigator.clipboard.writeText(`${window.location.origin}/manadabook/post/${postId}`);
+        alert('Enlace copiado al portapapeles');
+      }
+    } catch (error) {
+      console.error('Error sharing post:', error);
+    }
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (confirm('¿Estás seguro de que quieres eliminar este post?')) {
+      try {
+        await deletePost(postId);
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        alert('Error al eliminar el post');
+      }
     }
   };
 
@@ -138,16 +160,19 @@ export default function ManadaBookPage() {
               >
                 Crear Post
               </button>
-              <button style={{
-                border: '2px solid white',
-                color: 'white',
-                padding: '0.75rem 2rem',
-                borderRadius: '0.5rem',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                backgroundColor: 'transparent'
-              }}>
-                Explorar Comunidad
+              <button 
+                onClick={() => setMostrarPetManager(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Mis Mascotas
               </button>
               <button 
                 onClick={logout}
@@ -237,205 +262,185 @@ export default function ManadaBookPage() {
 
         {/* Post Composer */}
         {mostrarComposer && (
-          <div style={{ 
-            backgroundColor: 'white', 
-            borderRadius: '0.75rem', 
-            padding: '1.5rem', 
-            marginBottom: '2rem',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-          }}>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <div style={{
-                width: '3rem',
-                height: '3rem',
-                background: 'linear-gradient(135deg, #0F6FF6, #0C5CD9)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontWeight: 'bold'
-              }}>
-                👤
-              </div>
-              <div style={{ flex: 1 }}>
-                <textarea
-                  value={nuevoPost}
-                  onChange={(e) => setNuevoPost(e.target.value)}
-                  placeholder="¿Qué está haciendo tu mascota hoy? Comparte un momento especial..."
-                  style={{
-                    width: '100%',
-                    padding: '1rem',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '0.5rem',
-                    resize: 'none',
-                    minHeight: '100px'
-                  }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button style={{ padding: '0.5rem', color: '#6B7280', cursor: 'pointer' }}>📷</button>
-                    <button style={{ padding: '0.5rem', color: '#6B7280', cursor: 'pointer' }}>😊</button>
-                    <button style={{ padding: '0.5rem', color: '#6B7280', cursor: 'pointer' }}>📍</button>
-                  </div>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button 
-                      onClick={() => setMostrarComposer(false)}
-                      style={{ padding: '0.5rem 1rem', color: '#6B7280', cursor: 'pointer' }}
-                    >
-                      Cancelar
-                    </button>
-                    <button 
-                      onClick={() => {
-                        if (nuevoPost.trim()) {
-                          setNuevoPost('');
-                          setMostrarComposer(false);
-                        }
-                      }}
-                      style={{
-                        padding: '0.5rem 1.5rem',
-                        backgroundColor: '#0F6FF6',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Publicar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <PostComposer onClose={() => setMostrarComposer(false)} />
         )}
 
         {/* Posts Feed */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {posts.map((post) => (
-            <div key={post.id} style={{ 
-              backgroundColor: 'white', 
-              borderRadius: '0.75rem', 
-              overflow: 'hidden',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-            }}>
-              {/* Post Header */}
-              <div style={{ padding: '1.5rem', borderBottom: '1px solid #E5E7EB' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div style={{
-                    width: '3rem',
-                    height: '3rem',
-                    background: 'linear-gradient(135deg, #FF7A59, #E65E3F)',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}>
-                    {post.usuario.nombre.charAt(0)}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <h3 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.usuario.nombre}</h3>
-                      <span style={{ color: '#9CA3AF' }}>•</span>
-                      <span style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>{post.tiempo}</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#6B7280' }}>
-                      📍 <span>{typeof post.usuario.ubicacion === 'string' ? post.usuario.ubicacion : JSON.stringify(post.usuario.ubicacion)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Post Content */}
-              <div style={{ padding: '1.5rem' }}>
-                <p style={{ color: '#1F2937', marginBottom: '1rem' }}>{post.contenido}</p>
-                
-                {/* Tags */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
-                  {post.tags.map((tag, index) => (
-                    <span key={index} style={{
-                      padding: '0.25rem 0.75rem',
-                      backgroundColor: '#E6F0FF',
-                      color: '#0F6FF6',
-                      fontSize: '0.875rem',
-                      borderRadius: '9999px'
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Post Image */}
-                <div style={{
+          {postsLoading ? (
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🐾</div>
+              <div style={{ color: '#6B7280' }}>Cargando posts...</div>
+            </div>
+          ) : posts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📝</div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1F2937', marginBottom: '0.5rem' }}>
+                No hay posts aún
+              </h3>
+              <p style={{ color: '#6B7280', marginBottom: '1.5rem' }}>
+                Sé el primero en compartir un momento especial con tu mascota
+              </p>
+              <button 
+                onClick={() => setMostrarComposer(true)}
+                style={{
+                  backgroundColor: '#0F6FF6',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  border: 'none',
                   borderRadius: '0.5rem',
-                  overflow: 'hidden',
-                  marginBottom: '1rem',
-                  backgroundColor: '#F3F4F6',
-                  height: '16rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <div style={{ textAlign: 'center', color: '#6B7280' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>🐾</div>
-                    <p>Imagen de {post.mascota.nombre}</p>
-                  </div>
-                </div>
-
-                {/* Pet Info */}
-                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Crear Primer Post
+              </button>
+            </div>
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} style={{ 
+                backgroundColor: 'white', 
+                borderRadius: '0.75rem', 
+                overflow: 'hidden',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+              }}>
+                {/* Post Header */}
+                <div style={{ padding: '1.5rem', borderBottom: '1px solid #E5E7EB' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{
-                      width: '2.5rem',
-                      height: '2.5rem',
-                      backgroundColor: '#E6FFFC',
+                      width: '3rem',
+                      height: '3rem',
+                      background: 'linear-gradient(135deg, #FF7A59, #E65E3F)',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontWeight: 'bold'
                     }}>
-                      <span style={{ color: '#00C2A8', fontWeight: 'bold' }}>🐕</span>
+                      {post.authorName.charAt(0)}
                     </div>
-                    <div>
-                      <h4 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.mascota.nombre}</h4>
-                      <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>{post.mascota.tipo} • {post.mascota.edad}</p>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <h3 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.authorName}</h3>
+                        <span style={{ color: '#9CA3AF' }}>•</span>
+                        <span style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
+                          {new Date(post.createdAt).toLocaleDateString('es-ES', {
+                            day: 'numeric',
+                            month: 'short',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                      {post.location && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#6B7280' }}>
+                          📍 <span>{post.location}</span>
+                        </div>
+                      )}
                     </div>
+                    {post.authorId === user?.uid && (
+                      <button 
+                        onClick={() => handleDeletePost(post.id)}
+                        style={{ color: '#9CA3AF', cursor: 'pointer', border: 'none', background: 'none' }}
+                      >
+                        🗑️
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
 
-              {/* Post Actions */}
-              <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #E5E7EB' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                    <button 
-                      onClick={() => handleLike(post.id)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
-                    >
-                      ❤️ <span>{typeof post.likes === 'number' ? post.likes : JSON.stringify(post.likes)}</span>
-                    </button>
-                    <button 
-                      onClick={() => handleComentar(post.id)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
-                    >
-                      💬 <span>{typeof post.comentarios === 'number' ? post.comentarios : JSON.stringify(post.comentarios)}</span>
-                    </button>
-                    <button 
-                      onClick={() => handleCompartir(post.id)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
-                    >
-                      📤 <span>Compartir</span>
-                    </button>
+                {/* Post Content */}
+                <div style={{ padding: '1.5rem' }}>
+                  <p style={{ color: '#1F2937', marginBottom: '1rem', whiteSpace: 'pre-wrap' }}>{post.content}</p>
+                  
+                  {/* Tags */}
+                  {post.tags.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+                      {post.tags.map((tag, index) => (
+                        <span key={index} style={{
+                          padding: '0.25rem 0.75rem',
+                          backgroundColor: '#E6F0FF',
+                          color: '#0F6FF6',
+                          fontSize: '0.875rem',
+                          borderRadius: '9999px'
+                        }}>
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Pet Info */}
+                  {post.petName && (
+                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{
+                          width: '2.5rem',
+                          height: '2.5rem',
+                          backgroundColor: '#E6FFFC',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <span style={{ color: '#00C2A8', fontWeight: 'bold' }}>
+                            {post.petSpecies === 'dog' ? '🐕' : 
+                             post.petSpecies === 'cat' ? '🐱' : 
+                             post.petSpecies === 'bird' ? '🐦' : '🐾'}
+                          </span>
+                        </div>
+                        <div>
+                          <h4 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.petName}</h4>
+                          <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
+                            {post.petSpecies} • {post.visibility === 'public' ? 'Público' : 
+                             post.visibility === 'friends' ? 'Solo Amigos' : 'Privado'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Post Actions */}
+                <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #E5E7EB' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                      <button 
+                        onClick={() => handleLike(post.id)}
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '0.5rem', 
+                          color: post.userLiked ? '#ef4444' : '#6B7280', 
+                          cursor: 'pointer', 
+                          border: 'none', 
+                          background: 'none' 
+                        }}
+                      >
+                        {post.userLiked ? '❤️' : '🤍'} <span>{post.likesCount}</span>
+                      </button>
+                      <button 
+                        onClick={() => handleComentar(post.id)}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
+                      >
+                        💬 <span>{post.commentsCount}</span>
+                      </button>
+                      <button 
+                        onClick={() => handleCompartir(post.id)}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
+                      >
+                        📤 <span>{post.sharesCount}</span>
+                      </button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#9CA3AF', fontSize: '0.875rem' }}>
+                      👁️ {post.viewsCount}
+                    </div>
                   </div>
-                  <button style={{ color: '#9CA3AF', cursor: 'pointer', border: 'none', background: 'none' }}>
-                    •••
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
 
@@ -512,9 +517,13 @@ export default function ManadaBookPage() {
         </div>
       </section>
 
-      {/* Modal de Autenticación */}
+      {/* Modales */}
       {mostrarAuth && (
         <ManadaBookAuth onClose={() => setMostrarAuth(false)} />
+      )}
+      
+      {mostrarPetManager && (
+        <PetProfileManager onClose={() => setMostrarPetManager(false)} />
       )}
     </div>
   );
