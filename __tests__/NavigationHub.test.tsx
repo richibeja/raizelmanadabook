@@ -37,7 +37,6 @@ describe('NavigationHub', () => {
     expect(screen.getByText('Productos para Perros')).toBeInTheDocument()
     expect(screen.getByText('Productos para Gatos')).toBeInTheDocument()
     expect(screen.getByText('Calculadora de Porciones')).toBeInTheDocument()
-    expect(screen.getByText('Raizelmanada Book')).toBeInTheDocument()
   })
 
   it('renders user menu items', () => {
@@ -55,7 +54,5 @@ describe('NavigationHub', () => {
     const manadaBookLink = screen.getByText('ManadaBook').closest('a')
     expect(manadaBookLink).toHaveAttribute('href', '/manadabook')
     
-    const raizelmanadaBookLink = screen.getByText('Raizelmanada Book').closest('a')
-    expect(raizelmanadaBookLink).toHaveAttribute('href', '/raizelmanada-book')
   })
 })

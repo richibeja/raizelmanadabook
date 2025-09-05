@@ -2,11 +2,12 @@ import './globals.css';
 import './router-config'; // Suprimir warnings de React Router
 import type { Metadata } from 'next';
 import { AuthProvider } from './contexts/AuthContext';
+import { ManadaBookAuthProvider } from './contexts/ManadaBookAuthContext';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://raizelmanadabook.vercel.app'),
+    metadataBase: new URL('https://raizel.vercel.app'),
     title: 'Raízel - Ecosistema para Mascotas',
     description: 'Ecosistema completo para el bienestar de tu mascota con red social y marketplace',
     keywords: ['mascotas', 'perros', 'gatos', 'alimentos naturales', 'red social', 'BARF', 'pellets'],
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
       siteName: 'Raízel',
       title: 'Raízel - Ecosistema para Mascotas',
       description: 'Ecosistema completo para el bienestar de tu mascota con red social y marketplace',
-      url: 'https://raizelmanadabook.vercel.app',
+      url: 'https://raizel.vercel.app',
       images: [
         {
           url: '/icon-512x512.svg',
@@ -113,8 +114,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body className="h-full font-sans antialiased bg-gray-50">
                 <AuthProvider>
-                    {children}
-                    <PWAInstallPrompt />
+                    <ManadaBookAuthProvider>
+                        {children}
+                        <PWAInstallPrompt />
+                    </ManadaBookAuthProvider>
                 </AuthProvider>
                 
                 {/* Service Worker Registration */}

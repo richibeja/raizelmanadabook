@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import Header from '../components/Header';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import ManadaBookAuth from '@/components/ManadaBookAuth';
 
 // Datos de ejemplo para posts
 const postsEjemplo = [
@@ -59,9 +61,11 @@ const postsEjemplo = [
 ];
 
 export default function ManadaBookPage() {
+  const { user, userProfile, loading, logout } = useManadaBookAuth();
   const [posts, setPosts] = useState(postsEjemplo);
   const [nuevoPost, setNuevoPost] = useState('');
   const [mostrarComposer, setMostrarComposer] = useState(false);
+  const [mostrarAuth, setMostrarAuth] = useState(false);
 
   const handleLike = (postId: number) => {
     setPosts(posts.map(post => 
@@ -87,6 +91,17 @@ export default function ManadaBookPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🐾</div>
+          <div style={{ fontSize: '1.25rem', color: '#666' }}>Cargando ManadaBook...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
       <Header />
@@ -106,33 +121,81 @@ export default function ManadaBookPage() {
             La red social exclusiva para mascotas. Comparte momentos especiales, 
             conecta con otros dueños y descubre consejos para el cuidado de tu compañero.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button 
-              onClick={() => setMostrarComposer(true)}
-              style={{
-                backgroundColor: 'white',
-                color: '#0F6FF6',
+          
+          {user ? (
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button 
+                onClick={() => setMostrarComposer(true)}
+                style={{
+                  backgroundColor: 'white',
+                  color: '#0F6FF6',
+                  padding: '0.75rem 2rem',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Crear Post
+              </button>
+              <button style={{
+                border: '2px solid white',
+                color: 'white',
                 padding: '0.75rem 2rem',
-                border: 'none',
                 borderRadius: '0.5rem',
                 fontWeight: 'bold',
-                cursor: 'pointer'
-              }}
-            >
-              Crear Post
-            </button>
-            <button style={{
-              border: '2px solid white',
-              color: 'white',
-              padding: '0.75rem 2rem',
-              borderRadius: '0.5rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              backgroundColor: 'transparent'
-            }}>
-              Explorar Comunidad
-            </button>
-          </div>
+                cursor: 'pointer',
+                backgroundColor: 'transparent'
+              }}>
+                Explorar Comunidad
+              </button>
+              <button 
+                onClick={logout}
+                style={{
+                  border: '2px solid #ef4444',
+                  color: '#ef4444',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button 
+                onClick={() => setMostrarAuth(true)}
+                style={{
+                  backgroundColor: 'white',
+                  color: '#0F6FF6',
+                  padding: '0.75rem 2rem',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Iniciar Sesión
+              </button>
+              <button 
+                onClick={() => setMostrarAuth(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Registrarse
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -448,6 +511,11 @@ export default function ManadaBookPage() {
           </div>
         </div>
       </section>
+
+      {/* Modal de Autenticación */}
+      {mostrarAuth && (
+        <ManadaBookAuth onClose={() => setMostrarAuth(false)} />
+      )}
     </div>
   );
 }
