@@ -24,14 +24,14 @@ interface NavigationCardProps {
   bgColor: string;
 }
 
-const NavigationCard: React.FC<NavigationCardProps> = ({ 
+function NavigationCard({ 
   icon, 
   title, 
   description, 
   href, 
   color, 
   bgColor 
-}) => {
+}: NavigationCardProps) {
   return (
     <Link href={href} className="block group">
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 p-6 h-full border border-gray-100">
@@ -93,7 +93,7 @@ const NavigationCard: React.FC<NavigationCardProps> = ({
   );
 };
 
-export default function NavigationHub() {
+function NavigationHub() {
   const navigationCards = [
     {
       icon: <Dog size={24} />,
@@ -245,3 +245,6 @@ export default function NavigationHub() {
     </div>
   );
 }
+
+export { NavigationCard };
+export default NavigationHub;

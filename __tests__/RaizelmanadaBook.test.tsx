@@ -38,7 +38,7 @@ describe('RaizelmanadaBookPage', () => {
     
     expect(screen.getByText('Inicio')).toBeInTheDocument()
     expect(screen.getByText('Contenido')).toBeInTheDocument()
-    expect(screen.getByText('Testimonios')).toBeInTheDocument()
+    expect(screen.getAllByText('Testimonios')).toHaveLength(2) // One in nav, one as section title
     expect(screen.getByText('Contacto')).toBeInTheDocument()
   })
 

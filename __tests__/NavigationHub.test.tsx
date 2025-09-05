@@ -11,11 +11,16 @@ jest.mock('next/image', () => {
 
 // Mock Lucide React icons
 jest.mock('lucide-react', () => ({
+  Dog: () => <div data-testid="dog-icon">Dog</div>,
+  Cat: () => <div data-testid="cat-icon">Cat</div>,
+  Calculator: () => <div data-testid="calculator-icon">Calculator</div>,
   Users: () => <div data-testid="users-icon">Users</div>,
-  ShoppingCart: () => <div data-testid="shopping-cart-icon">ShoppingCart</div>,
   MessageCircle: () => <div data-testid="message-circle-icon">MessageCircle</div>,
-  Camera: () => <div data-testid="camera-icon">Camera</div>,
+  ArrowRight: () => <div data-testid="arrow-right-icon">ArrowRight</div>,
   Heart: () => <div data-testid="heart-icon">Heart</div>,
+  Camera: () => <div data-testid="camera-icon">Camera</div>,
+  Globe: () => <div data-testid="globe-icon">Globe</div>,
+  Phone: () => <div data-testid="phone-icon">Phone</div>,
   BookOpen: () => <div data-testid="book-open-icon">BookOpen</div>,
   Home: () => <div data-testid="home-icon">Home</div>,
   User: () => <div data-testid="user-icon">User</div>,
@@ -29,9 +34,9 @@ describe('NavigationHub', () => {
     
     // Check if main navigation cards are rendered
     expect(screen.getByText('ManadaBook')).toBeInTheDocument()
-    expect(screen.getByText('Marketplace')).toBeInTheDocument()
-    expect(screen.getByText('Conversaciones')).toBeInTheDocument()
-    expect(screen.getByText('Momentos')).toBeInTheDocument()
+    expect(screen.getByText('Productos para Perros')).toBeInTheDocument()
+    expect(screen.getByText('Productos para Gatos')).toBeInTheDocument()
+    expect(screen.getByText('Calculadora de Porciones')).toBeInTheDocument()
     expect(screen.getByText('Raizelmanada Book')).toBeInTheDocument()
   })
 
@@ -39,9 +44,8 @@ describe('NavigationHub', () => {
     render(<NavigationHub />)
     
     // Check if user menu items are rendered
-    expect(screen.getByText('Mi Perfil')).toBeInTheDocument()
-    expect(screen.getByText('Configuración')).toBeInTheDocument()
-    expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument()
+    expect(screen.getByText('Nuestros Aliados')).toBeInTheDocument()
+    expect(screen.getByText('Contacto')).toBeInTheDocument()
   })
 
   it('has proper navigation links', () => {
@@ -51,7 +55,7 @@ describe('NavigationHub', () => {
     const manadaBookLink = screen.getByText('ManadaBook').closest('a')
     expect(manadaBookLink).toHaveAttribute('href', '/manadabook')
     
-    const marketplaceLink = screen.getByText('Marketplace').closest('a')
-    expect(marketplaceLink).toHaveAttribute('href', '/marketplace')
+    const raizelmanadaBookLink = screen.getByText('Raizelmanada Book').closest('a')
+    expect(raizelmanadaBookLink).toHaveAttribute('href', '/raizelmanada-book')
   })
 })
