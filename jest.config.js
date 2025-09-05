@@ -17,6 +17,9 @@ const customJestConfig = {
     
     // Mapear alias comunes
     '^@/(.*)$': '<rootDir>/$1',
+    '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    '^@/components/(.*)$': '<rootDir>/app/components/$1',
+    '^@/hooks/(.*)$': '<rootDir>/app/hooks/$1',
     '^@components/(.*)$': '<rootDir>/app/components/$1',
     '^@pages/(.*)$': '<rootDir>/app/$1',
   },
