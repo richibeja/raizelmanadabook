@@ -11,10 +11,10 @@ const customJestConfig = {
   moduleNameMapper: {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png|jpg|jpeg)$': '<rootDir>/__mocks__/fileMock.js',
-    '^@/(.*)$': '<rootDir>/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
     '^@/components/(.*)$': '<rootDir>/app/components/$1',
     '^@/hooks/(.*)$': '<rootDir>/app/hooks/$1',
+    '^@/(.*)$': '<rootDir>/$1',
     '^@components/(.*)$': '<rootDir>/app/components/$1',
     '^@pages/(.*)$': '<rootDir>/app/$1',
   },

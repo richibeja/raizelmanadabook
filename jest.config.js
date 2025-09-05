@@ -15,11 +15,11 @@ const customJestConfig = {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png|jpg|jpeg)$': '<rootDir>/__mocks__/fileMock.js',
     
-    // Mapear alias comunes
-    '^@/(.*)$': '<rootDir>/$1',
+    // Mapear alias comunes - orden importante
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
     '^@/components/(.*)$': '<rootDir>/app/components/$1',
     '^@/hooks/(.*)$': '<rootDir>/app/hooks/$1',
+    '^@/(.*)$': '<rootDir>/$1',
     '^@components/(.*)$': '<rootDir>/app/components/$1',
     '^@pages/(.*)$': '<rootDir>/app/$1',
   },

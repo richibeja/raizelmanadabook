@@ -1,5 +1,5 @@
 // lib/firebase.ts
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { 
   getFirestore, 
   collection, 
@@ -39,14 +39,15 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (prevent multiple instances)
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
 // Export services
 export { db, auth, storage };
+export default app;
 
 // ========================================
 // TYPES & INTERFACES

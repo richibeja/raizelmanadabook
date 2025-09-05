@@ -3,6 +3,7 @@ const nextConfig = {
   // Remove static export for Vercel deployment
   // output: 'export',
   // trailingSlash: true,
+  outputFileTracingRoot: __dirname,
   images: {
     unoptimized: true,
     domains: ['images.unsplash.com', 'localhost', 'your-backend-api.com']
@@ -10,6 +11,25 @@ const nextConfig = {
   // distDir: 'out',
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
+  webpack: (config, { isServer }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname),
+      '@/lib': require('path').resolve(__dirname, 'lib'),
+      '@/components': require('path').resolve(__dirname, 'app/components'),
+      '@/hooks': require('path').resolve(__dirname, 'app/hooks'),
+    };
+    
+    // Asegurar que los módulos de Firebase se resuelvan correctamente
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+    
+    return config;
   },
   // PWA Configuration removed - using manual implementation
   async rewrites() {

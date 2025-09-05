@@ -5,7 +5,10 @@
       "@/*": ["./*"],
       "@/lib/*": ["./lib/*"],
       "@/components/*": ["./app/components/*"],
-      "@/hooks/*": ["./app/hooks/*"]
+      "@/hooks/*": ["./app/hooks/*"],
+      "@/lib": ["./lib"],
+      "@/components": ["./app/components"],
+      "@/hooks": ["./app/hooks"]
     },
     "target": "ES2017",
     "lib": [
