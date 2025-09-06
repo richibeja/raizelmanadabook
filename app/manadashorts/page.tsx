@@ -23,6 +23,8 @@ import NotificationSystem from '../components/NotificationSystem';
 import SearchModal from '../components/SearchModal';
 import UserProfile from '../components/UserProfile';
 import OnboardingModal from '../components/OnboardingModal';
+import { useManadaBookAuth } from '../contexts/ManadaBookAuthContext';
+import ManadaBookAuth from '../components/ManadaBookAuth';
 
 interface ShortVideo {
   id: string;
@@ -41,53 +43,9 @@ interface ShortVideo {
 }
 
 export default function ManadaShortsPage() {
-  const [videos, setVideos] = useState<ShortVideo[]>([
-    {
-      id: '1',
-      petName: 'Max',
-      petUsername: '@max_golden',
-      petType: 'Golden Retriever',
-      petAge: '3 años',
-      petAvatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
-      videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-dog-waiting-for-his-ball-14547-large.mp4',
-      caption: 'Esperando pacientemente para jugar con su pelota 🎾',
-      hashtags: ['#perro', '#goldenretriever', '#jugar', '#pelota'],
-      likes: 2400,
-      comments: 543,
-      shares: 89,
-      isLiked: false
-    },
-    {
-      id: '2',
-      petName: 'Luna',
-      petUsername: '@luna_siames',
-      petType: 'Gato Siamés',
-      petAge: '2 años',
-      petAvatar: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80',
-      videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-cat-looking-to-the-camera-14557-large.mp4',
-      caption: 'Mirando fijamente a la cámara con mis ojos azules 👀',
-      hashtags: ['#gato', '#siames', '#ojosazules', '#mirando'],
-      likes: 3100,
-      comments: 821,
-      shares: 156,
-      isLiked: false
-    },
-    {
-      id: '3',
-      petName: 'Bobby',
-      petUsername: '@bobby_corgi',
-      petType: 'Corgi',
-      petAge: '4 años',
-      petAvatar: 'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-small-dog-running-on-the-beach-14555-large.mp4',
-      caption: 'Corriendo feliz en la playa 🏖️ ¿A qué mascota no le gusta la arena?',
-      hashtags: ['#perro', '#corgi', '#playa', '#corriendo', '#feliz'],
-      likes: 4700,
-      comments: 1200,
-      shares: 234,
-      isLiked: false
-    }
-  ]);
+  const { user, userProfile, loading: authLoading } = useManadaBookAuth();
+  const [videos, setVideos] = useState<ShortVideo[]>([]);
+  const [showAuth, setShowAuth] = useState(false);
 
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -96,11 +54,79 @@ export default function ManadaShortsPage() {
   const [showComments, setShowComments] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true); // Mostrar onboarding para nuevos usuarios
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [following, setFollowing] = useState<Set<string>>(new Set());
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Cargar videos reales cuando el usuario esté autenticado
+  useEffect(() => {
+    if (user && userProfile) {
+      loadVideos();
+      setHasProfile(true);
+    } else if (!authLoading) {
+      // Si no está autenticado, mostrar algunos videos de ejemplo
+      loadSampleVideos();
+    }
+  }, [user, userProfile, authLoading]);
+
+  const loadVideos = async () => {
+    // Aquí cargarías videos reales desde Firebase
+    // Por ahora usamos videos de ejemplo
+    loadSampleVideos();
+  };
+
+  const loadSampleVideos = () => {
+    const sampleVideos: ShortVideo[] = [
+      {
+        id: '1',
+        petName: 'Max',
+        petUsername: '@max_golden',
+        petType: 'Golden Retriever',
+        petAge: '3 años',
+        petAvatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-dog-waiting-for-his-ball-14547-large.mp4',
+        caption: 'Esperando pacientemente para jugar con su pelota 🎾',
+        hashtags: ['#perro', '#goldenretriever', '#jugar', '#pelota'],
+        likes: 2400,
+        comments: 543,
+        shares: 89,
+        isLiked: false
+      },
+      {
+        id: '2',
+        petName: 'Luna',
+        petUsername: '@luna_siames',
+        petType: 'Gato Siamés',
+        petAge: '2 años',
+        petAvatar: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-cat-looking-to-the-camera-14557-large.mp4',
+        caption: 'Mirando fijamente a la cámara con mis ojos azules 👀',
+        hashtags: ['#gato', '#siames', '#ojosazules', '#mirando'],
+        likes: 3100,
+        comments: 821,
+        shares: 156,
+        isLiked: false
+      },
+      {
+        id: '3',
+        petName: 'Bobby',
+        petUsername: '@bobby_corgi',
+        petType: 'Corgi',
+        petAge: '4 años',
+        petAvatar: 'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-small-dog-running-on-the-beach-14555-large.mp4',
+        caption: 'Corriendo feliz en la playa 🏖️ ¿A qué mascota no le gusta la arena?',
+        hashtags: ['#perro', '#corgi', '#playa', '#corriendo', '#feliz'],
+        likes: 4700,
+        comments: 1200,
+        shares: 234,
+        isLiked: false
+      }
+    ];
+    setVideos(sampleVideos);
+  };
 
   // Inicializar videos como silenciados
   useEffect(() => {
@@ -221,6 +247,11 @@ export default function ManadaShortsPage() {
   };
 
   const toggleLike = (videoId: string) => {
+    if (!user) {
+      setShowAuth(true);
+      return;
+    }
+    
     setVideos(prev => 
       prev.map(video => 
         video.id === videoId 
@@ -242,6 +273,10 @@ export default function ManadaShortsPage() {
   };
 
   const handleComment = () => {
+    if (!user) {
+      setShowAuth(true);
+      return;
+    }
     setShowComments(true);
   };
 
@@ -260,8 +295,8 @@ export default function ManadaShortsPage() {
   };
 
   const handleUpload = () => {
-    if (!hasProfile) {
-      setShowOnboarding(true);
+    if (!user) {
+      setShowAuth(true);
       return;
     }
     setShowUploadModal(true);
@@ -342,7 +377,13 @@ export default function ManadaShortsPage() {
               placeholder="Buscar mascotas..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setShowSearch(true)}
+              onFocus={() => {
+                if (!user) {
+                  setShowAuth(true);
+                } else {
+                  setShowSearch(true);
+                }
+              }}
               className="bg-transparent text-white placeholder-gray-400 w-full outline-none"
             />
           </div>
@@ -498,7 +539,13 @@ export default function ManadaShortsPage() {
         </div>
         
         <button 
-          onClick={() => setShowProfile(true)}
+          onClick={() => {
+            if (!user) {
+              setShowAuth(true);
+            } else {
+              setShowProfile(true);
+            }
+          }}
           className="flex flex-col items-center text-gray-400 hover:text-white transition-colors"
         >
           <User className="h-6 w-6 mb-1" />
@@ -537,6 +584,13 @@ export default function ManadaShortsPage() {
         isOpen={showOnboarding}
         onComplete={handleOnboardingComplete}
       />
+
+      {/* Authentication Modal */}
+      {showAuth && (
+        <ManadaBookAuth
+          onClose={() => setShowAuth(false)}
+        />
+      )}
     </div>
   );
 }
