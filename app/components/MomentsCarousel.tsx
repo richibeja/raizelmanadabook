@@ -15,7 +15,7 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
   const { moments, loading } = useMoments();
 
   // Helper functions
-  const getProgress = (createdAt: string, expiresAt: string) => {
+  const getProgress = (createdAt: string | Date, expiresAt: string | Date) => {
     const now = new Date().getTime();
     const created = new Date(createdAt).getTime();
     const expires = new Date(expiresAt).getTime();
@@ -26,7 +26,7 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
     return (now - created) / (expires - created);
   };
 
-  const getTimeRemaining = (expiresAt: string) => {
+  const getTimeRemaining = (expiresAt: string | Date) => {
     const now = new Date().getTime();
     const expires = new Date(expiresAt).getTime();
     const remaining = expires - now;
