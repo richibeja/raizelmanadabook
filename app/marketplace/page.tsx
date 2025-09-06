@@ -49,8 +49,11 @@ export default function MarketplacePage() {
     limit: 50
   };
 
-  const { items, loading, error } = useMarketplace(marketplaceFilters);
+  const { products, loading, error } = useMarketplace();
   const { addFavorite, removeFavorite, isFavorite } = useMarketplaceFavorites();
+  
+  // Asegurar que items no sea undefined
+  const items = products || [];
 
   const formatPrice = (price: number, currency: string = 'COP') => {
     if (currency === 'COP') {

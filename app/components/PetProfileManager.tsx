@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 // import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { usePetsRealtime } from '../hooks/usePetsRealtime';
 import { X, Plus, Edit, Trash2, Camera, MapPin, Heart, Star } from 'lucide-react';
 
 interface PetProfileManagerProps {
@@ -12,11 +13,12 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
   // const { user, userProfile } = useManadaBookAuth();
   const user = null;
   const userProfile = null;
+  const { addPet, editPet } = usePetsRealtime();
   const [isEditing, setIsEditing] = useState(false);
   const [editingPet, setEditingPet] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    species: 'dog' as 'dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'rodent' | 'horse' | 'exotic' | 'other',
+    species: 'dog' as 'dog' | 'cat' | 'other',
     breed: '',
     age: 0,
     gender: 'male' as 'male' | 'female',
@@ -26,6 +28,7 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
     bio: '',
     privacy: 'public' as 'public' | 'friends' | 'private',
     vaccines: [] as string[],
+    isPublic: true,
   });
   const [newPersonality, setNewPersonality] = useState('');
   const [newInterest, setNewInterest] = useState('');
@@ -34,12 +37,6 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
   const speciesOptions = [
     { value: 'dog', label: '🐕 Perro', emoji: '🐕' },
     { value: 'cat', label: '🐱 Gato', emoji: '🐱' },
-    { value: 'bird', label: '🐦 Ave', emoji: '🐦' },
-    { value: 'fish', label: '🐠 Pez', emoji: '🐠' },
-    { value: 'reptile', label: '🦎 Reptil', emoji: '🦎' },
-    { value: 'rodent', label: '🐹 Roedor', emoji: '🐹' },
-    { value: 'horse', label: '🐴 Caballo', emoji: '🐴' },
-    { value: 'exotic', label: '🦜 Exótico', emoji: '🦜' },
     { value: 'other', label: '🐾 Otro', emoji: '🐾' },
   ];
 
@@ -116,7 +113,7 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
     
     try {
       if (editingPet) {
-        await updatePet(editingPet, formData);
+        await editPet(editingPet, formData);
       } else {
         await addPet(formData);
       }
@@ -134,6 +131,7 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
         bio: '',
         privacy: 'public',
         vaccines: [],
+        isPublic: true,
       });
       setIsEditing(false);
       setEditingPet(null);
@@ -155,6 +153,7 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
       bio: pet.bio || '',
       privacy: pet.privacy || 'public',
       vaccines: pet.vaccines || [],
+      isPublic: pet.isPublic !== undefined ? pet.isPublic : true,
     });
     setEditingPet(pet.id);
     setIsEditing(true);
@@ -173,6 +172,7 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
       bio: '',
       privacy: 'public',
       vaccines: [],
+      isPublic: true,
     });
     setEditingPet(null);
     setIsEditing(true);

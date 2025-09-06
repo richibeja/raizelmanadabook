@@ -19,7 +19,7 @@ const UploadMoment: React.FC<UploadMomentProps> = ({
   circleName 
 }) => {
   const { user } = useAuthContext();
-  const { upload } = useMoments();
+  const { createMoment } = useMoments();
   
   const [content, setContent] = useState('');
   const [mediaFile, setMediaFile] = useState<File | null>(null);
@@ -88,7 +88,7 @@ const UploadMoment: React.FC<UploadMomentProps> = ({
         tags: circleId ? ['circle', circleName?.toLowerCase()] : ['public']
       };
 
-      const momentId = await upload(momentData);
+      const momentId = await createMoment(momentData);
       
       if (momentId) {
         // Reset form
