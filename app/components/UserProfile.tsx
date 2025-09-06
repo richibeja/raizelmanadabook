@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { X, Settings, Edit3, Heart, MessageCircle, Share2, Plus, User, Camera } from 'lucide-react';
+import PetProfileEditor from './PetProfileEditor';
 
 interface UserProfileProps {
   isOpen: boolean;
@@ -10,8 +11,10 @@ interface UserProfileProps {
 
 export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
   const [activeTab, setActiveTab] = useState<'videos' | 'liked' | 'saved'>('videos');
+  const [showEditor, setShowEditor] = useState(false);
+  const [petData, setPetData] = useState(null);
 
-  const pet = {
+  const [pet, setPet] = useState({
     name: 'Max',
     species: 'Perro',
     breed: 'Golden Retriever',
@@ -29,6 +32,16 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
       username: '@maria_petmom',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'
     }
+  });
+
+  const handleEditProfile = () => {
+    setPetData(pet);
+    setShowEditor(true);
+  };
+
+  const handleSaveProfile = (newProfileData: any) => {
+    setPet(newProfileData);
+    setShowEditor(false);
   };
 
   const videos = [
@@ -97,7 +110,10 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
               className="w-20 h-20 rounded-full border-4 border-gray-900 object-cover"
             />
             <div className="flex space-x-2 mt-12">
-              <button className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+              <button 
+                onClick={handleEditProfile}
+                className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
                 <Edit3 className="w-4 h-4 mr-2 inline" />
                 Editar
               </button>
@@ -234,6 +250,14 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
           </div>
         </div>
       </div>
+
+      {/* Pet Profile Editor Modal */}
+      <PetProfileEditor
+        isOpen={showEditor}
+        onClose={() => setShowEditor(false)}
+        onSave={handleSaveProfile}
+        initialData={petData}
+      />
     </div>
   );
 }

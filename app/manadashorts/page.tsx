@@ -22,6 +22,7 @@ import VideoComments from '../components/VideoComments';
 import NotificationSystem from '../components/NotificationSystem';
 import SearchModal from '../components/SearchModal';
 import UserProfile from '../components/UserProfile';
+import OnboardingModal from '../components/OnboardingModal';
 
 interface ShortVideo {
   id: string;
@@ -95,6 +96,8 @@ export default function ManadaShortsPage() {
   const [showComments, setShowComments] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true); // Mostrar onboarding para nuevos usuarios
+  const [hasProfile, setHasProfile] = useState(false);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -218,7 +221,16 @@ export default function ManadaShortsPage() {
   };
 
   const handleUpload = () => {
+    if (!hasProfile) {
+      setShowOnboarding(true);
+      return;
+    }
     setShowUploadModal(true);
+  };
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    setHasProfile(true);
   };
 
   const handleVideoUpload = (videoData: {
@@ -454,6 +466,12 @@ export default function ManadaShortsPage() {
       <UserProfile
         isOpen={showProfile}
         onClose={() => setShowProfile(false)}
+      />
+
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onComplete={handleOnboardingComplete}
       />
     </div>
   );
