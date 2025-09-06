@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { X, Upload, Video, Camera, FileVideo, AlertCircle } from 'lucide-react';
+import { X, Upload, Video, Camera, FileVideo, AlertCircle, Brain, Music } from 'lucide-react';
 import VideoRecorder from './VideoRecorder';
 import VideoEffects from './VideoEffects';
+import AdvancedVideoEffects from './AdvancedVideoEffects';
+import AudioLibrary from './AudioLibrary';
 
 interface VideoUploadModalProps {
   isOpen: boolean;
@@ -25,7 +27,10 @@ export default function VideoUploadModal({ isOpen, onClose, onUpload }: VideoUpl
   const [error, setError] = useState<string | null>(null);
   const [showRecorder, setShowRecorder] = useState(false);
   const [showEffects, setShowEffects] = useState(false);
+  const [showAdvancedEffects, setShowAdvancedEffects] = useState(false);
+  const [showAudioLibrary, setShowAudioLibrary] = useState(false);
   const [appliedEffect, setAppliedEffect] = useState('none');
+  const [selectedAudio, setSelectedAudio] = useState<any>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -124,11 +129,18 @@ export default function VideoUploadModal({ isOpen, onClose, onUpload }: VideoUpl
     setShowRecorder(false);
   };
 
-  const handleApplyEffect = (effect: string) => {
+  const handleApplyEffect = (effect: string, intensity?: number) => {
     setAppliedEffect(effect);
     setShowEffects(false);
+    setShowAdvancedEffects(false);
     // Aquí aplicarías el efecto al video
-    console.log('Aplicando efecto:', effect);
+    console.log('Aplicando efecto:', effect, 'Intensidad:', intensity);
+  };
+
+  const handleSelectAudio = (track: any) => {
+    setSelectedAudio(track);
+    setShowAudioLibrary(false);
+    console.log('Audio seleccionado:', track);
   };
 
   if (!isOpen) return null;
@@ -204,12 +216,22 @@ export default function VideoUploadModal({ isOpen, onClose, onUpload }: VideoUpl
                 >
                   <X className="w-4 h-4" />
                 </button>
-                <button
-                  onClick={() => setShowEffects(true)}
-                  className="absolute top-2 left-2 bg-black/50 text-white p-1 rounded-full hover:bg-black/70"
-                >
-                  <Camera className="w-4 h-4" />
-                </button>
+                <div className="absolute top-2 left-2 flex space-x-1">
+                  <button
+                    onClick={() => setShowEffects(true)}
+                    className="bg-black/50 text-white p-1 rounded-full hover:bg-black/70"
+                    title="Efectos básicos"
+                  >
+                    <Camera className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setShowAdvancedEffects(true)}
+                    className="bg-purple-500/80 text-white p-1 rounded-full hover:bg-purple-500"
+                    title="Efectos con IA"
+                  >
+                    <Brain className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Caption */}
@@ -228,6 +250,37 @@ export default function VideoUploadModal({ isOpen, onClose, onUpload }: VideoUpl
                 <p className="text-xs text-gray-500 mt-1">
                   {caption.length}/200 caracteres
                 </p>
+              </div>
+
+              {/* Audio Selection */}
+              <div>
+                <label className="block text-sm text-gray-300 mb-2">
+                  Música de fondo
+                </label>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setShowAudioLibrary(true)}
+                    className="flex-1 bg-gray-800 border border-gray-700 rounded-lg p-3 text-white hover:bg-gray-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Music className="w-4 h-4" />
+                    <span className="text-sm">
+                      {selectedAudio ? selectedAudio.title : 'Seleccionar música'}
+                    </span>
+                  </button>
+                  {selectedAudio && (
+                    <button
+                      onClick={() => setSelectedAudio(null)}
+                      className="text-gray-400 hover:text-white p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+                {selectedAudio && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    {selectedAudio.artist} • {selectedAudio.duration}
+                  </p>
+                )}
               </div>
 
               {/* Hashtags */}
@@ -292,6 +345,20 @@ export default function VideoUploadModal({ isOpen, onClose, onUpload }: VideoUpl
         isOpen={showEffects}
         onClose={() => setShowEffects(false)}
         onApplyEffect={handleApplyEffect}
+      />
+
+      {/* Advanced Video Effects Modal */}
+      <AdvancedVideoEffects
+        isOpen={showAdvancedEffects}
+        onClose={() => setShowAdvancedEffects(false)}
+        onApplyEffect={handleApplyEffect}
+      />
+
+      {/* Audio Library Modal */}
+      <AudioLibrary
+        isOpen={showAudioLibrary}
+        onClose={() => setShowAudioLibrary(false)}
+        onSelectTrack={handleSelectAudio}
       />
     </div>
   );

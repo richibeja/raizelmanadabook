@@ -11,16 +11,24 @@ interface UserProfileProps {
 export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
   const [activeTab, setActiveTab] = useState<'videos' | 'liked' | 'saved'>('videos');
 
-  const user = {
-    name: 'Mi Mascota',
-    username: '@mi_mascota',
-    bio: 'Amante de los animales y creador de contenido divertido 🐾',
+  const pet = {
+    name: 'Max',
+    species: 'Perro',
+    breed: 'Golden Retriever',
+    age: '2 años',
+    username: '@max_golden',
+    bio: 'Soy Max, un Golden Retriever súper juguetón! 🐕✨ Me encanta correr en el parque y hacer nuevos amigos.',
     followers: 1234,
     following: 567,
     likes: 8901,
     avatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80',
     cover: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    verified: true
+    verified: true,
+    owner: {
+      name: 'María González',
+      username: '@maria_petmom',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80'
+    }
   };
 
   const videos = [
@@ -61,7 +69,7 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
       <div className="w-full max-w-md bg-gray-900 rounded-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
-          <h2 className="text-lg font-semibold text-white">Perfil</h2>
+          <h2 className="text-lg font-semibold text-white">Perfil de Mascota</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white"
@@ -73,7 +81,7 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
         {/* Cover Photo */}
         <div className="relative h-32 bg-gradient-to-r from-purple-500 to-pink-500">
           <img
-            src={user.cover}
+            src={pet.cover}
             alt="Cover"
             className="w-full h-full object-cover"
           />
@@ -84,8 +92,8 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
         <div className="px-4 pb-4">
           <div className="flex items-start justify-between -mt-8 mb-4">
             <img
-              src={user.avatar}
-              alt={user.name}
+              src={pet.avatar}
+              alt={pet.name}
               className="w-20 h-20 rounded-full border-4 border-gray-900 object-cover"
             />
             <div className="flex space-x-2 mt-12">
@@ -101,34 +109,48 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
 
           <div className="mb-4">
             <div className="flex items-center space-x-2 mb-1">
-              <h3 className="text-xl font-bold text-white">{user.name}</h3>
-              {user.verified && (
+              <h3 className="text-xl font-bold text-white">{pet.name}</h3>
+              {pet.verified && (
                 <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-xs">✓</span>
                 </div>
               )}
             </div>
-            <p className="text-gray-400 text-sm mb-2">{user.username}</p>
-            <p className="text-gray-300 text-sm">{user.bio}</p>
+            <p className="text-gray-400 text-sm mb-1">{pet.username}</p>
+            <p className="text-gray-400 text-xs mb-2">{pet.species} • {pet.breed} • {pet.age}</p>
+            <p className="text-gray-300 text-sm mb-3">{pet.bio}</p>
+            
+            {/* Owner Info */}
+            <div className="flex items-center space-x-2 bg-gray-800/50 rounded-lg p-3">
+              <img
+                src={pet.owner.avatar}
+                alt={pet.owner.name}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <div>
+                <p className="text-white text-sm font-medium">Tutor: {pet.owner.name}</p>
+                <p className="text-gray-400 text-xs">{pet.owner.username}</p>
+              </div>
+            </div>
           </div>
 
           {/* Stats */}
           <div className="flex space-x-6 mb-4">
             <div className="text-center">
               <div className="text-white font-bold text-lg">
-                {formatNumber(user.followers)}
+                {formatNumber(pet.followers)}
               </div>
               <div className="text-gray-400 text-sm">Seguidores</div>
             </div>
             <div className="text-center">
               <div className="text-white font-bold text-lg">
-                {formatNumber(user.following)}
+                {formatNumber(pet.following)}
               </div>
               <div className="text-gray-400 text-sm">Siguiendo</div>
             </div>
             <div className="text-center">
               <div className="text-white font-bold text-lg">
-                {formatNumber(user.likes)}
+                {formatNumber(pet.likes)}
               </div>
               <div className="text-gray-400 text-sm">Me gusta</div>
             </div>
