@@ -98,6 +98,7 @@ export default function ManadaShortsPage() {
   const [showProfile, setShowProfile] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true); // Mostrar onboarding para nuevos usuarios
   const [hasProfile, setHasProfile] = useState(false);
+  const [following, setFollowing] = useState<Set<string>>(new Set());
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -191,9 +192,37 @@ export default function ManadaShortsPage() {
     }
   };
 
+  // Navegación táctil para móviles
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const startY = touch.clientY;
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      const endY = touch.clientY;
+      const diff = startY - endY;
+      
+      if (Math.abs(diff) > 50) { // Mínimo de 50px para considerar swipe
+        if (diff > 0) {
+          if (currentVideoIndex < videos.length - 1) {
+            setCurrentVideoIndex(currentVideoIndex + 1);
+          }
+        } else {
+          if (currentVideoIndex > 0) {
+            setCurrentVideoIndex(currentVideoIndex - 1);
+          }
+        }
+      }
+      
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+    
+    document.addEventListener('touchend', handleTouchEnd);
+  };
+
   const toggleLike = (videoId: string) => {
-    setVideos(prevVideos => 
-      prevVideos.map(video => 
+    setVideos(prev => 
+      prev.map(video => 
         video.id === videoId 
           ? { 
               ...video, 
@@ -217,7 +246,17 @@ export default function ManadaShortsPage() {
   };
 
   const handleShare = () => {
-    alert('Compartiendo video en ManadaBook...');
+    if (navigator.share) {
+      navigator.share({
+        title: `Video de ${videos[currentVideoIndex]?.petName} en ManadaShorts`,
+        text: videos[currentVideoIndex]?.caption,
+        url: window.location.href
+      });
+    } else {
+      // Fallback para navegadores que no soportan Web Share API
+      navigator.clipboard.writeText(window.location.href);
+      alert('¡Enlace copiado al portapapeles!');
+    }
   };
 
   const handleUpload = () => {
@@ -231,6 +270,18 @@ export default function ManadaShortsPage() {
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
     setHasProfile(true);
+  };
+
+  const toggleFollow = (petUsername: string) => {
+    setFollowing(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(petUsername)) {
+        newSet.delete(petUsername);
+      } else {
+        newSet.add(petUsername);
+      }
+      return newSet;
+    });
   };
 
   const handleVideoUpload = (videoData: {
@@ -303,6 +354,7 @@ export default function ManadaShortsPage() {
         ref={containerRef}
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         onScroll={handleScroll}
+        onTouchStart={handleTouchStart}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {videos.map((video, index) => (
@@ -331,18 +383,30 @@ export default function ManadaShortsPage() {
             {/* Video Overlay */}
             <div className="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
               {/* Pet Info */}
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full overflow-hidden mr-4 border-2 border-white">
-                  <img 
-                    src={video.petAvatar} 
-                    alt={video.petName}
-                    className="w-full h-full object-cover"
-                  />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4 border-2 border-white">
+                    <img 
+                      src={video.petAvatar} 
+                      alt={video.petName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{video.petUsername}</h3>
+                    <p className="text-sm text-gray-300">{video.petType} • {video.petAge}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold">{video.petUsername}</h3>
-                  <p className="text-sm text-gray-300">{video.petType} • {video.petAge}</p>
-                </div>
+                <button
+                  onClick={() => toggleFollow(video.petUsername)}
+                  className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
+                    following.has(video.petUsername)
+                      ? 'bg-gray-600 text-white'
+                      : 'bg-red-500 text-white hover:bg-red-600'
+                  }`}
+                >
+                  {following.has(video.petUsername) ? 'Siguiendo' : 'Seguir'}
+                </button>
               </div>
 
               {/* Caption */}
