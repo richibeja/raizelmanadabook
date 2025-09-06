@@ -6,10 +6,10 @@ import {
   deletePet, 
   Pet 
 } from '@/lib/firebase';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useManadaBookAuth } from '../contexts/ManadaBookAuthContext';
 
 export const usePetsRealtime = () => {
-  const { user } = useAuthContext();
+  const { user } = useManadaBookAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

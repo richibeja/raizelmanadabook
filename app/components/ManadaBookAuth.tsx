@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-// // import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, FileText } from 'lucide-react';
 
 interface ManadaBookAuthProps {
@@ -9,22 +9,11 @@ interface ManadaBookAuthProps {
 }
 
 export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
-  const signIn = async (email: string, password: string) => {
-    console.log('Sign in:', email, password);
-    alert('Funcionalidad de login en desarrollo');
-  };
-  const signUp = async (email: string, password: string, name: string) => {
-    console.log('Sign up:', email, password, name);
-    alert('Funcionalidad de registro en desarrollo');
-  };
+  const { login, register, loading } = useManadaBookAuth();
   const signInWithGoogle = async () => {
     console.log('Sign in with Google');
     alert('Funcionalidad de Google en desarrollo');
   };
-  const loading = false;
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -78,9 +67,9 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
 
     try {
       if (isLogin) {
-        await signIn(formData.email, formData.password);
+        await login(formData.email, formData.password);
       } else {
-        await signUp(formData.email, formData.password, formData.name);
+        await register(formData.email, formData.password, formData.name);
       }
       onClose();
     } catch (error: any) {
