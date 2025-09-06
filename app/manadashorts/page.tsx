@@ -67,18 +67,48 @@ export default function ManadaShortsPage() {
       setHasProfile(true);
     } else if (!authLoading) {
       // Si no está autenticado, mostrar algunos videos de ejemplo
-      loadSampleVideos();
+      setVideos(loadSampleVideos());
     }
   }, [user, userProfile, authLoading]);
 
   const loadVideos = async () => {
-    // Aquí cargarías videos reales desde Firebase
-    // Por ahora usamos videos de ejemplo
-    loadSampleVideos();
+    if (!user) {
+      setVideos(loadSampleVideos());
+      return;
+    }
+    
+    // Cargar videos reales del usuario y de usuarios seguidos
+    try {
+      // Por ahora usamos videos de ejemplo pero con datos del usuario real
+      const userVideos: ShortVideo[] = [
+        {
+          id: 'user-1',
+          petName: userProfile?.name || 'Mi Mascota',
+          petUsername: `@${userProfile?.name?.toLowerCase().replace(' ', '_') || 'mi_mascota'}`,
+          petType: 'Mascota',
+          petAge: 'Edad',
+          petAvatar: userProfile?.avatar || 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
+          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-dog-waiting-for-his-ball-14547-large.mp4',
+          caption: 'Mi primer video en ManadaShorts! 🎥',
+          hashtags: ['#manadashorts', '#mimascota', '#primerovideo'],
+          likes: 0,
+          comments: 0,
+          shares: 0,
+          isLiked: false
+        }
+      ];
+      
+      // Agregar videos de ejemplo de otros usuarios
+      const sampleVideos = loadSampleVideos();
+      setVideos([...userVideos, ...sampleVideos]);
+    } catch (error) {
+      console.error('Error cargando videos:', error);
+      setVideos(loadSampleVideos());
+    }
   };
 
-  const loadSampleVideos = () => {
-    const sampleVideos: ShortVideo[] = [
+  const loadSampleVideos = (): ShortVideo[] => {
+    return [
       {
         id: '1',
         petName: 'Max',
@@ -125,7 +155,6 @@ export default function ManadaShortsPage() {
         isLiked: false
       }
     ];
-    setVideos(sampleVideos);
   };
 
   // Inicializar videos como silenciados
@@ -324,17 +353,19 @@ export default function ManadaShortsPage() {
     caption: string;
     hashtags: string[];
   }) => {
+    if (!user || !userProfile) return;
+    
     // Crear URL temporal para el video
     const videoUrl = URL.createObjectURL(videoData.file);
     
-    // Crear nuevo video
+    // Crear nuevo video con datos reales del usuario
     const newVideo: ShortVideo = {
-      id: Date.now().toString(),
-      petName: 'Mi Mascota',
-      petUsername: '@mi_mascota',
+      id: `user-${Date.now()}`,
+      petName: userProfile.name || 'Mi Mascota',
+      petUsername: `@${userProfile.name?.toLowerCase().replace(' ', '_') || 'mi_mascota'}`,
       petType: 'Mascota',
       petAge: 'Edad',
-      petAvatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
+      petAvatar: userProfile.avatar || 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
       videoUrl: videoUrl,
       caption: videoData.caption,
       hashtags: videoData.hashtags,
