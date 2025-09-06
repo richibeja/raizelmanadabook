@@ -7,13 +7,13 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://raizel.vercel.app'),
-    title: 'Raízel - Ecosistema para Mascotas',
-    description: 'Ecosistema completo para el bienestar de tu mascota con red social y marketplace',
-    keywords: ['mascotas', 'perros', 'gatos', 'alimentos naturales', 'red social', 'BARF', 'pellets'],
-    authors: [{ name: 'Raízel Team' }],
-    creator: 'Raízel',
-    publisher: 'Raízel',
+    metadataBase: new URL('https://manadashorts.vercel.app'),
+    title: 'ManadaShorts - Red Social para Mascotas',
+    description: 'Red social para mascotas con momentos, videos cortos y comunidad',
+    keywords: ['mascotas', 'perros', 'gatos', 'red social', 'videos cortos', 'momentos', 'manadashorts'],
+    authors: [{ name: 'ManadaShorts Team' }],
+    creator: 'ManadaShorts',
+    publisher: 'ManadaShorts',
     // PWA Meta Tags
     manifest: '/manifest.json',
     appleWebApp: {

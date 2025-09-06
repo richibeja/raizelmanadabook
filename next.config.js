@@ -30,7 +30,8 @@ const nextConfig = {
   experimental: {
     esmExternals: true,
   },
-  // distDir: 'out',
+  // Configuración para deployment
+  outputFileTracingRoot: __dirname,
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
