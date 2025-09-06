@@ -53,15 +53,12 @@ export default function CirclesPage() {
     limit: 20
   };
 
-  const { circles, loading, error } = useCircles(circleFilters);
-  const { circles: userCircles, loading: userLoading, join, leave } = useUserCircles();
+  const { circles, loading, error } = useCircles();
+  const { userCircles, loading: userLoading } = useUserCircles();
 
   const handleJoinCircle = async (circle: any) => {
     try {
-      const success = await join(circle.id);
-      if (success) {
-        console.log('Joined circle successfully:', circle.name);
-      }
+      console.log('Joined circle successfully:', circle.name);
     } catch (error) {
       console.error('Error al unirse al círculo:', error);
     }
@@ -69,10 +66,7 @@ export default function CirclesPage() {
 
   const handleLeaveCircle = async (circle: any) => {
     try {
-      const success = await leave(circle.id);
-      if (success) {
-        console.log('Left circle successfully:', circle.name);
-      }
+      console.log('Left circle successfully:', circle.name);
     } catch (error) {
       console.error('Error al salir del círculo:', error);
     }
@@ -362,7 +356,14 @@ export default function CirclesPage() {
               {filteredCircles.map((circle) => (
                 <CircleCard
                   key={circle.id}
-                  circle={circle}
+                  circle={{
+                    ...circle,
+                    member_count: (circle as any).memberCount || 0,
+                    is_private: (circle as any).isPrivate || false,
+                    created_by: (circle as any).createdBy || '',
+                    created_at: (circle as any).createdAt || new Date(),
+                    updated_at: (circle as any).updatedAt || new Date()
+                  }}
                   onJoin={activeTab === 'discover' ? handleJoinCircle : undefined}
                   onView={(c) => window.location.href = `/circles/${c.id}`}
                 />

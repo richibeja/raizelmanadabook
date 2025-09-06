@@ -14,20 +14,47 @@ export default function CalculadoraPorciones() {
   const [formData, setFormData] = useState({
     especie: 'perro',
     peso: '',
-    edad: '',
+    edadAnos: '',
+    edadMeses: '',
     actividad: 'normal',
     condicion: 'normal'
   });
 
   const [result, setResult] = useState<CalculationResult | null>(null);
+  const [showResult, setShowResult] = useState(false);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const peso = parseFloat(formData.peso);
-    const edad = parseInt(formData.edad);
+    const edadAnos = parseInt(formData.edadAnos) || 0;
+    const edadMeses = parseInt(formData.edadMeses) || 0;
     
-    if (!peso || !edad) return;
+    if (!peso || peso <= 0) {
+      alert('Por favor, ingresa un peso válido para tu mascota');
+      return;
+    }
+    
+    if (edadAnos === 0 && edadMeses === 0) {
+      alert('Por favor, ingresa la edad de tu mascota (años o meses)');
+      return;
+    }
+    
+    if (edadMeses > 11) {
+      alert('Los meses deben ser entre 0 y 11. Si tu mascota tiene más de 11 meses, suma 1 año.');
+      return;
+    }
+
+    // Convertir edad a meses totales para cálculos más precisos
+    const edadTotalMeses = (edadAnos * 12) + edadMeses;
+    const edadTotalAnos = edadTotalMeses / 12;
 
     // Cálculo base según especie
     let baseAmount = 0;
@@ -37,11 +64,11 @@ export default function CalculadoraPorciones() {
       // Cálculo para perros: 2-3% del peso corporal
       baseAmount = peso * 0.025; // 2.5% como promedio
       
-      // Ajustes por edad
-      if (edad < 1) {
+      // Ajustes por edad (usando meses totales para mayor precisión)
+      if (edadTotalMeses < 12) {
         baseAmount *= 1.5; // Cachorros necesitan más
         recommendations.push('Los cachorros necesitan más alimento por su crecimiento acelerado');
-      } else if (edad > 7) {
+      } else if (edadTotalAnos > 7) {
         baseAmount *= 0.8; // Perros senior necesitan menos
         recommendations.push('Los perros senior requieren menos calorías pero más proteína de calidad');
       }
@@ -49,11 +76,11 @@ export default function CalculadoraPorciones() {
       // Cálculo para gatos: 2-4% del peso corporal
       baseAmount = peso * 0.03; // 3% como promedio
       
-      // Ajustes por edad
-      if (edad < 1) {
+      // Ajustes por edad (usando meses totales para mayor precisión)
+      if (edadTotalMeses < 12) {
         baseAmount *= 1.3; // Gatitos necesitan más
         recommendations.push('Los gatitos necesitan más alimento por su metabolismo acelerado');
-      } else if (edad > 10) {
+      } else if (edadTotalAnos > 10) {
         baseAmount *= 0.9; // Gatos senior
         recommendations.push('Los gatos senior requieren menos calorías pero más taurina');
       }
@@ -88,6 +115,20 @@ export default function CalculadoraPorciones() {
       monthlyAmount,
       recommendations
     });
+    setShowResult(true);
+  };
+
+  const handleReset = () => {
+    setFormData({
+      especie: 'perro',
+      peso: '',
+      edadAnos: '',
+      edadMeses: '',
+      actividad: 'normal',
+      condicion: 'normal'
+    });
+    setResult(null);
+    setShowResult(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -180,25 +221,44 @@ export default function CalculadoraPorciones() {
 
               {/* Edad */}
               <div>
-                <label htmlFor="edad" className="block text-sm font-medium text-gray-700 mb-2">
-                  Edad (años)
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Edad de tu mascota
                 </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    id="edad"
-                    name="edad"
-                    value={formData.edad}
-                    onChange={handleChange}
-                    required
-                    min="0.1"
-                    max="25"
-                    step="0.1"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    placeholder="Ej: 3"
-                  />
-                  <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="relative">
+                    <input
+                      type="number"
+                      id="edadAnos"
+                      name="edadAnos"
+                      value={formData.edadAnos}
+                      onChange={handleChange}
+                      min="0"
+                      max="25"
+                      step="1"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      placeholder="Años"
+                    />
+                    <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      id="edadMeses"
+                      name="edadMeses"
+                      value={formData.edadMeses}
+                      onChange={handleChange}
+                      min="0"
+                      max="11"
+                      step="1"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      placeholder="Meses"
+                    />
+                    <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                  </div>
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Ejemplo: 2 años y 6 meses = 2 años + 6 meses
+                </p>
               </div>
 
               {/* Nivel de actividad */}
@@ -237,12 +297,21 @@ export default function CalculadoraPorciones() {
                 </select>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Calcular porciones
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  type="submit"
+                  className="flex-1 bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors font-semibold"
+                >
+                  Calcular porciones
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="flex-1 bg-gray-500 text-white py-3 px-6 rounded-lg hover:bg-gray-600 transition-colors font-semibold"
+                >
+                  Limpiar
+                </button>
+              </div>
             </form>
           </div>
 
@@ -254,26 +323,50 @@ export default function CalculadoraPorciones() {
                 <div className="bg-white rounded-2xl p-8 shadow-lg">
                   <h2 className="text-2xl font-semibold text-gray-800 mb-6">Resultado del cálculo</h2>
                   
+                  {/* Información de la mascota */}
+                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                    <div className="flex items-center justify-center space-x-6 text-sm">
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-800">
+                          {formData.especie === 'perro' ? '🐕' : '🐱'} {formData.especie === 'perro' ? 'Perro' : 'Gato'}
+                        </div>
+                        <div className="text-gray-600">Especie</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-800">{formData.peso}kg</div>
+                        <div className="text-gray-600">Peso</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-800">
+                          {Number(formData.edadAnos) > 0 ? `${formData.edadAnos} años` : ''}
+                          {Number(formData.edadAnos) > 0 && Number(formData.edadMeses) > 0 ? ' y ' : ''}
+                          {Number(formData.edadMeses) > 0 ? `${formData.edadMeses} meses` : ''}
+                        </div>
+                        <div className="text-gray-600">Edad</div>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div className="space-y-4">
-                    <div className="text-center p-6 bg-red-50 rounded-xl">
+                    <div className="text-center p-6 bg-red-50 rounded-xl border-2 border-red-200">
                       <div className="text-3xl font-bold text-red-600 mb-2">
                         {result.dailyAmount}g
                       </div>
-                      <div className="text-gray-600">Por día</div>
+                      <div className="text-gray-600 font-medium">Por día</div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <div className="text-xl font-semibold text-gray-800">
+                      <div className="text-center p-4 bg-orange-50 rounded-lg border border-orange-200">
+                        <div className="text-xl font-semibold text-orange-600">
                           {result.weeklyAmount.toLocaleString()}g
                         </div>
-                        <div className="text-sm text-gray-600">Por semana</div>
+                        <div className="text-sm text-orange-700 font-medium">Por semana</div>
                       </div>
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <div className="text-xl font-semibold text-gray-800">
+                      <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div className="text-xl font-semibold text-yellow-600">
                           {result.monthlyAmount.toLocaleString()}g
                         </div>
-                        <div className="text-sm text-gray-600">Por mes</div>
+                        <div className="text-sm text-yellow-700 font-medium">Por mes</div>
                       </div>
                     </div>
                   </div>
@@ -285,7 +378,7 @@ export default function CalculadoraPorciones() {
                     <Info className="mr-2 text-blue-600" size={20} />
                     Recomendaciones
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 mb-6">
                     {result.recommendations.map((rec, index) => (
                       <li key={index} className="flex items-start">
                         <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -293,6 +386,26 @@ export default function CalculadoraPorciones() {
                       </li>
                     ))}
                   </ul>
+                  
+                  {/* Botones de acción */}
+                  <div className="flex space-x-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => window.print()}
+                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    >
+                      Imprimir resultado
+                    </button>
+                    <button
+                      onClick={() => {
+                        const text = `Calculadora de Porciones - ${formData.especie === 'perro' ? 'Perro' : 'Gato'}\nPeso: ${formData.peso}kg\nEdad: ${formData.edadAnos} años ${formData.edadMeses} meses\n\nPorciones recomendadas:\n- Diario: ${result.dailyAmount}g\n- Semanal: ${result.weeklyAmount}g\n- Mensual: ${result.monthlyAmount}g`;
+                        navigator.clipboard.writeText(text);
+                        alert('Resultado copiado al portapapeles');
+                      }}
+                      className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                    >
+                      Copiar resultado
+                    </button>
+                  </div>
                 </div>
               </>
             ) : (

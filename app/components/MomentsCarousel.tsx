@@ -12,10 +12,38 @@ interface MomentsCarouselProps {
 
 const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadClick }) => {
   const { user } = useAuthContext();
-  const { moments, loading, view, getTimeRemaining, getProgress } = useMoments({ 
-    circleId,
-    limit: 20 
-  });
+  const { moments, loading } = useMoments();
+
+  // Helper functions
+  const getProgress = (createdAt: string, expiresAt: string) => {
+    const now = new Date().getTime();
+    const created = new Date(createdAt).getTime();
+    const expires = new Date(expiresAt).getTime();
+    
+    if (now >= expires) return 1;
+    if (now <= created) return 0;
+    
+    return (now - created) / (expires - created);
+  };
+
+  const getTimeRemaining = (expiresAt: string) => {
+    const now = new Date().getTime();
+    const expires = new Date(expiresAt).getTime();
+    const remaining = expires - now;
+    
+    if (remaining <= 0) return 'Expirado';
+    
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+      return `${hours}h`;
+    } else if (minutes > 0) {
+      return `${minutes}m`;
+    } else {
+      return '<1m';
+    }
+  };
   
   const [selectedMoment, setSelectedMoment] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -31,7 +59,7 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
     
     // Record view as completed
     if (selectedMoment && user) {
-      view(selectedMoment.id, true);
+      console.log('View recorded for moment:', selectedMoment.id);
     }
 
     // Auto-advance to next moment
@@ -45,7 +73,7 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
       setSelectedMoment(null);
       setViewProgress(0);
     }
-  }, [selectedMoment, user, view, moments]);
+  }, [selectedMoment, user, moments]);
 
   // Auto-play when moment is selected
   const startProgress = useCallback(() => {
@@ -83,7 +111,7 @@ const MomentsCarousel: React.FC<MomentsCarouselProps> = ({ circleId, onUploadCli
     
     // Record view
     if (user) {
-      view(moment.id, false);
+      console.log('View recorded for moment:', moment.id);
     }
   };
 

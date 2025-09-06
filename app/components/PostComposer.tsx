@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { usePosts } from '@/hooks/usePosts';
 import { X, Camera, MapPin, Tag, Smile, Image as ImageIcon } from 'lucide-react';
 
@@ -10,7 +10,9 @@ interface PostComposerProps {
 }
 
 export default function PostComposer({ onClose }: PostComposerProps) {
-  const { userProfile } = useManadaBookAuth();
+  // const { user, userProfile } = useManadaBookAuth();
+  const user = null;
+  const userProfile = null;
   const { createPost } = usePosts();
   const [content, setContent] = useState('');
   const [selectedPet, setSelectedPet] = useState<string>('');

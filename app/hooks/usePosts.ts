@@ -16,7 +16,7 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
 export interface Post {
   id: string;
@@ -66,7 +66,9 @@ export interface Reaction {
 }
 
 export function usePosts() {
-  const { user, userProfile } = useManadaBookAuth();
+  // const { user, userProfile } = useManadaBookAuth();
+  const user = null;
+  const userProfile = null;
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

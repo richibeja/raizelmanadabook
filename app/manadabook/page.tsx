@@ -7,6 +7,18 @@ import { usePosts } from '@/hooks/usePosts';
 import ManadaBookAuth from '@/components/ManadaBookAuth';
 import PostComposer from '@/components/PostComposer';
 import PetProfileManager from '@/components/PetProfileManager';
+import CirclesManager from '@/components/CirclesManager';
+import CommentsSection from '@/components/CommentsSection';
+import FollowManager from '@/components/FollowManager';
+import MomentsManager from '@/components/MomentsManager';
+import SnippetsManager from '@/components/SnippetsManager';
+import NotificationsManager from '@/components/NotificationsManager';
+import MarketplaceManager from '@/components/MarketplaceManager';
+import ModerationManager from '@/components/ModerationManager';
+import AnalyticsManager from '@/components/AnalyticsManager';
+import MessagingManager from '@/components/MessagingManager';
+import { useAds } from '@/hooks/useAds';
+import AdFeedCard from '@/components/AdFeedCard';
 
 // Datos de ejemplo para posts
 const postsEjemplo = [
@@ -66,9 +78,20 @@ const postsEjemplo = [
 export default function ManadaBookPage() {
   const { user, userProfile, loading, logout } = useManadaBookAuth();
   const { posts, loading: postsLoading, likePost, sharePost, deletePost } = usePosts();
+  const { ads, loading: adsLoading, error: adsError } = useAds({ status: 'active' });
   const [mostrarComposer, setMostrarComposer] = useState(false);
   const [mostrarAuth, setMostrarAuth] = useState(false);
   const [mostrarPetManager, setMostrarPetManager] = useState(false);
+  const [mostrarCircles, setMostrarCircles] = useState(false);
+  const [mostrarComments, setMostrarComments] = useState<string | null>(null);
+  const [mostrarFollow, setMostrarFollow] = useState(false);
+  const [mostrarMoments, setMostrarMoments] = useState(false);
+  const [mostrarSnippets, setMostrarSnippets] = useState(false);
+  const [mostrarNotifications, setMostrarNotifications] = useState(false);
+  const [mostrarMarketplace, setMostrarMarketplace] = useState(false);
+  const [mostrarModeration, setMostrarModeration] = useState(false);
+  const [mostrarAnalytics, setMostrarAnalytics] = useState(false);
+  const [mostrarMessaging, setMostrarMessaging] = useState(false);
 
   const handleLike = async (postId: string) => {
     try {
@@ -79,22 +102,21 @@ export default function ManadaBookPage() {
   };
 
   const handleComentar = (postId: string) => {
-    console.log('Comentar en post:', postId);
-    // TODO: Implementar sistema de comentarios
+    setMostrarComments(postId);
   };
 
   const handleCompartir = async (postId: string) => {
     try {
       await sharePost(postId);
       
-      if (navigator.share) {
-        navigator.share({
-          title: 'Post de ManadaBook',
-          text: 'Mira este post interesante en ManadaBook',
+    if (navigator.share) {
+      navigator.share({
+        title: 'Post de ManadaBook',
+        text: 'Mira este post interesante en ManadaBook',
           url: `${window.location.origin}/manadabook/post/${postId}`
-        });
-      } else {
-        navigator.clipboard.writeText(`${window.location.origin}/manadabook/post/${postId}`);
+      });
+    } else {
+      navigator.clipboard.writeText(`${window.location.origin}/manadabook/post/${postId}`);
         alert('Enlace copiado al portapapeles');
       }
     } catch (error) {
@@ -145,21 +167,21 @@ export default function ManadaBookPage() {
           </p>
           
           {user ? (
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button 
-                onClick={() => setMostrarComposer(true)}
-                style={{
-                  backgroundColor: 'white',
-                  color: '#0F6FF6',
-                  padding: '0.75rem 2rem',
-                  border: 'none',
-                  borderRadius: '0.5rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}
-              >
-                Crear Post
-              </button>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => setMostrarComposer(true)}
+              style={{
+                backgroundColor: 'white',
+                color: '#0F6FF6',
+                padding: '0.75rem 2rem',
+                border: 'none',
+                borderRadius: '0.5rem',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}
+            >
+              Crear Post
+            </button>
               <button 
                 onClick={() => setMostrarPetManager(true)}
                 style={{
@@ -173,6 +195,132 @@ export default function ManadaBookPage() {
                 }}
               >
                 Mis Mascotas
+              </button>
+              <button 
+                onClick={() => setMostrarCircles(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Círculos
+              </button>
+              <button 
+                onClick={() => setMostrarFollow(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Seguimiento
+              </button>
+              <button 
+                onClick={() => setMostrarMoments(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Moments
+              </button>
+              <button 
+                onClick={() => setMostrarSnippets(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Snippets
+              </button>
+              <button 
+                onClick={() => setMostrarNotifications(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Notificaciones
+              </button>
+              <button 
+                onClick={() => setMostrarMarketplace(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Marketplace
+              </button>
+              <button 
+                onClick={() => setMostrarModeration(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Moderación
+              </button>
+              <button 
+                onClick={() => setMostrarAnalytics(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Analytics
+              </button>
+              <button 
+                onClick={() => setMostrarMessaging(true)}
+                style={{
+                  border: '2px solid white',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Mensajes
               </button>
               <button 
                 onClick={logout}
@@ -208,18 +356,18 @@ export default function ManadaBookPage() {
               <button 
                 onClick={() => setMostrarAuth(true)}
                 style={{
-                  border: '2px solid white',
-                  color: 'white',
-                  padding: '0.75rem 2rem',
-                  borderRadius: '0.5rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent'
+              border: '2px solid white',
+              color: 'white',
+              padding: '0.75rem 2rem',
+              borderRadius: '0.5rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              backgroundColor: 'transparent'
                 }}
               >
                 Registrarse
-              </button>
-            </div>
+            </button>
+          </div>
           )}
         </div>
       </section>
@@ -297,33 +445,66 @@ export default function ManadaBookPage() {
               </button>
             </div>
           ) : (
-            posts.map((post) => (
-              <div key={post.id} style={{ 
-                backgroundColor: 'white', 
-                borderRadius: '0.75rem', 
-                overflow: 'hidden',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-              }}>
-                {/* Post Header */}
-                <div style={{ padding: '1.5rem', borderBottom: '1px solid #E5E7EB' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{
-                      width: '3rem',
-                      height: '3rem',
-                      background: 'linear-gradient(135deg, #FF7A59, #E65E3F)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontWeight: 'bold'
-                    }}>
+            // Combinar posts y anuncios
+            posts.map((post, index) => {
+              // Mostrar anuncio cada 3 posts
+              if (index > 0 && index % 3 === 0 && ads && ads.length > 0) {
+                const ad = ads[Math.floor(Math.random() * ads.length)];
+                return (
+                  <React.Fragment key={`fragment-${index}`}>
+                    <AdFeedCard
+                      key={`ad-${ad.id}`}
+                      ad={{
+                        id: ad.id,
+                        title: ad.title,
+                        description: ad.description,
+                        image_url: ad.image_url,
+                        target_audience: ad.target_audience,
+                        budget: ad.budget,
+                        start_date: ad.start_date,
+                        end_date: ad.end_date,
+                        status: ad.status,
+                        impressions: ad.impressions,
+                        clicks: ad.clicks,
+                        ctr: ad.ctr,
+                        cpc: ad.cpc,
+                        creative_type: (ad.creative_type as 'image' | 'video' | 'carousel' | 'story') || 'image',
+                        owner_name: ad.owner_username || 'Anunciante',
+                        owner_avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=32&q=80',
+                        destination_url: '#',
+                        is_sponsored: true
+                      }}
+                      onLike={(adId) => console.log('Like ad:', adId)}
+                      onShare={(adId) => console.log('Share ad:', adId)}
+                      onComment={(adId) => console.log('Comment ad:', adId)}
+                      onView={(adId) => console.log('View ad:', adId)}
+                    />
+                    <div key={post.id} style={{ 
+              backgroundColor: 'white', 
+              borderRadius: '0.75rem', 
+              overflow: 'hidden',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            }}>
+              {/* Post Header */}
+              <div style={{ padding: '1.5rem', borderBottom: '1px solid #E5E7EB' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{
+                    width: '3rem',
+                    height: '3rem',
+                    background: 'linear-gradient(135deg, #FF7A59, #E65E3F)',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontWeight: 'bold'
+                  }}>
                       {post.authorName.charAt(0)}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <h3 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.authorName}</h3>
-                        <span style={{ color: '#9CA3AF' }}>•</span>
+                      <span style={{ color: '#9CA3AF' }}>•</span>
                         <span style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
                           {new Date(post.createdAt).toLocaleDateString('es-ES', {
                             day: 'numeric',
@@ -332,9 +513,9 @@ export default function ManadaBookPage() {
                             minute: '2-digit'
                           })}
                         </span>
-                      </div>
+                    </div>
                       {post.location && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#6B7280' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#6B7280' }}>
                           📍 <span>{post.location}</span>
                         </div>
                       )}
@@ -347,50 +528,50 @@ export default function ManadaBookPage() {
                         🗑️
                       </button>
                     )}
-                  </div>
                 </div>
+              </div>
 
-                {/* Post Content */}
-                <div style={{ padding: '1.5rem' }}>
+              {/* Post Content */}
+              <div style={{ padding: '1.5rem' }}>
                   <p style={{ color: '#1F2937', marginBottom: '1rem', whiteSpace: 'pre-wrap' }}>{post.content}</p>
-                  
-                  {/* Tags */}
+                
+                {/* Tags */}
                   {post.tags.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
-                      {post.tags.map((tag, index) => (
-                        <span key={index} style={{
-                          padding: '0.25rem 0.75rem',
-                          backgroundColor: '#E6F0FF',
-                          color: '#0F6FF6',
-                          fontSize: '0.875rem',
-                          borderRadius: '9999px'
-                        }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+                  {post.tags.map((tag, index) => (
+                    <span key={index} style={{
+                      padding: '0.25rem 0.75rem',
+                      backgroundColor: '#E6F0FF',
+                      color: '#0F6FF6',
+                      fontSize: '0.875rem',
+                      borderRadius: '9999px'
+                    }}>
                           #{tag}
-                        </span>
-                      ))}
-                    </div>
+                    </span>
+                  ))}
+                </div>
                   )}
 
-                  {/* Pet Info */}
+                {/* Pet Info */}
                   {post.petName && (
-                    <div style={{ backgroundColor: '#F9FAFB', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{
-                          width: '2.5rem',
-                          height: '2.5rem',
-                          backgroundColor: '#E6FFFC',
-                          borderRadius: '50%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
+                <div style={{ backgroundColor: '#F9FAFB', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{
+                      width: '2.5rem',
+                      height: '2.5rem',
+                      backgroundColor: '#E6FFFC',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
                           <span style={{ color: '#00C2A8', fontWeight: 'bold' }}>
                             {post.petSpecies === 'dog' ? '🐕' : 
                              post.petSpecies === 'cat' ? '🐱' : 
                              post.petSpecies === 'bird' ? '🐦' : '🐾'}
                           </span>
-                        </div>
-                        <div>
+                    </div>
+                    <div>
                           <h4 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.petName}</h4>
                           <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
                             {post.petSpecies} • {post.visibility === 'public' ? 'Público' : 
@@ -400,14 +581,14 @@ export default function ManadaBookPage() {
                       </div>
                     </div>
                   )}
-                </div>
+              </div>
 
-                {/* Post Actions */}
-                <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #E5E7EB' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                      <button 
-                        onClick={() => handleLike(post.id)}
+              {/* Post Actions */}
+              <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #E5E7EB' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <button 
+                      onClick={() => handleLike(post.id)}
                         style={{ 
                           display: 'flex', 
                           alignItems: 'center', 
@@ -419,19 +600,19 @@ export default function ManadaBookPage() {
                         }}
                       >
                         {post.userLiked ? '❤️' : '🤍'} <span>{post.likesCount}</span>
-                      </button>
-                      <button 
-                        onClick={() => handleComentar(post.id)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
-                      >
+                    </button>
+                    <button 
+                      onClick={() => handleComentar(post.id)}
+                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
+                    >
                         💬 <span>{post.commentsCount}</span>
-                      </button>
-                      <button 
-                        onClick={() => handleCompartir(post.id)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
-                      >
+                    </button>
+                    <button 
+                      onClick={() => handleCompartir(post.id)}
+                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
+                    >
                         📤 <span>{post.sharesCount}</span>
-                      </button>
+                    </button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#9CA3AF', fontSize: '0.875rem' }}>
                       👁️ {post.viewsCount}
@@ -439,7 +620,156 @@ export default function ManadaBookPage() {
                   </div>
                 </div>
               </div>
-            ))
+                    </React.Fragment>
+                  );
+              }
+              
+              // Renderizar solo el post
+              return (
+                <div key={post.id} style={{
+                  backgroundColor: 'white', 
+                  borderRadius: '0.75rem', 
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}>
+                  {/* Post Header */}
+                  <div style={{ padding: '1.5rem', borderBottom: '1px solid #E5E7EB' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{
+                        width: '3rem',
+                        height: '3rem',
+                        background: 'linear-gradient(135deg, #FF7A59, #E65E3F)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold'
+                      }}>
+                        {post.authorName.charAt(0)}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <h3 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.authorName}</h3>
+                          <span style={{ color: '#9CA3AF' }}>•</span>
+                          <span style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>
+                            {new Date(post.createdAt).toLocaleDateString('es-ES', {
+                              day: 'numeric',
+                              month: 'short',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        {post.location && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#6B7280' }}>
+                            📍 <span>{post.location}</span>
+                          </div>
+                        )}
+                      </div>
+                      {post.authorId === user?.uid && (
+                        <button 
+                          onClick={() => handleDeletePost(post.id)}
+                          style={{ color: '#9CA3AF', cursor: 'pointer', border: 'none', background: 'none' }}
+                        >
+                          🗑️
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Post Content */}
+                  <div style={{ padding: '1.5rem' }}>
+                    <p style={{ color: '#1F2937', marginBottom: '1rem', whiteSpace: 'pre-wrap' }}>{post.content}</p>
+                    
+                    {/* Tags */}
+                    {post.tags.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+                        {post.tags.map((tag, index) => (
+                          <span key={index} style={{
+                            padding: '0.25rem 0.75rem',
+                            backgroundColor: '#E6F0FF',
+                            color: '#0F6FF6',
+                            fontSize: '0.875rem',
+                            borderRadius: '1rem',
+                            fontWeight: '500'
+                          }}>
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Pet Info */}
+                    {post.petName && (
+                      <div style={{ backgroundColor: '#F9FAFB', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <div style={{
+                            width: '2.5rem',
+                            height: '2.5rem',
+                            backgroundColor: '#E6FFFC',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            <span style={{ color: '#00C2A8', fontWeight: 'bold' }}>
+                              {post.petSpecies === 'dog' ? '🐕' : 
+                               post.petSpecies === 'cat' ? '🐱' : 
+                               post.petSpecies === 'bird' ? '🐦' : '🐾'}
+                            </span>
+                          </div>
+                          <div>
+                            <h4 style={{ fontWeight: 'bold', color: '#1F2937' }}>{post.petName}</h4>
+                            <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
+                              {post.petSpecies} • {post.visibility === 'public' ? 'Público' : 
+                               post.visibility === 'friends' ? 'Solo Amigos' : 'Privado'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Post Actions */}
+                  <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #E5E7EB' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <button 
+                          onClick={() => handleLike(post.id)}
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.5rem', 
+                            color: post.userLiked ? '#ef4444' : '#6B7280', 
+                            cursor: 'pointer', 
+                            border: 'none', 
+                            background: 'none' 
+                          }}
+                        >
+                          {post.userLiked ? '❤️' : '🤍'} <span>{post.likesCount}</span>
+                        </button>
+                        <button 
+                          onClick={() => handleComentar(post.id)}
+                          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
+                        >
+                          💬 <span>{post.commentsCount}</span>
+                        </button>
+                        <button 
+                          onClick={() => handleCompartir(post.id)}
+                          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6B7280', cursor: 'pointer', border: 'none', background: 'none' }}
+                        >
+                          📤 <span>{post.sharesCount}</span>
+                        </button>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#9CA3AF', fontSize: '0.875rem' }}>
+                        👁️ {post.viewsCount}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </section>
@@ -524,6 +854,49 @@ export default function ManadaBookPage() {
       
       {mostrarPetManager && (
         <PetProfileManager onClose={() => setMostrarPetManager(false)} />
+      )}
+      
+      {mostrarCircles && (
+        <CirclesManager onClose={() => setMostrarCircles(false)} />
+      )}
+      
+      {mostrarComments && (
+        <CommentsSection 
+          postId={mostrarComments} 
+          onClose={() => setMostrarComments(null)} 
+        />
+      )}
+      
+      {mostrarFollow && (
+        <FollowManager onClose={() => setMostrarFollow(false)} />
+      )}
+      
+      {mostrarMoments && (
+        <MomentsManager onClose={() => setMostrarMoments(false)} />
+      )}
+      
+      {mostrarSnippets && (
+        <SnippetsManager onClose={() => setMostrarSnippets(false)} />
+      )}
+      
+      {mostrarNotifications && (
+        <NotificationsManager onClose={() => setMostrarNotifications(false)} />
+      )}
+      
+      {mostrarMarketplace && (
+        <MarketplaceManager onClose={() => setMostrarMarketplace(false)} />
+      )}
+      
+      {mostrarModeration && (
+        <ModerationManager onClose={() => setMostrarModeration(false)} />
+      )}
+      
+      {mostrarAnalytics && (
+        <AnalyticsManager onClose={() => setMostrarAnalytics(false)} />
+      )}
+      
+      {mostrarMessaging && (
+        <MessagingManager onClose={() => setMostrarMessaging(false)} />
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+// // import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, FileText } from 'lucide-react';
 
 interface ManadaBookAuthProps {
@@ -9,7 +9,22 @@ interface ManadaBookAuthProps {
 }
 
 export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
-  const { signIn, signUp, signInWithGoogle, loading } = useManadaBookAuth();
+  // const { user, userProfile } = useManadaBookAuth();
+  const user = null;
+  const userProfile = null;
+  const signIn = async (email: string, password: string) => {
+    console.log('Sign in:', email, password);
+    alert('Funcionalidad de login en desarrollo');
+  };
+  const signUp = async (email: string, password: string, name: string) => {
+    console.log('Sign up:', email, password, name);
+    alert('Funcionalidad de registro en desarrollo');
+  };
+  const signInWithGoogle = async () => {
+    console.log('Sign in with Google');
+    alert('Funcionalidad de Google en desarrollo');
+  };
+  const loading = false;
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({

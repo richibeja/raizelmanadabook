@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { X, Plus, Edit, Trash2, Camera, MapPin, Heart, Star } from 'lucide-react';
 
 interface PetProfileManagerProps {
@@ -9,7 +9,9 @@ interface PetProfileManagerProps {
 }
 
 export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
-  const { userProfile, addPet, updatePet } = useManadaBookAuth();
+  // const { user, userProfile } = useManadaBookAuth();
+  const user = null;
+  const userProfile = null;
   const [isEditing, setIsEditing] = useState(false);
   const [editingPet, setEditingPet] = useState<string | null>(null);
   const [formData, setFormData] = useState({

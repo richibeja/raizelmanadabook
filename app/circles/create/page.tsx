@@ -27,7 +27,7 @@ const cities = [
 export default function CreateCirclePage() {
   const router = useRouter();
   const { user } = useAuthContext();
-  const { createNew } = useCircles();
+  const { createCircle } = useCircles();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -67,25 +67,18 @@ export default function CreateCirclePage() {
       const circleData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
-        photoURL: formData.photoURL,
-        coverURL: formData.coverURL,
-        isPrivate: formData.isPrivate,
-        requiresApproval: formData.requiresApproval,
-        location: formData.city ? {
-          city: formData.city,
-          country: formData.country
-        } : undefined,
+        category: formData.category as any,
+        location: formData.city ? `${formData.city}, ${formData.country}` : undefined,
         tags: [formData.category, ...formData.tags].filter(Boolean),
+        isPublic: !formData.isPrivate,
         rules: formData.rules ? formData.rules.split('\n').filter(Boolean) : [],
-        settings: {
-          allowPosts: true,
-          allowEvents: true,
-          allowMarketplace: true
-        },
-        createdBy: user.uid
+        requirements: {
+          minAge: 0,
+          verificationRequired: formData.requiresApproval
+        }
       };
 
-      const circleId = await createNew(circleData);
+      const circleId = await createCircle(circleData);
       
       if (circleId) {
         router.push(`/circles/${circleId}`);

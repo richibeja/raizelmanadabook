@@ -37,15 +37,15 @@ export default function AnalyticsEventsPage() {
   };
 
   const filteredEvents = events.filter(event => {
-    if (filters.event_type && event.event_type !== filters.event_type) return false;
-    if (filters.user_id && event.user_id !== filters.user_id) return false;
-    if (searchQuery && !event.event_type.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (filters.event_type && event.eventType !== filters.event_type) return false;
+    if (filters.user_id && event.userId !== filters.user_id) return false;
+    if (searchQuery && !event.eventType.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
 
-  const eventTypes = [...new Set(events.map(e => e.event_type))];
+  const eventTypes = [...new Set(events.map(e => e.eventType))];
   const totalEvents = events.length;
-  const uniqueUsers = new Set(events.map(e => e.user_id).filter(Boolean)).size;
+  const uniqueUsers = new Set(events.map(e => e.userId).filter(Boolean)).size;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -167,23 +167,23 @@ export default function AnalyticsEventsPage() {
                     <div className="flex-1">
                       <div className="flex items-center">
                         <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                          {event.event_type}
+                          {event.eventType}
                         </span>
-                        {event.user_id && (
+                        {event.userId && (
                           <span className="ml-2 text-sm text-gray-500">
-                            Usuario: {event.user_id}
+                            Usuario: {event.userId}
                           </span>
                         )}
-                        {event.pet_id && (
+                        {event.eventData.metadata?.petId && (
                           <span className="ml-2 text-sm text-gray-500">
-                            Mascota: {event.pet_id}
+                            Mascota: {event.eventData.metadata.petId}
                           </span>
                         )}
                       </div>
                       
                       <div className="mt-2">
                         <p className="text-sm text-gray-600">
-                          {JSON.stringify(event.metadata, null, 2)}
+                          {JSON.stringify(event.eventData.metadata, null, 2)}
                         </p>
                       </div>
                     </div>

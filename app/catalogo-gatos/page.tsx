@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Heart, Star } from 'lucide-react';
 
@@ -7,7 +7,6 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
   image: string;
   category: string;
   ingredients: string[];
@@ -18,46 +17,97 @@ const products: Product[] = [
   {
     id: '1',
     name: 'Vital BARF - Pollo para Gatos',
-    description: 'Pollo → vísceras y carne de pollo + calabacín, zanahoria y aceite de pescado.',
-    price: 42000,
+    description: 'Pollo → vísceras y carne de pollo + coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio.',
     image: '/images/gato-pollo.jpg',
     category: 'BARF',
-    ingredients: ['Vísceras de pollo', 'Carne de pollo', 'Calabacín', 'Zanahoria', 'Aceite de pescado'],
-    benefits: ['Alimento crudo natural', 'Mejora digestión', 'Pelo brillante', 'Energía natural']
+    ingredients: ['Vísceras de pollo', 'Carne de pollo', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Alimento crudo natural', 'Mejora digestión', 'Pelo brillante', 'Energía natural', 'Huesos fuertes']
   },
   {
     id: '2',
     name: 'Vital BARF - Res para Gatos',
-    description: 'Res → vísceras y carne de res + calabacín, zanahoria y linaza.',
-    price: 48000,
+    description: 'Res → vísceras y carne de res + coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio.',
     image: '/images/gato-res.jpg',
     category: 'BARF',
-    ingredients: ['Vísceras de res', 'Carne de res', 'Calabacín', 'Zanahoria', 'Linaza'],
-    benefits: ['Proteína de alta calidad', 'Digestión mejorada', 'Sistema inmune fuerte', 'Peso saludable']
+    ingredients: ['Vísceras de res', 'Carne de res', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Proteína de alta calidad', 'Digestión mejorada', 'Sistema inmune fuerte', 'Peso saludable', 'Minerales esenciales']
   },
   {
     id: '3',
-    name: 'Vital Pellets Naturales para Gatos',
-    description: 'Formato adaptado a gatos: vísceras con hierbas digestivas y granos suaves.',
-    price: 35000,
-    image: '/images/gato-pellets.jpg',
-    category: 'Pellets',
-    ingredients: ['Vísceras deshidratadas', 'Hierbas digestivas', 'Granos suaves', 'Vitaminas naturales'],
-    benefits: ['Fácil almacenamiento', 'Nutrición completa', 'Larga duración', 'Conveniente']
+    name: 'Vital BARF - Cordero para Gatos',
+    description: 'Cordero → vísceras y carne de cordero + coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio. Ideal para gatos sensibles.',
+    image: '/images/gato-cordero.jpg',
+    category: 'BARF',
+    ingredients: ['Vísceras de cordero', 'Carne de cordero', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Proteína de cordero', 'Fácil digestión', 'Rico en hierro', 'Ideal para gatos sensibles', 'Sabor suave']
   },
   {
     id: '4',
+    name: 'Vital Pellets Naturales para Gatos',
+    description: 'Formato adaptado a gatos: vísceras con coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio.',
+    image: '/images/gato-pellets.jpg',
+    category: 'Pellets',
+    ingredients: ['Vísceras deshidratadas', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Fácil almacenamiento', 'Nutrición completa', 'Larga duración', 'Conveniente', 'Ingredientes completos']
+  },
+  {
+    id: '5',
     name: 'Bocaditos Naturales para Gatos',
-    description: 'Mini porciones de vísceras con avena y linaza. Especiales para premiar o complementar la dieta.',
-    price: 18000,
+    description: 'Mini porciones de vísceras con coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio. Especiales para premiar o complementar la dieta.',
     image: '/images/gato-bocaditos.jpg',
     category: 'Bocaditos',
-    ingredients: ['Vísceras', 'Avena', 'Linaza', 'Especias naturales'],
-    benefits: ['Formato pequeño', 'Digestión mejorada', 'Nutrición concentrada', 'Fácil de servir']
+    ingredients: ['Vísceras', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Formato pequeño', 'Digestión mejorada', 'Nutrición concentrada', 'Fácil de servir', 'Ingredientes naturales']
+  },
+  {
+    id: '6',
+    name: 'Bandeja Hígado de Res para Gatos',
+    description: 'Vísceras crudas de hígado de res en tajadas pequeñas. Se puede dar crudo o preparar en recetas. Rico en hierro y vitaminas.',
+    image: '/images/gato-higado.jpg',
+    category: 'Vísceras Crudas',
+    ingredients: ['Hígado de res fresco', 'Cortado en tajadas pequeñas'],
+    benefits: ['Rico en hierro', 'Vitaminas del grupo B', 'Se puede dar crudo', 'Ideal para recetas', 'Alto valor nutricional']
   }
 ];
 
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+export default function CatalogoGatosPage() {
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [cart, setCart] = useState<Set<string>>(new Set());
+
+  const handleAddToFavorites = (productId: string) => {
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(productId)) {
+        newFavorites.delete(productId);
+        alert('Producto removido de favoritos');
+      } else {
+        newFavorites.add(productId);
+        alert('Producto agregado a favoritos');
+      }
+      return newFavorites;
+    });
+  };
+
+  const handleAddToCart = (productId: string) => {
+    setCart(prev => {
+      const newCart = new Set(prev);
+      if (newCart.has(productId)) {
+        alert('Este producto ya está en tu carrito');
+      } else {
+        newCart.add(productId);
+        alert('Producto agregado al carrito');
+      }
+      return newCart;
+    });
+  };
+
+  const handleContactWhatsApp = (productName: string) => {
+    const message = `Hola! Me interesa el producto: ${productName}. ¿Podrían darme más información sobre disponibilidad y cómo puedo adquirirlo?`;
+    const whatsappUrl = `https://wa.me/573001234567?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
       {/* Imagen del producto */}
@@ -108,16 +158,25 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         {/* Precio y acciones */}
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-2xl font-bold text-gray-800">${product.price.toLocaleString()}</span>
-            <span className="text-sm text-gray-500 ml-1">COP</span>
+            <span className="text-lg font-semibold text-green-600">Consultar precio</span>
           </div>
           <div className="flex space-x-2">
-            <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-              <Heart size={20} />
+            <button 
+              onClick={() => handleAddToFavorites(product.id)}
+              className={`p-2 transition-colors ${
+                favorites.has(product.id) 
+                  ? 'text-red-500' 
+                  : 'text-gray-400 hover:text-red-500'
+              }`}
+            >
+              <Heart size={20} fill={favorites.has(product.id) ? 'currentColor' : 'none'} />
             </button>
-            <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-1">
+            <button 
+              onClick={() => handleContactWhatsApp(product.name)}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-1"
+            >
               <ShoppingCart size={16} />
-              <span>Comprar</span>
+              <span>Consultar</span>
             </button>
           </div>
         </div>
@@ -126,7 +185,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   );
 };
 
-export default function CatalogoGatos() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
       <div className="max-w-7xl mx-auto px-4 py-8">

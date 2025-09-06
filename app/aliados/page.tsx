@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Filter, Search, MapPin, Users } from 'lucide-react';
+import { ArrowLeft, Filter, Search, MapPin, Users, Plus, Edit, Trash2, Phone, Mail, Globe, MessageCircle, Eye, EyeOff } from 'lucide-react';
 import TarjetaAliado from '../components/TarjetaAliado';
 
 interface Affiliate {
@@ -23,31 +23,130 @@ export default function AliadosPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedContactType, setSelectedContactType] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
+  const [showInactive, setShowInactive] = useState(false);
 
-  // Obtener aliados desde la API
+  // Datos de ejemplo para aliados
+  const sampleAffiliates: Affiliate[] = [
+    {
+      id: '1',
+      name: 'Veterinaria San Francisco',
+      contact_type: 'WhatsApp',
+      contact_value: '+57 300 123 4567',
+      region: 'Bogotá',
+      description: 'Clínica veterinaria especializada en medicina interna y cirugía. Ofrecemos servicios de consulta, cirugía y hospitalización.',
+      logo_url: null,
+      is_active: true
+    },
+    {
+      id: '2',
+      name: 'Pet Store Central',
+      contact_type: 'Email',
+      contact_value: 'ventas@petstorecentral.com',
+      region: 'Medellín',
+      description: 'Tienda especializada en productos naturales para mascotas. Distribuimos alimentos BARF, juguetes y accesorios.',
+      logo_url: null,
+      is_active: true
+    },
+    {
+      id: '3',
+      name: 'Guardería Canina HappyPets',
+      contact_type: 'Teléfono',
+      contact_value: '+57 310 987 6543',
+      region: 'Cali',
+      description: 'Guardería y hotel para perros con servicios de paseo, entrenamiento y cuidado especializado.',
+      logo_url: null,
+      is_active: true
+    },
+    {
+      id: '4',
+      name: 'Clínica Veterinaria del Norte',
+      contact_type: 'Web',
+      contact_value: 'https://veterinariadelnorte.com',
+      region: 'Barranquilla',
+      description: 'Centro veterinario con más de 15 años de experiencia. Especialistas en cardiología y dermatología.',
+      logo_url: null,
+      is_active: false
+    },
+    {
+      id: '5',
+      name: 'Alimentos Naturales PetFood',
+      contact_type: 'WhatsApp',
+      contact_value: '+57 315 456 7890',
+      region: 'Bucaramanga',
+      description: 'Fabricantes de alimentos naturales para perros y gatos. Productos orgánicos y sin conservantes.',
+      logo_url: null,
+      is_active: true
+    }
+  ];
+
+  // Cargar aliados (simulando API)
   useEffect(() => {
-    const fetchAffiliates = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/affiliates');
-        const result = await response.json();
-        
-        if (result.success) {
-          setAffiliates(result.data);
-          setFilteredAffiliates(result.data);
-        } else {
-          setError(result.message || 'Error al cargar los aliados');
-        }
-      } catch (err) {
-        setError('Error de conexión al cargar los aliados');
-        console.error('Error fetching affiliates:', err);
-      } finally {
+    const loadAffiliates = () => {
+      setLoading(true);
+      setTimeout(() => {
+        setAffiliates(sampleAffiliates);
+        setFilteredAffiliates(sampleAffiliates);
         setLoading(false);
-      }
+      }, 1000);
     };
 
-    fetchAffiliates();
+    loadAffiliates();
   }, []);
+
+  // Funciones de gestión de aliados
+  const handleAddAffiliate = (newAffiliate: Omit<Affiliate, 'id'>) => {
+    const affiliate: Affiliate = {
+      ...newAffiliate,
+      id: Date.now().toString()
+    };
+    setAffiliates(prev => [...prev, affiliate]);
+    setShowAddModal(false);
+    alert('Aliado agregado exitosamente');
+  };
+
+  const handleEditAffiliate = (updatedAffiliate: Affiliate) => {
+    setAffiliates(prev => 
+      prev.map(affiliate => 
+        affiliate.id === updatedAffiliate.id ? updatedAffiliate : affiliate
+      )
+    );
+    setEditingAffiliate(null);
+    alert('Aliado actualizado exitosamente');
+  };
+
+  const handleDeleteAffiliate = (id: string) => {
+    if (confirm('¿Estás seguro de que quieres eliminar este aliado?')) {
+      setAffiliates(prev => prev.filter(affiliate => affiliate.id !== id));
+      alert('Aliado eliminado exitosamente');
+    }
+  };
+
+  const handleToggleActive = (id: string) => {
+    setAffiliates(prev => 
+      prev.map(affiliate => 
+        affiliate.id === id ? { ...affiliate, is_active: !affiliate.is_active } : affiliate
+      )
+    );
+  };
+
+  const handleContact = (affiliate: Affiliate) => {
+    switch (affiliate.contact_type) {
+      case 'WhatsApp':
+        window.open(`https://wa.me/${affiliate.contact_value.replace(/\D/g, '')}`, '_blank');
+        break;
+      case 'Email':
+        window.open(`mailto:${affiliate.contact_value}`, '_blank');
+        break;
+      case 'Teléfono':
+        window.open(`tel:${affiliate.contact_value}`, '_blank');
+        break;
+      case 'Web':
+        window.open(affiliate.contact_value, '_blank');
+        break;
+    }
+  };
 
   // Filtrar aliados según búsqueda y filtros
   useEffect(() => {
@@ -72,8 +171,13 @@ export default function AliadosPage() {
       filtered = filtered.filter(affiliate => affiliate.contact_type === selectedContactType);
     }
 
+    // Filtro por estado activo/inactivo
+    if (!showInactive) {
+      filtered = filtered.filter(affiliate => affiliate.is_active);
+    }
+
     setFilteredAffiliates(filtered);
-  }, [affiliates, searchTerm, selectedRegion, selectedContactType]);
+  }, [affiliates, searchTerm, selectedRegion, selectedContactType, showInactive]);
 
   // Obtener regiones únicas para el filtro
   const uniqueRegions = Array.from(new Set(affiliates.map(affiliate => affiliate.region))).sort();
@@ -132,11 +236,22 @@ export default function AliadosPage() {
             <ArrowLeft size={20} className="mr-2" />
             Volver a Raízel
           </Link>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Nuestros Aliados</h1>
-          <p className="text-lg text-gray-600 max-w-3xl">
-            Contacta directamente a los distribuidores autorizados de nuestros productos. 
-            Encuentra el aliado más cercano a ti y obtén productos Raízel de calidad.
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">Nuestros Aliados</h1>
+              <p className="text-lg text-gray-600 max-w-3xl">
+                Contacta directamente a los distribuidores autorizados de nuestros productos. 
+                Encuentra el aliado más cercano a ti y obtén productos Raízel de calidad.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+            >
+              <Plus size={20} />
+              <span>Agregar Aliado</span>
+            </button>
+          </div>
         </div>
 
         {/* Estadísticas */}
@@ -216,6 +331,22 @@ export default function AliadosPage() {
               Limpiar filtros
             </button>
           </div>
+          
+          {/* Toggle para mostrar inactivos */}
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={showInactive}
+                onChange={(e) => setShowInactive(e.target.checked)}
+                className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+              />
+              <span className="text-sm text-gray-700">Mostrar aliados inactivos</span>
+            </label>
+            <div className="text-sm text-gray-500">
+              Mostrando {filteredAffiliates.length} de {affiliates.length} aliados
+            </div>
+          </div>
 
           {/* Resultados del filtro */}
           <div className="text-sm text-gray-600">
@@ -232,7 +363,51 @@ export default function AliadosPage() {
         {filteredAffiliates.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredAffiliates.map((affiliate) => (
-              <TarjetaAliado key={affiliate.id} affiliate={affiliate} />
+              <div key={affiliate.id} className="relative">
+                <TarjetaAliado affiliate={affiliate} />
+                
+                {/* Botones de acción */}
+                <div className="absolute top-4 right-4 flex space-x-2">
+                  <button
+                    onClick={() => handleContact(affiliate)}
+                    className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors"
+                    title="Contactar"
+                  >
+                    {affiliate.contact_type === 'WhatsApp' && <MessageCircle size={16} />}
+                    {affiliate.contact_type === 'Email' && <Mail size={16} />}
+                    {affiliate.contact_type === 'Teléfono' && <Phone size={16} />}
+                    {affiliate.contact_type === 'Web' && <Globe size={16} />}
+                  </button>
+                  
+                  <button
+                    onClick={() => setEditingAffiliate(affiliate)}
+                    className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                    title="Editar"
+                  >
+                    <Edit size={16} />
+                  </button>
+                  
+                  <button
+                    onClick={() => handleToggleActive(affiliate.id)}
+                    className={`p-2 rounded-full transition-colors ${
+                      affiliate.is_active 
+                        ? 'bg-yellow-600 text-white hover:bg-yellow-700' 
+                        : 'bg-gray-600 text-white hover:bg-gray-700'
+                    }`}
+                    title={affiliate.is_active ? 'Desactivar' : 'Activar'}
+                  >
+                    {affiliate.is_active ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                  
+                  <button
+                    onClick={() => handleDeleteAffiliate(affiliate.id)}
+                    className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                    title="Eliminar"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         ) : (
@@ -277,7 +452,160 @@ export default function AliadosPage() {
             </Link>
           </div>
         </div>
+
+        {/* Modal para agregar/editar aliado */}
+        {(showAddModal || editingAffiliate) && (
+          <AffiliateModal
+            affiliate={editingAffiliate}
+            onSave={editingAffiliate ? handleEditAffiliate : handleAddAffiliate}
+            onClose={() => {
+              setShowAddModal(false);
+              setEditingAffiliate(null);
+            }}
+          />
+        )}
       </div>
     </div>
   );
 }
+
+// Componente Modal para agregar/editar aliados
+interface AffiliateModalProps {
+  affiliate?: Affiliate | null;
+  onSave: (affiliate: Affiliate) => void;
+  onClose: () => void;
+}
+
+const AffiliateModal: React.FC<AffiliateModalProps> = ({ affiliate, onSave, onClose }) => {
+  const [formData, setFormData] = useState({
+    name: affiliate?.name || '',
+    contact_type: affiliate?.contact_type || 'WhatsApp',
+    contact_value: affiliate?.contact_value || '',
+    region: affiliate?.region || '',
+    description: affiliate?.description || '',
+    is_active: affiliate?.is_active ?? true
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (affiliate) {
+      onSave({ ...affiliate, ...formData });
+    } else {
+      onSave(formData as Affiliate);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          {affiliate ? 'Editar Aliado' : 'Agregar Nuevo Aliado'}
+        </h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nombre del aliado
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Tipo de contacto
+              </label>
+              <select
+                value={formData.contact_type}
+                onChange={(e) => setFormData({ ...formData, contact_type: e.target.value as any })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Email">Email</option>
+                <option value="Teléfono">Teléfono</option>
+                <option value="Web">Web</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Valor de contacto
+              </label>
+              <input
+                type="text"
+                value={formData.contact_value}
+                onChange={(e) => setFormData({ ...formData, contact_value: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ej: +57 300 123 4567"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Región
+              </label>
+              <input
+                type="text"
+                value={formData.region}
+                onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ej: Bogotá"
+                required
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Descripción
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={4}
+              placeholder="Describe los servicios o productos que ofrece este aliado..."
+              required
+            />
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="is_active"
+              checked={formData.is_active}
+              onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+            />
+            <label htmlFor="is_active" className="text-sm text-gray-700">
+              Aliado activo
+            </label>
+          </div>
+          
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              {affiliate ? 'Actualizar' : 'Agregar'} Aliado
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};

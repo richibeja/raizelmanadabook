@@ -6,9 +6,11 @@
       "@/lib/*": ["./lib/*"],
       "@/components/*": ["./app/components/*"],
       "@/hooks/*": ["./app/hooks/*"],
+      "@/contexts/*": ["./app/contexts/*"],
       "@/lib": ["./lib"],
       "@/components": ["./app/components"],
-      "@/hooks": ["./app/hooks"]
+      "@/hooks": ["./app/hooks"],
+      "@/contexts": ["./app/contexts"]
     },
     "target": "ES2017",
     "lib": [

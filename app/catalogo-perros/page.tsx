@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Heart, Star } from 'lucide-react';
 
@@ -7,7 +7,6 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
   image: string;
   category: string;
   ingredients: string[];
@@ -18,64 +17,122 @@ const products: Product[] = [
   {
     id: '1',
     name: 'Vital BARF - Pollo',
-    description: 'Alimento crudo biológicamente apropiado con vísceras y carne de pollo, verduras, avena, linaza y plantas medicinales.',
-    price: 45000,
+    description: 'Alimento crudo biológicamente apropiado con vísceras y carne de pollo, coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio.',
     image: '/images/producto-pollo.jpg',
     category: 'BARF',
-    ingredients: ['Vísceras de pollo', 'Carne de pollo', 'Verduras', 'Avena', 'Linaza', 'Plantas medicinales'],
-    benefits: ['Alimento crudo natural', 'Mejora digestión', 'Pelo brillante', 'Energía natural']
+    ingredients: ['Vísceras de pollo', 'Carne de pollo', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Alimento crudo natural', 'Mejora digestión', 'Pelo brillante', 'Energía natural', 'Huesos fuertes']
   },
   {
     id: '2',
     name: 'Vital BARF - Res',
-    description: 'Vísceras de res, zanahoria, calabacín, avena, linaza y plantas digestivas.',
-    price: 52000,
+    description: 'Vísceras de res, coliflor, zanahoria, linaza, aceites naturales, sal marina, calcio y plantas digestivas.',
     image: '/images/producto-res.jpg',
     category: 'BARF',
-    ingredients: ['Vísceras de res', 'Zanahoria', 'Calabacín', 'Avena', 'Linaza', 'Plantas digestivas'],
-    benefits: ['Proteína de alta calidad', 'Digestión mejorada', 'Sistema inmune fuerte', 'Peso saludable']
+    ingredients: ['Vísceras de res', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio', 'Plantas digestivas'],
+    benefits: ['Proteína de alta calidad', 'Digestión mejorada', 'Sistema inmune fuerte', 'Peso saludable', 'Minerales esenciales']
   },
   {
     id: '3',
+    name: 'Vital BARF - Cordero',
+    description: 'Alimento crudo con carne y vísceras de cordero, coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio.',
+    image: '/images/producto-cordero.jpg',
+    category: 'BARF',
+    ingredients: ['Carne de cordero', 'Vísceras de cordero', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Proteína de cordero', 'Fácil digestión', 'Rico en hierro', 'Ideal para perros sensibles', 'Sabor suave']
+  },
+  {
+    id: '4',
     name: 'Vital Pellets Naturales',
     description: 'Pellets deshidratados de vísceras con plantas medicinales y granos funcionales. Prácticos y de larga duración.',
-    price: 38000,
     image: '/images/pellets.jpg',
     category: 'Pellets',
     ingredients: ['Vísceras deshidratadas', 'Plantas medicinales', 'Granos funcionales', 'Vitaminas naturales'],
     benefits: ['Fácil almacenamiento', 'Nutrición completa', 'Larga duración', 'Conveniente']
   },
   {
-    id: '4',
-    name: 'Chorizos BARF',
-    description: 'Elaborados con vísceras frescas. Recubiertos de avena y linaza para mejor digestión.',
-    price: 28000,
-    image: '/images/chorizos.jpg',
-    category: 'Chorizos',
-    ingredients: ['Vísceras frescas', 'Avena', 'Linaza', 'Especias naturales'],
-    benefits: ['Formato práctico', 'Digestión mejorada', 'Nutrición concentrada', 'Fácil de servir']
-  },
-  {
     id: '5',
-    name: 'Albóndigas Funcionales',
-    description: 'Hechas con vísceras + avena y linaza. Formato práctico para porciones diarias.',
-    price: 32000,
-    image: '/images/albondegas.jpg',
-    category: 'Albóndigas',
-    ingredients: ['Vísceras', 'Avena', 'Linaza', 'Verduras', 'Hierbas naturales'],
-    benefits: ['Porciones controladas', 'Nutrición balanceada', 'Fácil de medir', 'Ideal para dietas']
+    name: 'Bandeja Hígado de Res - Solo',
+    description: 'Vísceras crudas de hígado de res en tajadas. Se puede dar crudo o preparar en recetas. Rico en hierro y vitaminas.',
+    image: '/images/bandeja-higado-solo.jpg',
+    category: 'Vísceras Crudas',
+    ingredients: ['Hígado de res fresco', 'Cortado en tajadas'],
+    benefits: ['Rico en hierro', 'Vitaminas del grupo B', 'Se puede dar crudo', 'Ideal para recetas', 'Alto valor nutricional']
   },
   {
     id: '6',
+    name: 'Bandeja Vísceras Mixtas',
+    description: 'Bandeja con hígado, pulmón, corazón y lengua de res en tajadas. Mezcla completa de vísceras para nutrición óptima.',
+    image: '/images/bandeja-viceras-mixtas.jpg',
+    category: 'Vísceras Crudas',
+    ingredients: ['Hígado de res', 'Pulmón de res', 'Corazón de res', 'Lengua de res', 'Cortado en tajadas'],
+    benefits: ['Nutrición completa', 'Variedad de vísceras', 'Se puede dar crudo', 'Ideal para recetas', 'Proteína de alta calidad']
+  },
+  {
+    id: '7',
+    name: 'Chorizos BARF',
+    description: 'Elaborados con vísceras frescas, coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio.',
+    image: '/images/chorizos.jpg',
+    category: 'Chorizos',
+    ingredients: ['Vísceras frescas', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Formato práctico', 'Digestión mejorada', 'Nutrición concentrada', 'Fácil de servir', 'Ingredientes naturales']
+  },
+  {
+    id: '8',
+    name: 'Albóndigas Funcionales',
+    description: 'Hechas con vísceras, coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio. Formato práctico para porciones diarias.',
+    image: '/images/albondegas.jpg',
+    category: 'Albóndigas',
+    ingredients: ['Vísceras', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
+    benefits: ['Porciones controladas', 'Nutrición balanceada', 'Fácil de medir', 'Ideal para dietas', 'Ingredientes completos']
+  },
+  {
+    id: '9',
     name: 'Helados Naturales',
-    description: 'Con base de vísceras + frutas naturales (plátano, arándanos, manzana). Refrescantes, digestivos y sin químicos.',
-    price: 15000,
+    description: 'Con base de vísceras, coliflor, zanahoria, linaza, aceites naturales, sal marina, calcio + frutas naturales (plátano, arándanos, manzana). Refrescantes, digestivos y sin químicos.',
     image: '/images/helados.jpg',
     category: 'Helados',
-    ingredients: ['Vísceras', 'Plátano', 'Arándanos', 'Manzana', 'Agua natural'],
-    benefits: ['Refrescante', 'Sin químicos', 'Digestivo', 'Premio saludable']
+    ingredients: ['Vísceras', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio', 'Plátano', 'Arándanos', 'Manzana', 'Agua natural'],
+    benefits: ['Refrescante', 'Sin químicos', 'Digestivo', 'Premio saludable', 'Ingredientes completos']
   }
 ];
+
+export default function CatalogoPerrosPage() {
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [cart, setCart] = useState<Set<string>>(new Set());
+
+  const handleAddToFavorites = (productId: string) => {
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(productId)) {
+        newFavorites.delete(productId);
+        alert('Producto removido de favoritos');
+      } else {
+        newFavorites.add(productId);
+        alert('Producto agregado a favoritos');
+      }
+      return newFavorites;
+    });
+  };
+
+  const handleAddToCart = (productId: string) => {
+    setCart(prev => {
+      const newCart = new Set(prev);
+      if (newCart.has(productId)) {
+        alert('Este producto ya está en tu carrito');
+      } else {
+        newCart.add(productId);
+        alert('Producto agregado al carrito');
+      }
+      return newCart;
+    });
+  };
+
+  const handleContactWhatsApp = (productName: string) => {
+    const message = `Hola! Me interesa el producto: ${productName}. ¿Podrían darme más información sobre disponibilidad y cómo puedo adquirirlo?`;
+    const whatsappUrl = `https://wa.me/573001234567?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
@@ -128,16 +185,25 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         {/* Precio y acciones */}
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-2xl font-bold text-gray-800">${product.price.toLocaleString()}</span>
-            <span className="text-sm text-gray-500 ml-1">COP</span>
+            <span className="text-lg font-semibold text-green-600">Consultar precio</span>
           </div>
           <div className="flex space-x-2">
-            <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-              <Heart size={20} />
+            <button 
+              onClick={() => handleAddToFavorites(product.id)}
+              className={`p-2 transition-colors ${
+                favorites.has(product.id) 
+                  ? 'text-red-500' 
+                  : 'text-gray-400 hover:text-red-500'
+              }`}
+            >
+              <Heart size={20} fill={favorites.has(product.id) ? 'currentColor' : 'none'} />
             </button>
-            <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-1">
+            <button 
+              onClick={() => handleContactWhatsApp(product.name)}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-1"
+            >
               <ShoppingCart size={16} />
-              <span>Comprar</span>
+              <span>Consultar</span>
             </button>
           </div>
         </div>
@@ -146,7 +212,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   );
 };
 
-export default function CatalogoPerros() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       <div className="max-w-7xl mx-auto px-4 py-8">

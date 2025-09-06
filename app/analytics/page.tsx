@@ -15,7 +15,7 @@ import {
 
 export default function AnalyticsPage() {
   const { 
-    metrics, 
+    dashboardData, 
     loading, 
     error
   } = useAnalyticsDashboard();
@@ -54,7 +54,7 @@ export default function AnalyticsPage() {
     {
       id: 'total_users',
       title: 'Total Usuarios',
-      value: metrics?.total_users || 0,
+      value: dashboardData?.totalUsers || 0,
       change: 12,
       changeType: 'increase' as const,
       icon: Users,
@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
     {
       id: 'total_posts',
       title: 'Total Publicaciones',
-      value: metrics?.total_posts || 0,
+      value: dashboardData?.totalPosts || 0,
       change: 8,
       changeType: 'increase' as const,
       icon: FileText,
@@ -72,7 +72,7 @@ export default function AnalyticsPage() {
     {
       id: 'total_interactions',
       title: 'Total Interacciones',
-      value: metrics?.total_interactions || 0,
+      value: dashboardData?.totalLikes || 0,
       change: 15,
       changeType: 'increase' as const,
       icon: Heart,
@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
     {
       id: 'daily_active_users',
       title: 'Usuarios Activos Diarios',
-      value: metrics?.daily_active_users || 0,
+      value: dashboardData?.totalComments || 0,
       change: 5,
       changeType: 'increase' as const,
       icon: TrendingUp,
@@ -177,7 +177,7 @@ export default function AnalyticsPage() {
           <div className="bg-white rounded-xl shadow-sm border p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Crecimiento Semanal</h2>
             <div className="text-3xl font-bold text-green-600">
-              +{metrics?.weekly_growth || 0}%
+              +{dashboardData?.weeklyGrowth || 0}%
             </div>
             <p className="text-sm text-gray-500 mt-2">
               Comparado con la semana anterior
@@ -190,13 +190,13 @@ export default function AnalyticsPage() {
               {events.slice(0, 5).map((event) => (
                 <div key={event.id} className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{event.event_type}</p>
+                    <p className="text-sm font-medium text-gray-900">{event.eventType}</p>
                     <p className="text-xs text-gray-500">
                       {new Date(event.timestamp).toLocaleString()}
                     </p>
                   </div>
-                  {event.user_id && (
-                    <span className="text-xs text-gray-400">Usuario: {event.user_id}</span>
+                  {event.userId && (
+                    <span className="text-xs text-gray-400">Usuario: {event.userId}</span>
                   )}
                 </div>
               ))}
@@ -222,24 +222,24 @@ export default function AnalyticsPage() {
                 <div key={event.id} className="border rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">{event.event_type}</h3>
+                      <h3 className="font-medium text-gray-900">{event.eventType}</h3>
                       <p className="text-sm text-gray-500">
                         {new Date(event.timestamp).toLocaleString()}
                       </p>
                     </div>
                     <div className="text-right">
-                      {event.user_id && (
-                        <p className="text-sm text-gray-600">Usuario: {event.user_id}</p>
+                      {event.userId && (
+                        <p className="text-sm text-gray-600">Usuario: {event.userId}</p>
                       )}
-                      {event.pet_id && (
-                        <p className="text-sm text-gray-600">Mascota: {event.pet_id}</p>
+                      {event.eventData.metadata?.petId && (
+                        <p className="text-sm text-gray-600">Mascota: {event.eventData.metadata.petId}</p>
                       )}
                     </div>
                   </div>
-                  {Object.keys(event.metadata).length > 0 && (
+                  {Object.keys(event.eventData.metadata || {}).length > 0 && (
                     <div className="mt-2">
                       <pre className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-                        {JSON.stringify(event.metadata, null, 2)}
+                        {JSON.stringify(event.eventData.metadata, null, 2)}
                       </pre>
                     </div>
                   )}

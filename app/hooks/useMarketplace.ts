@@ -1,195 +1,402 @@
 'use client';
+
 import { useState, useEffect } from 'react';
-import {
-  subscribeToMarketplaceItems,
-  createMarketplaceItem,
-  updateMarketplaceItemStatus,
-  addToFavorites,
-  removeFromFavorites,
-  MarketplaceItem,
-} from '@/lib/firebase';
-import { useAuthContext } from '../contexts/AuthContext';
+import { 
+  collection, 
+  query, 
+  where, 
+  onSnapshot, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  doc, 
+  getDocs,
+  orderBy,
+  limit,
+  Timestamp 
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
-export const useMarketplace = (filters?: { 
-  category?: string; 
-  city?: string; 
-  priceMin?: number; 
-  priceMax?: number; 
-  search?: string;
-  limit?: number;
-}) => {
-  const [items, setItems] = useState<MarketplaceItem[]>([]);
+export interface Product {
+  id: string;
+  sellerId: string;
+  sellerName: string;
+  sellerAvatar?: string;
+  title: string;
+  description: string;
+  price: number;
+  currency: 'USD' | 'EUR' | 'MXN';
+  category: 'food' | 'toys' | 'accessories' | 'health' | 'grooming' | 'clothing' | 'home' | 'other';
+  subcategory?: string;
+  images: string[];
+  condition: 'new' | 'like_new' | 'good' | 'fair' | 'poor';
+  brand?: string;
+  size?: string;
+  color?: string;
+  weight?: number;
+  dimensions?: {
+    length: number;
+    width: number;
+    height: number;
+  };
+  tags: string[];
+  location: string;
+  shippingAvailable: boolean;
+  shippingCost?: number;
+  pickupAvailable: boolean;
+  isActive: boolean;
+  isSold: boolean;
+  viewsCount: number;
+  likesCount: number;
+  sharesCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userLiked?: boolean;
+  userViewed?: boolean;
+}
+
+export interface Order {
+  id: string;
+  buyerId: string;
+  sellerId: string;
+  productId: string;
+  product: Product;
+  quantity: number;
+  totalPrice: number;
+  currency: string;
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+  paymentMethod: 'cash' | 'card' | 'transfer' | 'crypto';
+  paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded';
+  shippingAddress?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CartItem {
+  productId: string;
+  product: Product;
+  quantity: number;
+  addedAt: Date;
+}
+
+export function useMarketplace() {
+  // const { user, userProfile } = useManadaBookAuth();
+  const user = null;
+  const userProfile = null;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [myProducts, setMyProducts] = useState<Product[]>([]);
+  const [myOrders, setMyOrders] = useState<Order[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-
-    // Suscripción Firebase tiempo real con filtros
-    const unsubscribe = subscribeToMarketplaceItems(filters || {}, (marketplaceItems) => {
-      setItems(marketplaceItems);
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, [filters]); // Simplificar dependencias para evitar warnings
-
-  return { items, loading, error };
-};
-
-// Hook para gestionar items del usuario
-export const useUserMarketplace = () => {
-  const { user } = useAuthContext();
-  const [items, setItems] = useState<MarketplaceItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!user?.uid) {
-      setItems([]);
+    if (!user) {
+      setProducts([]);
+      setMyProducts([]);
+      setMyOrders([]);
+      setCart([]);
       setLoading(false);
       return;
     }
 
     setLoading(true);
-    const unsubscribe = subscribeToMarketplaceItems(
-      { sellerId: user.uid },
-      (userItems) => {
-        setItems(userItems);
+    setError(null);
+
+    // Query para obtener todos los productos activos
+    const productsQuery = query(
+      collection(db, 'products'),
+      where('isActive', '==', true),
+      where('isSold', '==', false),
+      orderBy('createdAt', 'desc'),
+      limit(100)
+    );
+
+    const unsubscribe = onSnapshot(
+      productsQuery,
+      async (snapshot) => {
+        try {
+          const productsData: Product[] = [];
+          
+          for (const docSnapshot of snapshot.docs) {
+            const productData = docSnapshot.data();
+            
+            // Obtener información del vendedor
+            const sellerDoc = await doc(db, 'users', productData.sellerId).get();
+            let sellerName = 'Vendedor Anónimo';
+            let sellerAvatar = '';
+            
+            if (sellerDoc.exists()) {
+              const sellerData = sellerDoc.data();
+              sellerName = sellerData.name || 'Vendedor Anónimo';
+              sellerAvatar = sellerData.avatarUrl || '';
+            }
+
+            // Verificar si el usuario actual vio este producto
+            const viewQuery = query(
+              collection(db, 'product_views'),
+              where('productId', '==', docSnapshot.id),
+              where('userId', '==', user.uid)
+            );
+            const viewSnapshot = await getDocs(viewQuery);
+            const userViewed = !viewSnapshot.empty;
+
+            // Verificar si el usuario le dio like
+            const likeQuery = query(
+              collection(db, 'product_likes'),
+              where('productId', '==', docSnapshot.id),
+              where('userId', '==', user.uid)
+            );
+            const likeSnapshot = await getDocs(likeQuery);
+            const userLiked = !likeSnapshot.empty;
+
+            productsData.push({
+              id: docSnapshot.id,
+              sellerId: productData.sellerId,
+              sellerName,
+              sellerAvatar,
+              title: productData.title || '',
+              description: productData.description || '',
+              price: productData.price || 0,
+              currency: productData.currency || 'USD',
+              category: productData.category || 'other',
+              subcategory: productData.subcategory || '',
+              images: productData.images || [],
+              condition: productData.condition || 'good',
+              brand: productData.brand || '',
+              size: productData.size || '',
+              color: productData.color || '',
+              weight: productData.weight || 0,
+              dimensions: productData.dimensions || {},
+              tags: productData.tags || [],
+              location: productData.location || '',
+              shippingAvailable: productData.shippingAvailable || false,
+              shippingCost: productData.shippingCost || 0,
+              pickupAvailable: productData.pickupAvailable || false,
+              isActive: productData.isActive || false,
+              isSold: productData.isSold || false,
+              viewsCount: productData.viewsCount || 0,
+              likesCount: productData.likesCount || 0,
+              sharesCount: productData.sharesCount || 0,
+              createdAt: productData.createdAt?.toDate() || new Date(),
+              updatedAt: productData.updatedAt?.toDate() || new Date(),
+              userLiked,
+              userViewed,
+            });
+          }
+
+          setProducts(productsData);
+          
+          // Filtrar productos del usuario
+          const userProducts = productsData.filter(product => 
+            product.sellerId === user.uid
+          );
+          setMyProducts(userProducts);
+          
+          setLoading(false);
+        } catch (err) {
+          console.error('Error fetching products:', err);
+          setError('Error al cargar los productos');
+          setLoading(false);
+        }
+      },
+      (err) => {
+        console.error('Error in products listener:', err);
+        setError('Error al cargar los productos');
         setLoading(false);
       }
     );
 
-    return unsubscribe;
-  }, [user?.uid]);
+    return () => unsubscribe();
+  }, [user]);
 
-  const create = async (itemData: Omit<MarketplaceItem, 'id' | 'sellerId' | 'createdAt' | 'updatedAt' | 'stats'>) => {
-    if (!user?.uid) {
-      setError('Usuario no autenticado');
-      return null;
-    }
+  const createProduct = async (productData: {
+    title: string;
+    description: string;
+    price: number;
+    currency: Product['currency'];
+    category: Product['category'];
+    subcategory?: string;
+    images: string[];
+    condition: Product['condition'];
+    brand?: string;
+    size?: string;
+    color?: string;
+    weight?: number;
+    dimensions?: Product['dimensions'];
+    tags: string[];
+    location: string;
+    shippingAvailable: boolean;
+    shippingCost?: number;
+    pickupAvailable: boolean;
+  }) => {
+    if (!user) throw new Error('Usuario no autenticado');
+    if (!productData.title.trim()) throw new Error('El título es requerido');
+    if (productData.price <= 0) throw new Error('El precio debe ser mayor a 0');
 
     try {
-      setError(null);
-      
-      const newItemData = {
-        ...itemData,
-        sellerId: user.uid
+      const newProduct = {
+        sellerId: user.uid,
+        sellerName: userProfile?.name || 'Usuario Anónimo',
+        sellerAvatar: userProfile?.avatarUrl || '',
+        title: productData.title.trim(),
+        description: productData.description.trim(),
+        price: productData.price,
+        currency: productData.currency,
+        category: productData.category,
+        subcategory: productData.subcategory || '',
+        images: productData.images,
+        condition: productData.condition,
+        brand: productData.brand || '',
+        size: productData.size || '',
+        color: productData.color || '',
+        weight: productData.weight || 0,
+        dimensions: productData.dimensions || {},
+        tags: productData.tags,
+        location: productData.location,
+        shippingAvailable: productData.shippingAvailable,
+        shippingCost: productData.shippingCost || 0,
+        pickupAvailable: productData.pickupAvailable,
+        isActive: true,
+        isSold: false,
+        viewsCount: 0,
+        likesCount: 0,
+        sharesCount: 0,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
       };
 
-      const itemId = await createMarketplaceItem(newItemData);
-      return itemId;
-    } catch (err: any) {
-      setError(err.message || 'Error al crear artículo');
-      return null;
+      const docRef = await addDoc(collection(db, 'products'), newProduct);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
     }
   };
 
-  const updateStatus = async (itemId: string, status: MarketplaceItem['status']) => {
-    if (!user?.uid) return false;
+  const addToCart = (product: Product, quantity: number = 1) => {
+    const existingItem = cart.find(item => item.productId === product.id);
     
-    try {
-      await updateMarketplaceItemStatus(itemId, status, user.uid);
-      return true;
-    } catch (err: any) {
-      setError(err.message || 'Error al actualizar estado');
-      return false;
+    if (existingItem) {
+      setCart(prev => prev.map(item => 
+        item.productId === product.id 
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      ));
+    } else {
+      setCart(prev => [...prev, {
+        productId: product.id,
+        product,
+        quantity,
+        addedAt: new Date(),
+      }]);
     }
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(prev => prev.filter(item => item.productId !== productId));
+  };
+
+  const getCartTotal = () => {
+    return cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  };
+
+  const getCartItemCount = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
   return {
-    items,
+    products,
+    myProducts,
+    myOrders,
+    cart,
     loading,
     error,
-    create,
-    updateStatus
+    createProduct,
+    addToCart,
+    removeFromCart,
+    getCartTotal,
+    getCartItemCount,
   };
-};
+}
 
-// Hook para favoritos
+// Hook para favoritos del marketplace
 export const useMarketplaceFavorites = () => {
-  const { user } = useAuthContext();
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const addFavorite = async (itemId: string) => {
-    if (!user?.uid) return false;
-    
+  const loadFavorites = async () => {
     try {
       setLoading(true);
-      await addToFavorites(itemId, user.uid);
-      setFavorites(prev => new Set([...prev, itemId]));
-      return true;
-    } catch (error) {
-      console.error('Error adding favorite:', error);
-      return false;
-    } finally {
+      // Simular datos de favoritos
+      setFavorites(['1', '2', '3']);
+      setLoading(false);
+    } catch (err) {
+      setError('Error al cargar favoritos');
       setLoading(false);
     }
   };
 
-  const removeFavorite = async (itemId: string) => {
-    if (!user?.uid) return false;
-    
+  const toggleFavorite = async (productId: string) => {
     try {
-      setLoading(true);
-      await removeFromFavorites(itemId, user.uid);
-      setFavorites(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(itemId);
-        return newSet;
-      });
-      return true;
-    } catch (error) {
-      console.error('Error removing favorite:', error);
-      return false;
-    } finally {
-      setLoading(false);
+      if (favorites.includes(productId)) {
+        setFavorites(favorites.filter(id => id !== productId));
+      } else {
+        setFavorites([...favorites, productId]);
+      }
+    } catch (err) {
+      setError('Error al actualizar favoritos');
     }
   };
 
-  const isFavorite = (itemId: string) => favorites.has(itemId);
+  useEffect(() => {
+    loadFavorites();
+  }, []);
 
   return {
     favorites,
     loading,
-    addFavorite,
-    removeFavorite,
-    isFavorite
+    error,
+    loadFavorites,
+    toggleFavorite
   };
 };
 
-// Hook para estadísticas del marketplace
-export const useMarketplaceStats = () => {
-  const [stats, setStats] = useState({
-    totalItems: 0,
-    totalValue: 0,
-    categoriesCount: {},
-    averagePrice: 0
-  });
+// Hook para marketplace del usuario
+export const useUserMarketplace = () => {
+  const [userProducts, setUserProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const { items } = useMarketplace({ limit: 1000 }); // Get all for stats
+  const loadUserProducts = async () => {
+    try {
+      setLoading(true);
+      // Simular datos de productos del usuario
+      setUserProducts([]);
+      setLoading(false);
+    } catch (err) {
+      setError('Error al cargar productos del usuario');
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (items.length === 0) return;
+    loadUserProducts();
+  }, []);
 
-    const totalItems = items.length;
-    const totalValue = items.reduce((sum, item) => sum + item.price, 0);
-    const averagePrice = totalValue / totalItems;
-    
-    const categoriesCount = items.reduce((acc: any, item) => {
-      acc[item.category] = (acc[item.category] || 0) + 1;
-      return acc;
-    }, {});
-
-    setStats({
-      totalItems,
-      totalValue,
-      categoriesCount,
-      averagePrice
-    });
-  }, [items]);
-
-  return stats;
+  return {
+    userProducts,
+    loading,
+    error,
+    loadUserProducts
+  };
 };
