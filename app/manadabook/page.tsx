@@ -20,60 +20,7 @@ import MessagingManager from '@/components/MessagingManager';
 import { useAds } from '@/hooks/useAds';
 import AdFeedCard from '@/components/AdFeedCard';
 
-// Datos de ejemplo para posts
-const postsEjemplo = [
-  {
-    id: 1,
-    usuario: {
-      nombre: 'María García',
-      ubicacion: 'Madrid, España'
-    },
-    mascota: {
-      nombre: 'Luna',
-      tipo: 'Golden Retriever',
-      edad: '2 años'
-    },
-    contenido: '¡Luna tuvo su primera clase de obediencia hoy! Estoy muy orgullosa de lo bien que se portó. 🐕✨',
-    likes: 24,
-    comentarios: 8,
-    tiempo: 'hace 2 horas',
-    tags: ['#Adiestramiento', '#GoldenRetriever', '#Orgullosa']
-  },
-  {
-    id: 2,
-    usuario: {
-      nombre: 'Carlos Rodríguez',
-      ubicacion: 'Barcelona, España'
-    },
-    mascota: {
-      nombre: 'Milo',
-      tipo: 'Gato Persa',
-      edad: '3 años'
-    },
-    contenido: 'Milo descubrió su nuevo rascador y no puede parar de usarlo. ¡Al fin encontré algo que le gusta! 😸',
-    likes: 18,
-    comentarios: 5,
-    tiempo: 'hace 4 horas',
-    tags: ['#GatoPersa', '#Rascador', '#Feliz']
-  },
-  {
-    id: 3,
-    usuario: {
-      nombre: 'Ana López',
-      ubicacion: 'Valencia, España'
-    },
-    mascota: {
-      nombre: 'Rocky',
-      tipo: 'Border Collie',
-      edad: '1 año'
-    },
-    contenido: 'Paseo matutino en el parque. Rocky siempre encuentra nuevos amigos. ¡Es tan sociable! 🐾',
-    likes: 31,
-    comentarios: 12,
-    tiempo: 'hace 6 horas',
-    tags: ['#BorderCollie', '#Paseo', '#Amigos']
-  }
-];
+// ManadaBook ahora usa posts reales desde Firebase
 
 export default function ManadaBookPage() {
   const { user, userProfile, loading, logout } = useManadaBookAuth();
@@ -424,25 +371,45 @@ export default function ManadaBookPage() {
             <div style={{ textAlign: 'center', padding: '3rem' }}>
               <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📝</div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1F2937', marginBottom: '0.5rem' }}>
-                No hay posts aún
+                {user ? 'No hay posts aún' : 'Inicia sesión para ver posts'}
               </h3>
               <p style={{ color: '#6B7280', marginBottom: '1.5rem' }}>
-                Sé el primero en compartir un momento especial con tu mascota
+                {user 
+                  ? 'Sé el primero en compartir un momento especial con tu mascota'
+                  : 'Regístrate para acceder a la comunidad de ManadaBook'
+                }
               </p>
-              <button 
-                onClick={() => setMostrarComposer(true)}
-                style={{
-                  backgroundColor: '#0F6FF6',
-                  color: 'white',
-                  padding: '0.75rem 2rem',
-                  border: 'none',
-                  borderRadius: '0.5rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}
-              >
-                Crear Primer Post
-              </button>
+              {user ? (
+                <button 
+                  onClick={() => setMostrarComposer(true)}
+                  style={{
+                    backgroundColor: '#0F6FF6',
+                    color: 'white',
+                    padding: '0.75rem 2rem',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Crear Primer Post
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setMostrarAuth(true)}
+                  style={{
+                    backgroundColor: '#0F6FF6',
+                    color: 'white',
+                    padding: '0.75rem 2rem',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Iniciar Sesión
+                </button>
+              )}
             </div>
           ) : (
             // Combinar posts y anuncios
