@@ -386,7 +386,7 @@ export const useUserCircles = () => {
           name: 'Amantes de Perros',
           description: 'Círculo para dueños de perros',
           memberCount: 150,
-          isPrivate: false,
+          isPublic: true,
           tags: ['perros', 'mascotas'],
           createdAt: new Date(),
           updatedAt: new Date()

@@ -196,9 +196,43 @@ function NavigationHub() {
             </span>
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-10 px-4 font-medium">
-            El ecosistema más completo y colorido para el bienestar de tu mascota. 
-            Alimentos naturales premium, red social interactiva, videos virales, recetas exclusivas y una comunidad que ama a los animales. ¡Todo en un solo lugar! 🌟
+            Descubre una plataforma única que reúne todo lo que necesitas para el bienestar de tu mejor amigo. Con Raízel, no solo encuentras alimentos naturales premium, también accedes a una comunidad vibrante y a herramientas exclusivas que harán la vida con tu mascota más fácil y divertida.
           </p>
+          {/* Puntos destacados */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 sm:mb-10 max-w-6xl mx-auto">
+            <div className="text-center p-4 bg-white/80 rounded-2xl shadow-lg border border-green-200">
+              <div className="text-3xl mb-2">🌱</div>
+              <h3 className="font-bold text-gray-900 mb-2">Alimentos naturales premium</h3>
+              <p className="text-sm text-gray-600">BARF, albóndigas, chorizos, helados y snacks saludables</p>
+            </div>
+            <div className="text-center p-4 bg-white/80 rounded-2xl shadow-lg border border-blue-200">
+              <div className="text-3xl mb-2">🐶</div>
+              <h3 className="font-bold text-gray-900 mb-2">Cuidado inteligente</h3>
+              <p className="text-sm text-gray-600">Calculadora de porciones, recordatorios de salud, consejos de embarazo</p>
+            </div>
+            <div className="text-center p-4 bg-white/80 rounded-2xl shadow-lg border border-purple-200">
+              <div className="text-3xl mb-2">🎥</div>
+              <h3 className="font-bold text-gray-900 mb-2">Entretenimiento y comunidad</h3>
+              <p className="text-sm text-gray-600">ManadaBook, ManadaShorts y círculos temáticos</p>
+            </div>
+            <div className="text-center p-4 bg-white/80 rounded-2xl shadow-lg border border-orange-200">
+              <div className="text-3xl mb-2">🛒</div>
+              <h3 className="font-bold text-gray-900 mb-2">Marketplace especializado</h3>
+              <p className="text-sm text-gray-600">Productos de confianza con recetas y promociones exclusivas</p>
+            </div>
+          </div>
+
+          {/* Herramientas prácticas */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-4">
+              <span className="text-2xl">📊</span>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Herramientas prácticas</h3>
+            <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+              Nutrición personalizada, guías por etapas de vida y seguimiento de tu mascota
+            </p>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
             <Link href="/catalogo-perros" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
               🛍️ Explorar Productos

@@ -142,14 +142,14 @@ export function useAnalytics() {
     loadRecentEvents();
 
     setLoading(false);
-  }, [user, loadUserAnalytics, loadContentAnalytics, loadPlatformAnalytics, loadRecentEvents]);
+  }, [user]);
 
   const loadUserAnalytics = async () => {
     if (!user) return;
 
     try {
       // Obtener estadísticas del usuario
-      const userDoc = await doc(db, 'users', user.uid).get();
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
         const userData = userDoc.data();
         setUserAnalytics({
@@ -456,12 +456,7 @@ export const useAnalyticsEvents = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = loadEvents();
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    loadEvents();
   }, []);
 
   return {

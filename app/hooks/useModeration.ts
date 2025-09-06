@@ -108,7 +108,7 @@ export function useModeration() {
             const reportData = docSnapshot.data();
             
             // Obtener información del reporter
-            const reporterDoc = await doc(db, 'users', reportData.reporterId).get();
+            const reporterDoc = await getDoc(doc(db, 'users', reportData.reporterId));
             let reporterName = 'Usuario Anónimo';
             
             if (reporterDoc.exists()) {
@@ -119,7 +119,7 @@ export function useModeration() {
             // Obtener información del usuario reportado
             let reportedUserName = '';
             if (reportData.reportedUserId) {
-              const reportedUserDoc = await doc(db, 'users', reportData.reportedUserId).get();
+              const reportedUserDoc = await getDoc(doc(db, 'users', reportData.reportedUserId));
               if (reportedUserDoc.exists()) {
                 const reportedUserData = reportedUserDoc.data();
                 reportedUserName = reportedUserData.name || 'Usuario Anónimo';
@@ -129,7 +129,7 @@ export function useModeration() {
             // Obtener información del moderador
             let moderatorName = '';
             if (reportData.moderatorId) {
-              const moderatorDoc = await doc(db, 'users', reportData.moderatorId).get();
+              const moderatorDoc = await getDoc(doc(db, 'users', reportData.moderatorId));
               if (moderatorDoc.exists()) {
                 const moderatorData = moderatorDoc.data();
                 moderatorName = moderatorData.name || 'Moderador';
