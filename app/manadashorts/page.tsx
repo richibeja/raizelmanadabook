@@ -17,6 +17,11 @@ import {
   X,
   Circle
 } from 'lucide-react';
+import VideoUploadModal from '../components/VideoUploadModal';
+import VideoComments from '../components/VideoComments';
+import NotificationSystem from '../components/NotificationSystem';
+import SearchModal from '../components/SearchModal';
+import UserProfile from '../components/UserProfile';
 
 interface ShortVideo {
   id: string;
@@ -84,9 +89,12 @@ export default function ManadaShortsPage() {
   ]);
 
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [showUploadModal, setShowUploadModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [videoMuted, setVideoMuted] = useState<{ [key: string]: boolean }>({});
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -99,21 +107,27 @@ export default function ManadaShortsPage() {
     setVideoMuted(mutedState);
   }, [videos]);
 
-  // Auto-play del video actual
+  // Auto-play del video actual con mejor manejo
   useEffect(() => {
     const currentVideo = videoRefs.current[currentVideoIndex];
     if (currentVideo) {
       // Verificar que el video esté listo antes de reproducir
       if (currentVideo.readyState >= 2) {
-        currentVideo.play().catch(() => {
-          // Silenciar el error de reproducción
+        currentVideo.play().catch((error) => {
+          console.log('Error de reproducción:', error);
         });
       } else {
-        currentVideo.addEventListener('loadeddata', () => {
-          currentVideo.play().catch(() => {
-            // Silenciar el error de reproducción
+        const handleLoadedData = () => {
+          currentVideo.play().catch((error) => {
+            console.log('Error de reproducción:', error);
           });
-        }, { once: true });
+        };
+        currentVideo.addEventListener('loadeddata', handleLoadedData, { once: true });
+        
+        // Cleanup function
+        return () => {
+          currentVideo.removeEventListener('loadeddata', handleLoadedData);
+        };
       }
     }
   }, [currentVideoIndex]);
@@ -125,6 +139,40 @@ export default function ManadaShortsPage() {
         video.pause();
       }
     });
+  }, [currentVideoIndex]);
+
+  // Navegación con teclado
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (currentVideoIndex > 0) {
+            setCurrentVideoIndex(currentVideoIndex - 1);
+          }
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (currentVideoIndex < videos.length - 1) {
+            setCurrentVideoIndex(currentVideoIndex + 1);
+          }
+          break;
+        case ' ':
+          e.preventDefault();
+          const currentVideo = videoRefs.current[currentVideoIndex];
+          if (currentVideo) {
+            if (currentVideo.paused) {
+              currentVideo.play();
+            } else {
+              currentVideo.pause();
+            }
+          }
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
   }, [currentVideoIndex]);
 
   const handleScroll = () => {
@@ -162,7 +210,7 @@ export default function ManadaShortsPage() {
   };
 
   const handleComment = () => {
-    alert('Funcionalidad de comentarios en desarrollo. ¡Próximamente!');
+    setShowComments(true);
   };
 
   const handleShare = () => {
@@ -170,7 +218,39 @@ export default function ManadaShortsPage() {
   };
 
   const handleUpload = () => {
-    alert('Funcionalidad de subida en desarrollo. ¡Próximamente!');
+    setShowUploadModal(true);
+  };
+
+  const handleVideoUpload = (videoData: {
+    file: File;
+    caption: string;
+    hashtags: string[];
+  }) => {
+    // Crear URL temporal para el video
+    const videoUrl = URL.createObjectURL(videoData.file);
+    
+    // Crear nuevo video
+    const newVideo: ShortVideo = {
+      id: Date.now().toString(),
+      petName: 'Mi Mascota',
+      petUsername: '@mi_mascota',
+      petType: 'Mascota',
+      petAge: 'Edad',
+      petAvatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
+      videoUrl: videoUrl,
+      caption: videoData.caption,
+      hashtags: videoData.hashtags,
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false
+    };
+
+    // Agregar el nuevo video al inicio de la lista
+    setVideos(prevVideos => [newVideo, ...prevVideos]);
+    
+    // Ir al nuevo video
+    setCurrentVideoIndex(0);
   };
 
   const formatNumber = (num: number) => {
@@ -187,7 +267,10 @@ export default function ManadaShortsPage() {
         <div className="flex justify-between items-center max-w-md mx-auto">
           <div className="flex items-center text-xl font-bold">
             <Circle className="mr-2 h-6 w-6 text-red-500 fill-current" />
-            <span>ManadaShorts</span>
+            <div>
+              <span>ManadaShorts</span>
+              <p className="text-xs text-gray-400 font-normal">↑↓ Navegar • Espacio Pausar</p>
+            </div>
           </div>
           <div className="flex items-center bg-white/10 rounded-full px-4 py-2 flex-1 mx-4">
             <Search className="mr-2 h-4 w-4 text-gray-400" />
@@ -196,6 +279,7 @@ export default function ManadaShortsPage() {
               placeholder="Buscar mascotas..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSearch(true)}
               className="bg-transparent text-white placeholder-gray-400 w-full outline-none"
             />
           </div>
@@ -213,14 +297,24 @@ export default function ManadaShortsPage() {
           <div key={video.id} className="h-screen w-full relative snap-start">
             {/* Video Player */}
             <video
-              ref={(el) => (videoRefs.current[index] = el)}
+              ref={(el) => {
+                videoRefs.current[index] = el;
+              }}
               className="w-full h-full object-cover absolute top-0 left-0"
               loop
               muted={videoMuted[video.id]}
               playsInline
+              preload="metadata"
             >
               <source src={video.videoUrl} type="video/mp4" />
             </video>
+
+            {/* Indicador de video actual */}
+            {index === currentVideoIndex && (
+              <div className="absolute top-4 right-4 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                {index + 1} / {videos.length}
+              </div>
+            )}
 
             {/* Video Overlay */}
             <div className="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
@@ -322,83 +416,45 @@ export default function ManadaShortsPage() {
           <Plus className="h-6 w-6 text-white" />
         </button>
         
-        <button className="flex flex-col items-center text-gray-400">
-          <Bell className="h-6 w-6 mb-1" />
-          <span className="text-xs">Notificaciones</span>
-        </button>
+        <div className="flex flex-col items-center">
+          <NotificationSystem />
+          <span className="text-xs text-gray-400 mt-1">Notificaciones</span>
+        </div>
         
-        <button className="flex flex-col items-center text-gray-400">
+        <button 
+          onClick={() => setShowProfile(true)}
+          className="flex flex-col items-center text-gray-400 hover:text-white transition-colors"
+        >
           <User className="h-6 w-6 mb-1" />
           <span className="text-xs">Perfil</span>
         </button>
       </div>
 
-      {/* Upload Modal */}
-      {showUploadModal && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 w-full max-w-md rounded-2xl overflow-hidden">
-            <div className="flex justify-between items-center p-4 border-b border-gray-700">
-              <h2 className="text-lg font-semibold">Crear nuevo Short</h2>
-              <button
-                onClick={() => setShowUploadModal(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            
-            <div className="p-4">
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <button
-                  onClick={handleUpload}
-                  className="bg-gray-800 rounded-xl p-6 text-center hover:bg-gray-700 transition-colors"
-                >
-                  <Video className="h-8 w-8 mx-auto mb-2 text-red-500" />
-                  <p className="text-sm">Subir video</p>
-                </button>
-                <button
-                  onClick={handleUpload}
-                  className="bg-gray-800 rounded-xl p-6 text-center hover:bg-gray-700 transition-colors"
-                >
-                  <Film className="h-8 w-8 mx-auto mb-2 text-red-500" />
-                  <p className="text-sm">Grabar video</p>
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Descripción del video
-                  </label>
-                  <textarea
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:border-red-500"
-                    rows={3}
-                    placeholder="Describe tu video..."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Hashtags
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:border-red-500"
-                    placeholder="#mascota #divertido #..."
-                  />
-                </div>
-                
-                <button
-                  onClick={handleUpload}
-                  className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition-colors"
-                >
-                  Publicar Short
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Video Upload Modal */}
+      <VideoUploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUpload={handleVideoUpload}
+      />
+
+      {/* Video Comments Modal */}
+      <VideoComments
+        isOpen={showComments}
+        onClose={() => setShowComments(false)}
+        videoId={videos[currentVideoIndex]?.id || ''}
+      />
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={showSearch}
+        onClose={() => setShowSearch(false)}
+      />
+
+      {/* User Profile Modal */}
+      <UserProfile
+        isOpen={showProfile}
+        onClose={() => setShowProfile(false)}
+      />
     </div>
   );
 }
