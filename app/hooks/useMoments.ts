@@ -15,7 +15,7 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
 export interface Moment {
   id: string;
@@ -48,9 +48,7 @@ export interface MomentReaction {
 }
 
 export function useMoments() {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
+  const { user, userProfile } = useManadaBookAuth();
   const [moments, setMoments] = useState<Moment[]>([]);
   const [myMoments, setMyMoments] = useState<Moment[]>([]);
   const [loading, setLoading] = useState(true);

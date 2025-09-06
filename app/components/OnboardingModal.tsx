@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Heart, Camera, User, ArrowRight } from 'lucide-react';
-import PetProfileEditor from './PetProfileEditor';
+import { X, Camera, Video, Heart, MessageCircle, Share2, ArrowRight } from 'lucide-react';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -10,112 +9,121 @@ interface OnboardingModalProps {
 }
 
 export default function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
-  const [step, setStep] = useState(1);
-  const [showProfileEditor, setShowProfileEditor] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
-  const handleCreateProfile = () => {
-    setShowProfileEditor(true);
+  const steps = [
+    {
+      icon: <Video className="w-16 h-16 text-red-500" />,
+      title: "¡Bienvenido a ManadaShorts!",
+      description: "La red social de videos cortos para mascotas. Comparte los momentos más especiales de tu mejor amigo.",
+      features: ["Videos de hasta 60 segundos", "Efectos y filtros especiales", "Comunidad de amantes de mascotas"]
+    },
+    {
+      icon: <Camera className="w-16 h-16 text-blue-500" />,
+      title: "Crea contenido increíble",
+      description: "Graba videos directamente o sube desde tu galería. Usa efectos y música para hacer tu contenido único.",
+      features: ["Grabación en tiempo real", "Efectos con IA", "Biblioteca de música"]
+    },
+    {
+      icon: <Heart className="w-16 h-16 text-pink-500" />,
+      title: "Conecta con la comunidad",
+      description: "Interactúa con otros dueños de mascotas. Dale like, comenta y comparte los videos que más te gusten.",
+      features: ["Sistema de likes y comentarios", "Compartir en redes sociales", "Seguir a tus favoritos"]
+    },
+    {
+      icon: <MessageCircle className="w-16 h-16 text-green-500" />,
+      title: "¡Todo listo!",
+      description: "Ya puedes empezar a crear y compartir videos de tu mascota. ¡La comunidad te está esperando!",
+      features: ["Perfil personalizado", "Estadísticas de tus videos", "Notificaciones en tiempo real"]
+    }
+  ];
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      onComplete();
+    }
   };
 
-  const handleProfileCreated = () => {
-    setShowProfileEditor(false);
+  const handleSkip = () => {
     onComplete();
   };
 
   if (!isOpen) return null;
 
-  if (showProfileEditor) {
-    return (
-      <PetProfileEditor
-        isOpen={true}
-        onClose={() => setShowProfileEditor(false)}
-        onSave={handleProfileCreated}
-      />
-    );
-  }
+  const currentStepData = steps[currentStep];
 
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-900 rounded-2xl overflow-hidden">
-        {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-700">
-          <h2 className="text-lg font-semibold text-white">¡Bienvenido a ManadaShorts!</h2>
-          <button
-            onClick={onComplete}
-            className="text-gray-400 hover:text-white"
-          >
-            <X className="w-6 h-6" />
-          </button>
+      <div className="bg-gray-900 rounded-2xl w-full max-w-md overflow-hidden">
+        {/* Progress Bar */}
+        <div className="h-1 bg-gray-700">
+          <div 
+            className="h-full bg-red-500 transition-all duration-300"
+            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+          />
         </div>
 
-        <div className="p-6">
-          {step === 1 && (
-            <div className="text-center space-y-6">
-              <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto">
-                <Heart className="w-10 h-10 text-white" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Crea el perfil de tu mascota
-                </h3>
-                <p className="text-gray-400">
-                  Comparte la personalidad única de tu mascota con la comunidad de ManadaShorts
-                </p>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-left">
-                  <Camera className="w-5 h-5 text-red-500" />
-                  <span className="text-gray-300">Sube fotos increíbles</span>
-                </div>
-                <div className="flex items-center space-x-3 text-left">
-                  <User className="w-5 h-5 text-red-500" />
-                  <span className="text-gray-300">Personaliza su perfil</span>
-                </div>
-                <div className="flex items-center space-x-3 text-left">
-                  <Heart className="w-5 h-5 text-red-500" />
-                  <span className="text-gray-300">Conecta con otros amantes de mascotas</span>
-                </div>
-              </div>
-              <button
-                onClick={handleCreateProfile}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
-              >
-                <span>Crear Perfil</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
+        {/* Content */}
+        <div className="p-8 text-center">
+          <div className="mb-6">
+            {currentStepData.icon}
+          </div>
+          
+          <h2 className="text-2xl font-bold text-white mb-4">
+            {currentStepData.title}
+          </h2>
+          
+          <p className="text-gray-300 mb-6 leading-relaxed">
+            {currentStepData.description}
+          </p>
 
-          {step === 2 && (
-            <div className="text-center space-y-6">
-              <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto">
-                <Camera className="w-10 h-10 text-white" />
+          {/* Features List */}
+          <div className="space-y-3 mb-8">
+            {currentStepData.features.map((feature, index) => (
+              <div key={index} className="flex items-center space-x-3 text-left">
+                <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-300 text-sm">{feature}</span>
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  ¡Comienza a crear contenido!
-                </h3>
-                <p className="text-gray-400">
-                  Graba videos divertidos de tu mascota y compártelos con la comunidad
-                </p>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 space-y-2">
-                <h4 className="text-white font-medium">Consejos para videos increíbles:</h4>
-                <ul className="text-gray-300 text-sm space-y-1 text-left">
-                  <li>• Usa buena iluminación</li>
-                  <li>• Captura momentos espontáneos</li>
-                  <li>• Añade música temática</li>
-                  <li>• Usa hashtags relevantes</li>
-                </ul>
-              </div>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex space-x-3">
+            {currentStep < steps.length - 1 && (
               <button
-                onClick={onComplete}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                onClick={handleSkip}
+                className="flex-1 px-4 py-3 text-gray-400 hover:text-white transition-colors"
               >
-                ¡Empezar a crear!
+                Omitir
               </button>
-            </div>
-          )}
+            )}
+            
+            <button
+              onClick={handleNext}
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center space-x-2"
+            >
+              <span>
+                {currentStep < steps.length - 1 ? 'Siguiente' : '¡Empezar!'}
+              </span>
+              {currentStep < steps.length - 1 && (
+                <ArrowRight className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+
+          {/* Step Indicators */}
+          <div className="flex justify-center space-x-2 mt-6">
+            {steps.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentStep ? 'bg-red-500' : 'bg-gray-600'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

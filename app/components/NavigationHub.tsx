@@ -16,7 +16,8 @@ import {
   Video,
   Megaphone,
   IceCream,
-  ChefHat
+  ChefHat,
+  Shield
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -239,6 +240,14 @@ function NavigationHub() {
             </Link>
             <Link href="/manadabook" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
               👥 Unirse a la Comunidad
+            </Link>
+          </div>
+          
+          {/* Enlace a políticas */}
+          <div className="text-center mt-6">
+            <Link href="/politicas" className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors text-sm">
+              <Shield className="w-4 h-4 mr-2" />
+              Políticas de Uso y Privacidad
             </Link>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import TermsAcceptanceModal from './TermsAcceptanceModal';
 import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, FileText } from 'lucide-react';
 
 interface ManadaBookAuthProps {
@@ -26,6 +27,8 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
     bio: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [pendingRegistration, setPendingRegistration] = useState<{email: string, password: string, name: string} | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -68,10 +71,16 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
+        onClose();
       } else {
-        await register(formData.email, formData.password, formData.name);
+        // Para registro, mostrar modal de términos primero
+        setPendingRegistration({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name
+        });
+        setShowTermsModal(true);
       }
-      onClose();
     } catch (error: any) {
       console.error('Auth error:', error);
       setErrors({ general: error.message || 'Error en la autenticación' });
@@ -86,6 +95,27 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
       console.error('Google auth error:', error);
       setErrors({ general: error.message || 'Error con Google' });
     }
+  };
+
+  const handleAcceptTerms = async () => {
+    if (pendingRegistration) {
+      try {
+        await register(pendingRegistration.email, pendingRegistration.password, pendingRegistration.name);
+        setShowTermsModal(false);
+        setPendingRegistration(null);
+        onClose();
+      } catch (error: any) {
+        console.error('Registration error:', error);
+        setErrors({ general: error.message || 'Error en el registro' });
+        setShowTermsModal(false);
+        setPendingRegistration(null);
+      }
+    }
+  };
+
+  const handleDeclineTerms = () => {
+    setShowTermsModal(false);
+    setPendingRegistration(null);
   };
 
   return (
@@ -257,6 +287,13 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
           </div>
         </form>
       </div>
+
+      {/* Modal de aceptación de términos */}
+      <TermsAcceptanceModal
+        isOpen={showTermsModal}
+        onAccept={handleAcceptTerms}
+        onDecline={handleDeclineTerms}
+      />
     </div>
   );
 }
