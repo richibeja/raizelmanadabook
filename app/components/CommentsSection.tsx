@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useComments } from '@/hooks/useComments';
-// // import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { Heart, Reply, MoreHorizontal, Edit, Trash2, Send } from 'lucide-react';
 
 interface CommentsSectionProps {
@@ -11,9 +11,7 @@ interface CommentsSectionProps {
 }
 
 export default function CommentsSection({ postId, onClose }: CommentsSectionProps) {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
+  const { user, userProfile } = useManadaBookAuth();
   const { comments, loading, addComment, editComment, deleteComment, likeComment } = useComments(postId);
   const [newComment, setNewComment] = useState('');
   const [editingComment, setEditingComment] = useState<string | null>(null);

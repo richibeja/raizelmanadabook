@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useMessaging } from '@/hooks/useMessaging';
-// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { X, Send, Plus, Smile, Image, Paperclip, MoreVertical, Search, Users, Phone, Video } from 'lucide-react';
 
 interface MessagingManagerProps {
@@ -10,9 +10,7 @@ interface MessagingManagerProps {
 }
 
 export default function MessagingManager({ onClose }: MessagingManagerProps) {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
+  const { user, userProfile } = useManadaBookAuth();
   const { 
     conversations, 
     activeConversation, 
