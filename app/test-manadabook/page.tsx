@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
-import { usePosts } from '@/hooks/usePosts';
-import { useComments } from '@/hooks/useComments';
-import { useMessaging } from '@/hooks/useMessaging';
-import { usePetsRealtime } from '@/hooks/usePetsRealtime';
+import { useManadaBookAuth } from '../contexts/ManadaBookAuthContext';
+import { usePosts } from '../hooks/usePosts';
+import { useComments } from '../hooks/useComments';
+import { useMessaging } from '../hooks/useMessaging';
+import { usePetsRealtime } from '../hooks/usePetsRealtime';
 
 export default function TestManadaBookPage() {
   const { user, userProfile, loading: authLoading, login, register, logout } = useManadaBookAuth();
