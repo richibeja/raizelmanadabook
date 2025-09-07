@@ -12,7 +12,7 @@ import {
   Home, 
   Bell, 
   User, 
-  Video, 
+  Video,   
   Film,
   X,
   Circle
@@ -24,6 +24,7 @@ import SearchModal from '../components/SearchModal';
 import UserProfile from '../components/UserProfile';
 import OnboardingModal from '../components/OnboardingModal';
 import { useManadaBookAuth } from '../contexts/ManadaBookAuthContext';
+import { useManadaShorts } from '../hooks/useManadaShorts';
 import ManadaBookAuth from '../components/ManadaBookAuth';
 
 interface ShortVideo {
@@ -44,7 +45,17 @@ interface ShortVideo {
 
 export default function ManadaShortsPage() {
   const { user, userProfile, loading: authLoading } = useManadaBookAuth();
-  const [videos, setVideos] = useState<ShortVideo[]>([]);
+  const { 
+    videos, 
+    loading: videosLoading, 
+    error: videosError, 
+    likeVideo, 
+    followUser, 
+    shareVideo, 
+    uploadVideo, 
+    getVideoComments, 
+    addComment 
+  } = useManadaShorts();
   const [showAuth, setShowAuth] = useState(false);
 
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -60,52 +71,13 @@ export default function ManadaShortsPage() {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Cargar videos reales cuando el usuario esté autenticado
+  // El hook useManadaShorts ya maneja la carga de videos
   useEffect(() => {
     if (user && userProfile) {
-      loadVideos();
       setHasProfile(true);
-    } else if (!authLoading) {
-      // Si no está autenticado, mostrar algunos videos de ejemplo
-      setVideos(loadSampleVideos());
     }
-  }, [user, userProfile, authLoading]);
+  }, [user, userProfile]);
 
-  const loadVideos = async () => {
-    if (!user) {
-      setVideos(loadSampleVideos());
-      return;
-    }
-    
-    // Cargar videos reales del usuario y de usuarios seguidos
-    try {
-      // Por ahora usamos videos de ejemplo pero con datos del usuario real
-      const userVideos: ShortVideo[] = [
-        {
-          id: 'user-1',
-          petName: userProfile?.name || 'Mi Mascota',
-          petUsername: `@${userProfile?.name?.toLowerCase().replace(' ', '_') || 'mi_mascota'}`,
-          petType: 'Mascota',
-          petAge: 'Edad',
-          petAvatar: userProfile?.avatar || 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
-          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-dog-waiting-for-his-ball-14547-large.mp4',
-          caption: 'Mi primer video en ManadaShorts! 🎥',
-          hashtags: ['#manadashorts', '#mimascota', '#primerovideo'],
-          likes: 0,
-          comments: 0,
-          shares: 0,
-          isLiked: false
-        }
-      ];
-      
-      // Agregar videos de ejemplo de otros usuarios
-      const sampleVideos = loadSampleVideos();
-      setVideos([...userVideos, ...sampleVideos]);
-    } catch (error) {
-      console.error('Error cargando videos:', error);
-      setVideos(loadSampleVideos());
-    }
-  };
 
   const loadSampleVideos = (): ShortVideo[] => {
     return [
@@ -275,23 +247,18 @@ export default function ManadaShortsPage() {
     document.addEventListener('touchend', handleTouchEnd);
   };
 
-  const toggleLike = (videoId: string) => {
+  const toggleLike = async (videoId: string) => {
     if (!user) {
       setShowAuth(true);
       return;
     }
     
-    setVideos(prev => 
-      prev.map(video => 
-        video.id === videoId 
-          ? { 
-              ...video, 
-              isLiked: !video.isLiked,
-              likes: video.isLiked ? video.likes - 1 : video.likes + 1
-            }
-          : video
-      )
-    );
+    try {
+      await likeVideo(videoId);
+    } catch (error) {
+      console.error('Error liking video:', error);
+      alert('Error al dar like al video');
+    }
   };
 
   const toggleSound = (videoId: string) => {
@@ -301,7 +268,7 @@ export default function ManadaShortsPage() {
     }));
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     if (!user) {
       setShowAuth(true);
       return;
@@ -309,17 +276,20 @@ export default function ManadaShortsPage() {
     setShowComments(true);
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: `Video de ${videos[currentVideoIndex]?.petName} en ManadaShorts`,
-        text: videos[currentVideoIndex]?.caption,
-        url: window.location.href
-      });
-    } else {
-      // Fallback para navegadores que no soportan Web Share API
-      navigator.clipboard.writeText(window.location.href);
-      alert('¡Enlace copiado al portapapeles!');
+  const handleShare = async () => {
+    if (!user) {
+      setShowAuth(true);
+      return;
+    }
+    
+    try {
+      const currentVideo = videos[currentVideoIndex];
+      if (currentVideo) {
+        await shareVideo(currentVideo.id);
+      }
+    } catch (error) {
+      console.error('Error sharing video:', error);
+      alert('Error al compartir video');
     }
   };
 
@@ -336,51 +306,40 @@ export default function ManadaShortsPage() {
     setHasProfile(true);
   };
 
-  const toggleFollow = (petUsername: string) => {
-    setFollowing(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(petUsername)) {
-        newSet.delete(petUsername);
-      } else {
-        newSet.add(petUsername);
+  const toggleFollow = async (petUsername: string) => {
+    if (!user) {
+      setShowAuth(true);
+      return;
+    }
+    
+    try {
+      // Buscar el video para obtener el authorId
+      const video = videos.find(v => v.petUsername === petUsername);
+      if (video) {
+        await followUser(video.authorId);
       }
-      return newSet;
-    });
+    } catch (error) {
+      console.error('Error following user:', error);
+      alert('Error al seguir usuario');
+    }
   };
 
 
-  const handleVideoUpload = (videoData: {
+  const handleVideoUpload = async (videoData: {
     file: File;
     caption: string;
     hashtags: string[];
   }) => {
     if (!user || !userProfile) return;
     
-    // Crear URL temporal para el video
-    const videoUrl = URL.createObjectURL(videoData.file);
-    
-    // Crear nuevo video con datos reales del usuario
-    const newVideo: ShortVideo = {
-      id: `user-${Date.now()}`,
-      petName: userProfile.name || 'Mi Mascota',
-      petUsername: `@${userProfile.name?.toLowerCase().replace(' ', '_') || 'mi_mascota'}`,
-      petType: 'Mascota',
-      petAge: 'Edad',
-      petAvatar: userProfile.avatar || 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=612&q=80',
-      videoUrl: videoUrl,
-      caption: videoData.caption,
-      hashtags: videoData.hashtags,
-      likes: 0,
-      comments: 0,
-      shares: 0,
-      isLiked: false
-    };
-
-    // Agregar el nuevo video al inicio de la lista
-    setVideos(prevVideos => [newVideo, ...prevVideos]);
-    
-    // Ir al nuevo video
-    setCurrentVideoIndex(0);
+    try {
+      await uploadVideo(videoData);
+      setShowUploadModal(false);
+      alert('¡Video subido exitosamente!');
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      alert('Error al subir video');
+    }
   };
 
   const formatNumber = (num: number) => {
