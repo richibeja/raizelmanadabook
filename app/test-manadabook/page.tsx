@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useManadaBookAuth } from '../../contexts/ManadaBookAuthContext';
-import { usePosts } from '../../hooks/usePosts';
-import { useComments } from '../../hooks/useComments';
-import { useMessaging } from '../../hooks/useMessaging';
-import { usePetsRealtime } from '../../hooks/usePetsRealtime';
+import { useManadaBookAuth } from '../contexts/ManadaBookAuthContext';
+import { usePosts } from '../hooks/usePosts';
+import { useComments } from '../hooks/useComments';
+import { useMessaging } from '../hooks/useMessaging';
+import { usePetsRealtime } from '../hooks/usePetsRealtime';
 
 interface TestResult {
   id: string;
@@ -16,7 +16,7 @@ interface TestResult {
   details?: any;
 }
 
-export default function TestManadaBookCompletoPage() {
+export default function TestManadaBookPage() {
   const { user, userProfile, loading: authLoading, login, register, logout } = useManadaBookAuth();
   const { posts, loading: postsLoading, createPost, likePost, sharePost, deletePost } = usePosts();
   const { addComment, editComment, deleteComment, likeComment } = useComments('test-post');
