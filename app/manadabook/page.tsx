@@ -56,14 +56,14 @@ export default function ManadaBookPage() {
     try {
       await sharePost(postId);
       
-    if (navigator.share) {
-      navigator.share({
-        title: 'Post de ManadaBook',
-        text: 'Mira este post interesante en ManadaBook',
+      if (navigator.share) {
+        navigator.share({
+          title: 'Post de ManadaBook',
+          text: 'Mira este post interesante en ManadaBook',
           url: `${window.location.origin}/manadabook/post/${postId}`
-      });
-    } else {
-      navigator.clipboard.writeText(`${window.location.origin}/manadabook/post/${postId}`);
+        });
+      } else {
+        navigator.clipboard.writeText(`${window.location.origin}/manadabook/post/${postId}`);
         alert('Enlace copiado al portapapeles');
       }
     } catch (error) {

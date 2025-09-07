@@ -348,6 +348,7 @@ export default function ManadaShortsPage() {
     });
   };
 
+
   const handleVideoUpload = (videoData: {
     file: File;
     caption: string;
