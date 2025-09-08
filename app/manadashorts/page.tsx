@@ -131,11 +131,11 @@ export default function ManadaShortsPage() {
   // Usar videos del hook si hay usuario, sino usar videos de muestra
   const displayVideos = user ? videos : loadSampleVideos();
 
-  // Inicializar videos como silenciados
+  // Inicializar videos como NO silenciados (con audio)
   useEffect(() => {
     const mutedState: { [key: string]: boolean } = {};
     displayVideos.forEach(video => {
-      mutedState[video.id] = true;
+      mutedState[video.id] = false; // Cambiado a false para que tengan audio
     });
     setVideoMuted(mutedState);
   }, [displayVideos]);

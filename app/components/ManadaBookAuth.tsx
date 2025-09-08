@@ -162,7 +162,7 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
                     errors.name ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Tu nombre completo"
@@ -183,7 +183,7 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
                   errors.email ? 'border-red-300' : 'border-gray-300'
                 }`}
                 placeholder="tu@email.com"
@@ -203,7 +203,7 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
                   errors.password ? 'border-red-300' : 'border-gray-300'
                 }`}
                 placeholder="Mínimo 6 caracteres"
@@ -231,7 +231,7 @@ export default function ManadaBookAuth({ onClose }: ManadaBookAuthProps) {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Repite tu contraseña"
