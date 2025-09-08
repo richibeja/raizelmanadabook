@@ -78,7 +78,6 @@ export default function ManadaShortsPage() {
     }
   }, [user, userProfile]);
 
-
   const loadSampleVideos = (): ShortVideo[] => {
     return [
       {
@@ -129,14 +128,17 @@ export default function ManadaShortsPage() {
     ];
   };
 
+  // Usar videos del hook si hay usuario, sino usar videos de muestra
+  const displayVideos = user ? videos : loadSampleVideos();
+
   // Inicializar videos como silenciados
   useEffect(() => {
     const mutedState: { [key: string]: boolean } = {};
-    videos.forEach(video => {
+    displayVideos.forEach(video => {
       mutedState[video.id] = true;
     });
     setVideoMuted(mutedState);
-  }, [videos]);
+  }, [displayVideos]);
 
   // Auto-play del video actual con mejor manejo
   useEffect(() => {
@@ -184,7 +186,7 @@ export default function ManadaShortsPage() {
           break;
         case 'ArrowDown':
           e.preventDefault();
-          if (currentVideoIndex < videos.length - 1) {
+          if (currentVideoIndex < displayVideos.length - 1) {
             setCurrentVideoIndex(currentVideoIndex + 1);
           }
           break;
@@ -214,7 +216,7 @@ export default function ManadaShortsPage() {
     const itemHeight = window.innerHeight;
     const newIndex = Math.round(scrollTop / itemHeight);
     
-    if (newIndex !== currentVideoIndex && newIndex >= 0 && newIndex < videos.length) {
+    if (newIndex !== currentVideoIndex && newIndex >= 0 && newIndex < displayVideos.length) {
       setCurrentVideoIndex(newIndex);
     }
   };
@@ -231,7 +233,7 @@ export default function ManadaShortsPage() {
       
       if (Math.abs(diff) > 50) { // Mínimo de 50px para considerar swipe
         if (diff > 0) {
-          if (currentVideoIndex < videos.length - 1) {
+          if (currentVideoIndex < displayVideos.length - 1) {
             setCurrentVideoIndex(currentVideoIndex + 1);
           }
         } else {
@@ -283,7 +285,7 @@ export default function ManadaShortsPage() {
     }
     
     try {
-      const currentVideo = videos[currentVideoIndex];
+      const currentVideo = displayVideos[currentVideoIndex];
       if (currentVideo) {
         await shareVideo(currentVideo.id);
       }
@@ -314,9 +316,10 @@ export default function ManadaShortsPage() {
     
     try {
       // Buscar el video para obtener el authorId
-      const video = videos.find(v => v.petUsername === petUsername);
+      const video = displayVideos.find(v => v.petUsername === petUsername);
       if (video) {
-        await followUser(video.authorId);
+        // Usar el ID del video como authorId temporal
+        await followUser(video.id);
       }
     } catch (error) {
       console.error('Error following user:', error);
@@ -389,7 +392,7 @@ export default function ManadaShortsPage() {
         onTouchStart={handleTouchStart}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {videos.map((video, index) => (
+        {displayVideos.map((video, index) => (
           <div key={video.id} className="h-screen w-full relative snap-start">
             {/* Video Player */}
             <video
@@ -555,7 +558,7 @@ export default function ManadaShortsPage() {
       <VideoComments
         isOpen={showComments}
         onClose={() => setShowComments(false)}
-        videoId={videos[currentVideoIndex]?.id || ''}
+        videoId={displayVideos[currentVideoIndex]?.id || ''}
       />
 
       {/* Search Modal */}
