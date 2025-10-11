@@ -9,6 +9,7 @@ import {
   addDoc, 
   deleteDoc, 
   doc, 
+  getDoc,
   getDocs,
   orderBy,
   limit,
@@ -78,9 +79,9 @@ export function useFollow() {
           
           for (const followDoc of snapshot.docs) {
             const followData = followDoc.data();
-            const userDoc = await doc(db, 'users', followData.followerId).get();
+            const userDoc = await getDoc(doc(db, 'users', followData.followerId));
             
-            if (userDoc.exists()) {
+            if (userDoc.exists) {
               const userData = userDoc.data();
               followersData.push({
                 id: userData.id || followData.followerId,
@@ -123,9 +124,9 @@ export function useFollow() {
           
           for (const followDoc of snapshot.docs) {
             const followData = followDoc.data();
-            const userDoc = await doc(db, 'users', followData.followingId).get();
+            const userDoc = await getDoc(doc(db, 'users', followData.followingId));
             
-            if (userDoc.exists()) {
+            if (userDoc.exists) {
               const userData = userDoc.data();
               followingData.push({
                 id: userData.id || followData.followingId,
@@ -277,9 +278,9 @@ export function useFollow() {
   const updateUserCounters = async (userId: string, counterType: 'followers' | 'following' | 'posts', change: number) => {
     try {
       const userRef = doc(db, 'users', userId);
-      const userDoc = await userRef.get();
+      const userDoc = await getDoc(userRef);
       
-      if (userDoc.exists()) {
+      if (userDoc.exists) {
         const userData = userDoc.data();
         const currentCount = userData[`${counterType}Count`] || 0;
         const newCount = Math.max(0, currentCount + change);
