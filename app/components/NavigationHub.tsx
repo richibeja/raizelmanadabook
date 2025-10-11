@@ -193,14 +193,14 @@ function NavigationHub() {
               <p className="text-sm text-gray-600">Calculadora de porciones, recordatorios de salud, consejos de embarazo</p>
             </div>
             <div className="text-center p-4 bg-white/80 rounded-2xl shadow-lg border border-purple-200">
-              <div className="text-3xl mb-2">🎥</div>
-              <h3 className="font-bold text-gray-900 mb-2">Entretenimiento y comunidad</h3>
-              <p className="text-sm text-gray-600">ManadaBook, ManadaShorts y círculos temáticos</p>
+              <div className="text-3xl mb-2">👥</div>
+              <h3 className="font-bold text-gray-900 mb-2">Comunidad en redes sociales</h3>
+              <p className="text-sm text-gray-600">Facebook, Instagram, TikTok y grupos de amantes de mascotas</p>
             </div>
             <div className="text-center p-4 bg-white/80 rounded-2xl shadow-lg border border-orange-200">
-              <div className="text-3xl mb-2">🛒</div>
-              <h3 className="font-bold text-gray-900 mb-2">Marketplace especializado</h3>
-              <p className="text-sm text-gray-600">Productos de confianza con recetas y promociones exclusivas</p>
+              <div className="text-3xl mb-2">📖</div>
+              <h3 className="font-bold text-gray-900 mb-2">Recetas y contenido gratis</h3>
+              <p className="text-sm text-gray-600">Recetas caseras de helados, comidas y guías nutricionales</p>
             </div>
           </div>
 
