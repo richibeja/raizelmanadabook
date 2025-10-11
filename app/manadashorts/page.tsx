@@ -586,5 +586,5 @@ export default function ManadaShortsPage() {
         />
       )}
     </div>
-    );
-  }
+  );
+}

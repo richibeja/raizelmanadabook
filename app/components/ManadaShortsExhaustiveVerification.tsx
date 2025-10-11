@@ -370,7 +370,7 @@ export default function ManadaShortsExhaustiveVerification() {
         {verificationResults.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <p>No hay resultados de verificación aún.</p>
-            <p>Haz clic en "Iniciar Verificación Exhaustiva" para comenzar.</p>
+            <p>Haz clic en &quot;Iniciar Verificación Exhaustiva&quot; para comenzar.</p>
           </div>
         ) : (
           <div className="space-y-3">

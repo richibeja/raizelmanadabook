@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Shield, CheckCircle, X, AlertTriangle } from 'lucide-react';
 
 interface TermsAcceptanceModalProps {
@@ -159,9 +160,9 @@ export default function TermsAcceptanceModal({ isOpen, onAccept, onDecline }: Te
           <div className="text-center pt-4 border-t border-gray-200">
             <p className="text-xs text-gray-500">
               Puedes leer las políticas completas en{' '}
-              <a href="/politicas" className="text-blue-600 hover:text-blue-800 underline">
+              <Link href="/politicas" className="text-blue-600 hover:text-blue-800 underline">
                 /politicas
-              </a>
+              </Link>
             </p>
           </div>
         </div>

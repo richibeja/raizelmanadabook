@@ -157,6 +157,14 @@ function NavigationHub() {
       bgColor: "#fdf2f8"
     },
     {
+      icon: <Users size={24} />,
+      title: "Comunidad Facebook",
+      description: "Únete a nuestra comunidad en Facebook. Comparte fotos de tu mascota, conecta con otros dueños, recibe consejos exclusivos y accede a promociones especiales para miembros del grupo. ¡Captura y comparte momentos únicos!",
+      href: "/comunidad",
+      color: "#1877f2", // azul Facebook
+      bgColor: "#e7f3ff"
+    },
+    {
       icon: <Megaphone size={24} />,
       title: "Dashboard de Publicidad",
       description: "Panel completo de administración publicitaria con métricas en tiempo real, creación y gestión de campañas, targeting avanzado por ubicación e intereses, control de presupuestos, analytics detallados y sistema de monetización. ¡Maximiza tu alcance!",
