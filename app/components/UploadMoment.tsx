@@ -81,9 +81,8 @@ const UploadMoment: React.FC<UploadMomentProps> = ({
 
       const momentData = {
         content: content.trim(),
-        mediaUrl,
+        mediaUrls: mediaUrl ? [mediaUrl] : [],
         mediaType,
-        duration,
         circleId: circleId || undefined,
         tags: circleId ? ['circle', circleName?.toLowerCase()] : ['public']
       };
