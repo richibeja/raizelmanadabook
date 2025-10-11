@@ -101,11 +101,11 @@ export function useComments(postId: string) {
 
             for (const replyDoc of repliesSnapshot.docs) {
               const replyData = replyDoc.data();
-              const replyAuthorDoc = await doc(db, 'users', replyData.authorId).get();
+              const replyAuthorDoc = await getDoc(doc(db, 'users', replyData.authorId));
               let replyAuthorName = 'Usuario Anónimo';
               let replyAuthorAvatar = '';
 
-              if (replyAuthorDoc.exists()) {
+              if (replyAuthorDoc.exists) {
                 const replyAuthorData = replyAuthorDoc.data();
                 replyAuthorName = replyAuthorData.name || 'Usuario Anónimo';
                 replyAuthorAvatar = replyAuthorData.avatarUrl || '';
