@@ -5,6 +5,8 @@ import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 import { usePetsRealtime } from '../hooks/usePetsRealtime';
 import { X, Plus, Edit, Trash2, Camera, MapPin, Heart, Star } from 'lucide-react';
 
+// TypeScript: Fixed all pet property checks with 'in' operator
+
 interface PetProfileManagerProps {
   onClose: () => void;
 }
