@@ -238,11 +238,16 @@ export default function AliadosPage() {
           </Link>
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-4">Nuestros Aliados</h1>
-              <p className="text-lg text-gray-600 max-w-3xl">
-                Contacta directamente a los distribuidores autorizados de nuestros productos. 
-                Encuentra el aliado más cercano a ti y obtén productos Raízel de calidad.
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">🏪 Distribuidores Autorizados Raízel</h1>
+              <p className="text-lg text-gray-600 max-w-3xl mb-4">
+                <strong>¡Compra cerca de ti!</strong> Nuestros distribuidores autorizados ofrecen productos Raízel 100% naturales en tu región. 
+                Contacta directamente y recibe productos frescos con entrega rápida.
               </p>
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                <p className="text-green-800 font-medium">
+                  ✅ Todos nuestros distribuidores están certificados y ofrecen productos originales Raízel
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setShowAddModal(true)}
