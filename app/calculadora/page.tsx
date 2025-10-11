@@ -439,21 +439,100 @@ export default function CalculadoraPorciones() {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-16 text-center bg-white rounded-2xl p-8 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            ¿Necesitas productos específicos?
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Explora nuestro catálogo de alimentos naturales para perros y gatos.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/catalogo-perros" className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
-              Productos para Perros
-            </Link>
-            <Link href="/catalogo-gatos" className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
-              Productos para Gatos
-            </Link>
+        {/* CTA Mejorado con WhatsApp */}
+        <div className="mt-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 shadow-2xl text-white">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold mb-4">
+              ¿Listo para alimentar mejor a tu mascota?
+            </h2>
+            <p className="text-green-100 text-lg mb-6">
+              Explora nuestros productos 100% naturales o pide asesoría personalizada por WhatsApp
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <h3 className="font-semibold text-xl mb-3 flex items-center">
+                <Dog className="mr-2" size={24} />
+                Para Perros
+              </h3>
+              <p className="text-green-100 mb-4 text-sm">
+                BARF premium, chorizos, albóndigas, pellets naturales y más
+              </p>
+              <Link href="/catalogo-perros" className="block w-full bg-white text-green-600 px-6 py-3 rounded-lg hover:bg-green-50 transition-colors font-semibold text-center">
+                Ver Catálogo
+              </Link>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <h3 className="font-semibold text-xl mb-3 flex items-center">
+                <Cat className="mr-2" size={24} />
+                Para Gatos
+              </h3>
+              <p className="text-green-100 mb-4 text-sm">
+                BARF de cordero, vísceras, pellets especializados y bocaditos
+              </p>
+              <Link href="/catalogo-gatos" className="block w-full bg-white text-purple-600 px-6 py-3 rounded-lg hover:bg-purple-50 transition-colors font-semibold text-center">
+                Ver Catálogo
+              </Link>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-green-100 mb-4 font-medium">
+              ¿Tienes dudas sobre las porciones? ¡Contáctanos ahora!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="https://wa.me/573108188723" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-green-600 px-8 py-4 rounded-lg hover:bg-green-50 transition-colors font-bold shadow-lg flex items-center justify-center"
+              >
+                📱 WhatsApp: +57 310 818 8723
+              </a>
+              <a 
+                href="https://wa.me/573124505966" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-green-600 px-8 py-4 rounded-lg hover:bg-green-50 transition-colors font-bold shadow-lg flex items-center justify-center"
+              >
+                📱 WhatsApp: +57 312 450 5966
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        {/* Banner de calidad */}
+        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
+            <div className="flex items-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                <span className="text-3xl">🌿</span>
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-800">100% Natural</h4>
+                <p className="text-gray-600 text-sm">Sin químicos ni conservantes</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                <span className="text-3xl">🇨🇴</span>
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-800">Hecho en Colombia</h4>
+                <p className="text-gray-600 text-sm">Ingredientes locales frescos</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                <span className="text-3xl">💚</span>
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-800">Calidad Premium</h4>
+                <p className="text-gray-600 text-sm">Para el bienestar de tu mascota</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

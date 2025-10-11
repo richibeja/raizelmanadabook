@@ -216,11 +216,14 @@ function NavigationHub() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
+            <Link href="/calculadora" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105 animate-pulse">
+              🧮 Calcular Porciones Ahora
+            </Link>
             <Link href="/catalogo-perros" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
-              🛍️ Explorar Productos
+              🛍️ Ver Productos
             </Link>
             <Link href="/comunidad" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
-              👥 Unirse a la Comunidad
+              👥 Comunidad
             </Link>
           </div>
           
