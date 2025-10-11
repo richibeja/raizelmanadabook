@@ -12,7 +12,7 @@ export default function ComunidadPage() {
   const FACEBOOK_GROUP = 'https://www.facebook.com/share/g/1CSVg7WncY/';
   const INSTAGRAM_URL = 'https://www.instagram.com/somosraizel?igsh=MnduazUycGhneng%3D';
   const TIKTOK_URL = 'https://www.tiktok.com/@raizeloficial?_t=ZS-90SvcHz0z5j&_r=1';
-  const WHATSAPP_NUMBER = '573108188723';
+  const WHATSAPP_NUMBER = '573124505966';
 
   const handleTakePhoto = () => {
     const input = document.createElement('input');
