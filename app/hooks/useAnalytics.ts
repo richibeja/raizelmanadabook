@@ -8,6 +8,7 @@ import {
   onSnapshot, 
   addDoc, 
   doc, 
+  getDoc,
   getDocs,
   orderBy,
   limit,
