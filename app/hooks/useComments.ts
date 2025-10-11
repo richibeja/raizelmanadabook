@@ -10,6 +10,7 @@ import {
   updateDoc, 
   deleteDoc, 
   doc, 
+  getDoc,
   orderBy,
   limit,
   Timestamp 
@@ -68,11 +69,11 @@ export function useComments(postId: string) {
             const commentData = docSnapshot.data();
             
             // Obtener información del autor
-            const authorDoc = await doc(db, 'users', commentData.authorId).get();
+            const authorDoc = await getDoc(doc(db, 'users', commentData.authorId));
             let authorName = 'Usuario Anónimo';
             let authorAvatar = '';
             
-            if (authorDoc.exists()) {
+            if (authorDoc.exists) {
               const authorData = authorDoc.data();
               authorName = authorData.name || 'Usuario Anónimo';
               authorAvatar = authorData.avatarUrl || '';
