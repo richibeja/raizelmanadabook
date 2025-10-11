@@ -230,12 +230,12 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
                       )}
                       
                       <div className="flex flex-wrap gap-1 mb-3">
-                        {'personality' in pet && pet.personality && pet.personality.slice(0, 3).map((trait: string, index: number) => (
+                        {'personality' in pet && Array.isArray(pet.personality) && pet.personality.slice(0, 3).map((trait: string, index: number) => (
                           <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
                             {trait}
                           </span>
                         ))}
-                        {'personality' in pet && pet.personality && pet.personality.length > 3 && (
+                        {'personality' in pet && Array.isArray(pet.personality) && pet.personality.length > 3 && (
                           <span className="text-gray-500 text-xs">+{pet.personality.length - 3} más</span>
                         )}
                       </div>
