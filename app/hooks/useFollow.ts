@@ -162,7 +162,7 @@ export function useFollow() {
       followersUnsubscribe();
       followingUnsubscribe();
     };
-  }, [user, loadSuggestions]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadSuggestions = async () => {
     if (!user) return;
