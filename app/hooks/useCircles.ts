@@ -385,11 +385,18 @@ export const useUserCircles = () => {
           id: '1',
           name: 'Amantes de Perros',
           description: 'Círculo para dueños de perros',
+          category: 'interest' as const,
           memberCount: 150,
+          postCount: 0,
           isPublic: true,
+          isActive: true,
+          members: [],
+          admins: [],
+          moderators: [],
           tags: ['perros', 'mascotas'],
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          createdBy: ''
         }
       ]);
       setLoading(false);
