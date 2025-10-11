@@ -435,21 +435,63 @@ export default function AliadosPage() {
           </div>
         )}
 
-        {/* CTA */}
-        <div className="mt-16 text-center bg-white rounded-2xl p-8 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            ¿Eres distribuidor y quieres ser aliado de Raízel?
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Contáctanos para conocer los beneficios de ser distribuidor autorizado de nuestros productos naturales.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contacto" className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
-              Contactar para ser aliado
-            </Link>
-            <Link href="/" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-              Volver a Raízel
-            </Link>
+        {/* CTA Mejorado para nuevos aliados */}
+        <div className="mt-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 shadow-2xl text-white">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold mb-4">
+              ¿Quieres ser distribuidor autorizado de Raízel? 🤝
+            </h2>
+            <p className="text-green-100 text-lg mb-6">
+              Únete a nuestra red de distribuidores y ofrece productos 100% naturales en tu región
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
+              <div className="text-4xl mb-3">💰</div>
+              <h3 className="font-bold text-xl mb-2">Comisiones Atractivas</h3>
+              <p className="text-green-100 text-sm">Gana por cada venta que realices</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
+              <div className="text-4xl mb-3">📦</div>
+              <h3 className="font-bold text-xl mb-2">Productos Premium</h3>
+              <p className="text-green-100 text-sm">Ofrece calidad 100% natural</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
+              <div className="text-4xl mb-3">🎯</div>
+              <h3 className="font-bold text-xl mb-2">Soporte Completo</h3>
+              <p className="text-green-100 text-sm">Marketing y capacitación incluidos</p>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-green-100 mb-6 font-medium text-lg">
+              Envíanos tus datos por WhatsApp y te contactamos:
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href={`https://wa.me/573108188723?text=${encodeURIComponent(
+                  '¡Hola Raízel! Quiero ser distribuidor autorizado.\n\n' +
+                  '📋 MIS DATOS:\n' +
+                  '• Nombre de mi negocio: \n' +
+                  '• Ciudad/Región: \n' +
+                  '• Tipo de negocio: (Tienda, Veterinaria, Otro)\n' +
+                  '• WhatsApp de contacto: \n' +
+                  '• Email: \n' +
+                  '• Dirección: \n' +
+                  '• Productos de interés: (BARF, Pellets, Snacks, Todos)\n\n' +
+                  '¡Espero su respuesta! 🐾'
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-green-600 px-10 py-5 rounded-lg hover:bg-green-50 transition-colors font-bold shadow-lg flex items-center justify-center text-lg"
+              >
+                📱 Registrarme como Distribuidor
+              </a>
+            </div>
+            <p className="text-green-100 text-sm mt-4">
+              Te responderemos en menos de 24 horas con toda la información
+            </p>
           </div>
         </div>
 
