@@ -10,6 +10,7 @@ import {
   updateDoc, 
   deleteDoc, 
   doc, 
+  getDoc,
   getDocs,
   orderBy,
   limit,
@@ -128,11 +129,11 @@ export function useMarketplace() {
             const productData = docSnapshot.data();
             
             // Obtener información del vendedor
-            const sellerDoc = await doc(db, 'users', productData.sellerId).get();
+            const sellerDoc = await getDoc(doc(db, 'users', productData.sellerId));
             let sellerName = 'Vendedor Anónimo';
             let sellerAvatar = '';
             
-            if (sellerDoc.exists()) {
+            if (sellerDoc.exists) {
               const sellerData = sellerDoc.data();
               sellerName = sellerData.name || 'Vendedor Anónimo';
               sellerAvatar = sellerData.avatarUrl || '';

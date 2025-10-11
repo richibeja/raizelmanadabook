@@ -10,6 +10,7 @@ import {
   updateDoc, 
   deleteDoc, 
   doc, 
+  getDoc,
   getDocs,
   orderBy,
   limit,
@@ -119,8 +120,8 @@ export function useMessaging() {
             const participantAvatars: { [userId: string]: string } = {};
             
             for (const participantId of conversationData.participants) {
-              const participantDoc = await doc(db, 'users', participantId).get();
-              if (participantDoc.exists()) {
+              const participantDoc = await getDoc(doc(db, 'users', participantId));
+              if (participantDoc.exists) {
                 const participantData = participantDoc.data();
                 participantNames[participantId] = participantData.name || 'Usuario Anónimo';
                 participantAvatars[participantId] = participantData.avatarUrl || '';
@@ -186,11 +187,11 @@ export function useMessaging() {
         const messageData = docSnapshot.data();
         
         // Obtener información del remitente
-        const senderDoc = await doc(db, 'users', messageData.senderId).get();
+        const senderDoc = await getDoc(doc(db, 'users', messageData.senderId));
         let senderName = 'Usuario Anónimo';
         let senderAvatar = '';
         
-        if (senderDoc.exists()) {
+        if (senderDoc.exists) {
           const senderData = senderDoc.data();
           senderName = senderData.name || 'Usuario Anónimo';
           senderAvatar = senderData.avatarUrl || '';

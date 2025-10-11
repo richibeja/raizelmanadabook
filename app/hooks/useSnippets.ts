@@ -9,6 +9,7 @@ import {
   addDoc, 
   deleteDoc, 
   doc, 
+  getDoc,
   getDocs,
   orderBy,
   limit,
@@ -98,11 +99,11 @@ export function useSnippets() {
             const snippetData = docSnapshot.data();
             
             // Obtener información del autor
-            const authorDoc = await doc(db, 'users', snippetData.authorId).get();
+            const authorDoc = await getDoc(doc(db, 'users', snippetData.authorId));
             let authorName = 'Usuario Anónimo';
             let authorAvatar = '';
             
-            if (authorDoc.exists()) {
+            if (authorDoc.exists) {
               const authorData = authorDoc.data();
               authorName = authorData.name || 'Usuario Anónimo';
               authorAvatar = authorData.avatarUrl || '';
