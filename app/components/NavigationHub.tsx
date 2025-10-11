@@ -12,9 +12,6 @@ import {
   Camera,
   Globe,
   Phone,
-  BookOpen,
-  Video,
-  Megaphone,
   IceCream,
   ChefHat,
   Shield
@@ -142,35 +139,11 @@ function NavigationHub() {
     },
     {
       icon: <Users size={24} />,
-      title: "ManadaBook",
-      description: "La red social más completa para amantes de mascotas. Crea perfiles detallados de tus mascotas, comparte momentos únicos, conecta con otros dueños, únete a círculos temáticos, gestiona seguidores, sistema de moderación activa y mucho más. ¡Tu ecosistema social completo!",
-      href: "/manadabook",
-      color: "#3b82f6", // azul vibrante
-      bgColor: "#eff6ff"
-    },
-    {
-      icon: <Video size={24} />,
-      title: "ManadaShorts",
-      description: "Videos cortos estilo TikTok para mascotas con reproducción automática, scroll vertical, sistema de likes y comentarios, subida de videos, descubrimiento de contenido, navegación fluida y integración completa con la red social. ¡Viraliza a tu mascota!",
-      href: "/manadashorts",
-      color: "#ec4899", // rosa vibrante
-      bgColor: "#fdf2f8"
-    },
-    {
-      icon: <Users size={24} />,
       title: "Comunidad Facebook",
       description: "Únete a nuestra comunidad en Facebook. Comparte fotos de tu mascota, conecta con otros dueños, recibe consejos exclusivos y accede a promociones especiales para miembros del grupo. ¡Captura y comparte momentos únicos!",
       href: "/comunidad",
       color: "#1877f2", // azul Facebook
       bgColor: "#e7f3ff"
-    },
-    {
-      icon: <Megaphone size={24} />,
-      title: "Dashboard de Publicidad",
-      description: "Panel completo de administración publicitaria con métricas en tiempo real, creación y gestión de campañas, targeting avanzado por ubicación e intereses, control de presupuestos, analytics detallados y sistema de monetización. ¡Maximiza tu alcance!",
-      href: "/ads-dashboard",
-      color: "#a855f7", // violeta vibrante
-      bgColor: "#f3f4f6"
     },
     {
       icon: <Users size={24} />,
@@ -246,7 +219,7 @@ function NavigationHub() {
             <Link href="/catalogo-perros" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
               🛍️ Explorar Productos
             </Link>
-            <Link href="/manadabook" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
+            <Link href="/comunidad" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
               👥 Unirse a la Comunidad
             </Link>
           </div>

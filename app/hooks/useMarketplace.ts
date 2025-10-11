@@ -245,7 +245,7 @@ export function useMarketplace() {
       const newProduct = {
         sellerId: user.uid,
         sellerName: userProfile?.name || 'Usuario Anónimo',
-        sellerAvatar: userProfile?.avatarUrl || '',
+        sellerAvatar: userProfile?.avatar || '',
         title: productData.title.trim(),
         description: productData.description.trim(),
         price: productData.price,
