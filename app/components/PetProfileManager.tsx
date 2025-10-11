@@ -242,12 +242,12 @@ export default function PetProfileManager({ onClose }: PetProfileManagerProps) {
                       
                       <div className="flex justify-between items-center">
                         <span className={`text-xs px-2 py-1 rounded-full ${
-                          pet.privacy === 'public' ? 'bg-green-100 text-green-800' :
-                          pet.privacy === 'friends' ? 'bg-yellow-100 text-yellow-800' :
+                          ('privacy' in pet && pet.privacy === 'public') ? 'bg-green-100 text-green-800' :
+                          ('privacy' in pet && pet.privacy === 'friends') ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {pet.privacy === 'public' ? 'Público' :
-                           pet.privacy === 'friends' ? 'Solo Amigos' : 'Privado'}
+                          {('privacy' in pet && pet.privacy === 'public') ? 'Público' :
+                           ('privacy' in pet && pet.privacy === 'friends') ? 'Solo Amigos' : 'Privado'}
                         </span>
                         <button
                           onClick={() => handleEditPet(pet)}
