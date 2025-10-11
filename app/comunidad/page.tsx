@@ -12,7 +12,8 @@ export default function ComunidadPage() {
   const FACEBOOK_GROUP = 'https://www.facebook.com/share/g/1CSVg7WncY/';
   const INSTAGRAM_URL = 'https://www.instagram.com/somosraizel?igsh=MnduazUycGhneng%3D';
   const TIKTOK_URL = 'https://www.tiktok.com/@raizeloficial?_t=ZS-90SvcHz0z5j&_r=1';
-  const WHATSAPP_NUMBER = '573124505966';
+  const WHATSAPP_NUMBER_1 = '573108188723'; // WhatsApp Principal
+  const WHATSAPP_NUMBER_2 = '573124505966'; // WhatsApp Secundario
 
   const handleTakePhoto = () => {
     const input = document.createElement('input');
@@ -207,23 +208,32 @@ export default function ComunidadPage() {
           )}
         </div>
 
-        {/* WhatsApp Contact */}
+        {/* WhatsApp Contact - Dos números */}
         <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-8 shadow-lg text-white mb-12">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="mb-4 md:mb-0">
-              <h3 className="text-2xl font-semibold mb-2">¿Necesitas ayuda?</h3>
-              <p className="text-green-100">
-                Contáctanos directamente por WhatsApp para pedidos y consultas
-              </p>
-            </div>
+          <div className="text-center mb-6">
+            <h3 className="text-2xl font-semibold mb-2">¿Necesitas ayuda?</h3>
+            <p className="text-green-100">
+              Contáctanos directamente por WhatsApp para pedidos y consultas
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              href={`https://wa.me/${WHATSAPP_NUMBER_1}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white text-green-600 py-3 px-8 rounded-lg hover:bg-green-50 transition-colors font-semibold flex items-center"
+              className="bg-white text-green-600 py-3 px-8 rounded-lg hover:bg-green-50 transition-colors font-semibold flex items-center justify-center"
             >
               <MessageCircle size={20} className="mr-2" />
-              Abrir WhatsApp
+              WhatsApp 1: +57 310 818 8723
+            </a>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER_2}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-green-600 py-3 px-8 rounded-lg hover:bg-green-50 transition-colors font-semibold flex items-center justify-center"
+            >
+              <MessageCircle size={20} className="mr-2" />
+              WhatsApp 2: +57 312 450 5966
             </a>
           </div>
         </div>
