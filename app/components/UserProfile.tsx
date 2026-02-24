@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { X, Settings, Edit, Heart, MessageCircle, Share2, Plus } from 'lucide-react';
 
 interface UserProfileProps {
@@ -63,11 +65,12 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
           {/* Profile Info */}
           <div className="p-4">
             <div className="flex items-center space-x-4 mb-4">
-              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-red-500">
-                <img
+              <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-red-500">
+                <Image
                   src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
                   alt="Mi perfil"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
               <div className="flex-1">
@@ -107,21 +110,19 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
             <div className="flex space-x-4 mb-4">
               <button
                 onClick={() => setActiveTab('videos')}
-                className={`px-4 py-2 rounded-lg transition-colors ${
-                  activeTab === 'videos'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:text-white'
-                }`}
+                className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'videos'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:text-white'
+                  }`}
               >
                 Videos
               </button>
               <button
                 onClick={() => setActiveTab('liked')}
-                className={`px-4 py-2 rounded-lg transition-colors ${
-                  activeTab === 'liked'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:text-white'
-                }`}
+                className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'liked'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:text-white'
+                  }`}
               >
                 Me gusta
               </button>
@@ -132,11 +133,14 @@ export default function UserProfile({ isOpen, onClose }: UserProfileProps) {
               <div className="grid grid-cols-3 gap-2">
                 {userVideos.map((video) => (
                   <div key={video.id} className="relative group">
-                    <img
-                      src={video.thumbnail}
-                      alt="Video thumbnail"
-                      className="w-full h-32 object-cover rounded-lg"
-                    />
+                    <div className="relative w-full h-32">
+                      <Image
+                        src={video.thumbnail}
+                        alt="Video thumbnail"
+                        fill
+                        className="object-cover rounded-lg"
+                      />
+                    </div>
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                       <div className="flex items-center space-x-4 text-white">
                         <div className="flex items-center space-x-1">
