@@ -111,7 +111,7 @@ function NavigationHub() {
     {
       icon: <Microscope size={24} />,
       title: "BioCheck AI",
-      description: "Análisis inteligente de salud digestiva. Escanea y monitorea el microbioma de tu mascota con validación científica instantánea.",
+      description: "Análisis de salud intestinal sin importar su dieta (Croquetas o Natural). Escanea y monitorea el microbioma de tu mascota al instante.",
       href: "/herramientas/biocheck-intestinal",
       color: "#06b6d4",
       bgColor: "#ecfeff"
@@ -119,18 +119,10 @@ function NavigationHub() {
     {
       icon: <Calculator size={24} />,
       title: "Smart Diet Calc",
-      description: "Algoritmo avanzado para determinar la ración exacta. Ahorra dinero y evita el sobrepeso calculando la nutrición real de tu mascota.",
+      description: "Optimiza su nutrición actual o descubre su ración natural exacta. Algoritmo avanzado para evitar el sobrepeso y ahorrar dinero.",
       href: "/calculadora",
       color: "#ef4444",
       bgColor: "#fef2f2"
-    },
-    {
-      icon: <ShieldAlert size={24} />,
-      title: "Alimentos Tóxicos",
-      description: "Buscador inteligente de emergencia. Descubre en segundos qué alimentos son un riesgo mortal para tu mascota.",
-      href: "/herramientas/alimentos-toxicos",
-      color: "#f97316",
-      bgColor: "#fff7ed"
     },
     {
       icon: <Syringe size={24} />,

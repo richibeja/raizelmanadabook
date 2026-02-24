@@ -40,30 +40,30 @@ export default function BioCheckIntestinal() {
             1: {
                 score: 98,
                 status: 'ÓPTIMO',
-                classification: 'Heces BARF Tipo A (Sólidas)',
-                explanation: 'Heces pequeñas, firmes y de bajo olor. Indica una absorción de nutrientes del 95%+. Pocos residuos significa que el metabolismo está aprovechando la proteína real.',
-                recommendation: '¡Excelente! Continúa con la rotación actual de proteínas Raízel. Tu mascota está en equilibrio metabólico.'
+                classification: 'Absorción Máxima (Sólidas)',
+                explanation: 'Heces pequeñas y firmes. Este es el "Estándar de Oro" de la nutrición. Indica que el cuerpo absorbió casi todo. Es el resultado más común en perros que comen BARF Raízel.',
+                recommendation: '¡Excelente! Estás dándole lo mejor. Si ya usas Raízel, mantén la rotación. Si usas croquetas, felicidades: tu mascota tiene una digestión privilegiada.'
             },
             2: {
                 score: 85,
                 status: 'ÓPTIMO',
-                classification: 'Heces Tipo B (Formadas)',
-                explanation: 'Consistencia ideal. Los niveles de fibra y ceniza mineral están perfectamente balanceados.',
-                recommendation: 'Mantén la hidratación actual. No es necesario realizar ajustes nutricionales.'
+                classification: 'Heces Saludables (Formadas)',
+                explanation: 'Consistencia estándar saludable. Un poco más grandes que el tipo A, común en dietas mixtas o croquetas de alta gama.',
+                recommendation: 'Todo en orden. Para reducir el tamaño y olor de las heces, considera integrar un 25% de ración natural Raízel.'
             },
             3: {
                 score: 60,
                 status: 'DISBIOSIS LEVE',
-                classification: 'Heces Blandas / Mucosidad',
-                explanation: 'Presencia de humedad excesiva. Podría indicar una transición rápida o exceso de grasa/vísceras en la ración diaria.',
-                recommendation: 'Aumenta ligeramente la proporción de hueso carnoso o reduce el porcentaje de vísceras durante 48 horas.'
+                classification: 'Inflamación / Mucosidad',
+                explanation: 'Heces blandas. Frecuente en dietas altas en carbohidratos (rellenos de cereales) o cambios bruscos de marca de croquetas.',
+                recommendation: 'Tu mascota podría estar teniendo dificultad para procesar los rellenos de su comida. Intenta una dieta blanda o transiciona a ración natural.'
             },
             4: {
-                score: 30,
+                score: 25,
                 status: 'ALERTA NUTRICIONAL',
-                classification: 'Heces Pastosas / Olor Fuerte',
-                explanation: 'Indica fermentación bacteriana o intolerancia a algún ingrediente. El olor fuerte sugiere que hay proteína no digerida llegando al colon.',
-                recommendation: 'Considera una dieta de exclusión o consulta nuestro soporte experto para ajustar el microbioma.'
+                classification: 'Heces Voluminosas / Olor Intenso',
+                explanation: 'Si las heces son muy grandes y huelen mal, significa que los ingredientes no se digieren. Común en croquetas con bajo valor biológico.',
+                recommendation: 'Alerta: Su sistema digestivo está trabajando de más. Te recomendamos chatear con nuestro experto para un plan de choque digestivo.'
             }
         };
 
@@ -99,7 +99,7 @@ export default function BioCheckIntestinal() {
                         </h1>
 
                         <p className="text-xl text-gray-400 max-w-xl mb-12 font-medium leading-relaxed">
-                            Analiza el microbioma y la calidad digestiva de tu mascota mediante el reconocimiento visual de patrones fecales. <b>Científicamente validado para dietas naturales.</b>
+                            Analiza la salud digestiva de tu mascota sin importar su dieta (Croquetas, BARF o Cocinado). <b>Identifica si su alimentación actual se está aprovechando correctamente.</b>
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
