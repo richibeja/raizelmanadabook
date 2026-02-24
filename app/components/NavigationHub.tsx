@@ -15,7 +15,8 @@ import {
   IceCream,
   ChefHat,
   Shield,
-  ShieldAlert
+  ShieldAlert,
+  Syringe
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -120,6 +121,14 @@ function NavigationHub() {
       href: "/herramientas/alimentos-toxicos",
       color: "#f97316",
       bgColor: "#fff7ed"
+    },
+    {
+      icon: <Syringe size={24} />,
+      title: "Carnet de Vacunas",
+      description: "Digitaliza el carnet de tu mascota. Recibe alertas y nunca más olvides una fecha importante de vacunación.",
+      href: "/herramientas/calendario-vacunas",
+      color: "#16a34a",
+      bgColor: "#f0fdf4"
     },
     {
       icon: <Dog size={24} />,
