@@ -14,7 +14,8 @@ import {
   Phone,
   IceCream,
   ChefHat,
-  Shield
+  Shield,
+  ShieldAlert
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -105,68 +106,52 @@ function NavigationCard({
 function NavigationHub() {
   const navigationCards = [
     {
-      icon: <Dog size={24} />,
-      title: "Productos para Perros",
-      description: "Alimentos BARF premium con ingredientes naturales: coliflor, zanahoria, linaza, aceites esenciales, sal marina y calcio. Chorizos, albóndigas funcionales, bandejas de vísceras crudas y helados naturales. ¡Nutrición completa para tu mejor amigo!",
-      href: "/catalogo-perros",
-      color: "#10b981", // verde esmeralda vibrante
-      bgColor: "#ecfdf5"
-    },
-    {
-      icon: <Cat size={24} />,
-      title: "Productos para Gatos",
-      description: "Recetas BARF especializadas para gatos con cordero, hígado de res, vísceras mixtas y pellets adaptados. Bocaditos naturales, bandejas de vísceras crudas y nutrición felina completa. ¡Tu gato merece lo mejor!",
-      href: "/catalogo-gatos",
-      color: "#8b5cf6", // violeta vibrante
-      bgColor: "#faf5ff"
-    },
-    {
-      icon: <IceCream size={24} />,
-      title: "Recetas de Helados",
-      description: "6 recetas exclusivas de helados caseros para mascotas: helado de pollo, helado de hígado, helado de zanahoria, helado de manzana, helado de yogur y helado de atún. Ingredientes 100% naturales y nutritivos. ¡Refresca a tu mascota!",
-      href: "/helados",
-      color: "#06b6d4", // cian vibrante
-      bgColor: "#f0f9ff"
-    },
-    {
-      icon: <ChefHat size={24} />,
-      title: "Recetas para Mascotas",
-      description: "6 recetas completas con bandejas de vísceras crudas, cordero BARF, hígado de res, vísceras mixtas, helados de vísceras y cordero para gatos. Desde platos crudos hasta preparaciones cocidas. ¡Cocina como un chef para tu mascota!",
-      href: "/recetas",
-      color: "#f97316", // naranja vibrante
-      bgColor: "#fff7ed"
-    },
-    {
       icon: <Calculator size={24} />,
-      title: "Calculadora de Porciones",
-      description: "Calculadora inteligente y precisa con edad en años y meses, validación de datos, cálculos detallados de nutrición, opciones de impresión y copia, resultados personalizados y recomendaciones específicas. ¡Calcula la porción perfecta!",
+      title: "Calculadora de Dieta",
+      description: "Algoritmo avanzado para determinar la ración exacta según peso, actividad y etapa de vida. ¡Evita el sobrepeso y ahorra dinero calculando solo lo que tu mascota necesita!",
       href: "/calculadora",
-      color: "#ef4444", // rojo vibrante
+      color: "#ef4444",
       bgColor: "#fef2f2"
     },
     {
+      icon: <ShieldAlert size={24} />,
+      title: "Alimentos Tóxicos",
+      description: "Buscador inteligente de emergencia. Descubre qué alimentos pueden salvar o poner en riesgo la vida de tu mejor amigo en segundos.",
+      href: "/herramientas/alimentos-toxicos",
+      color: "#f97316",
+      bgColor: "#fff7ed"
+    },
+    {
+      icon: <Dog size={24} />,
+      title: "Productos Raízel",
+      description: "Explora nuestra línea de alimentos BARF premium, snacks funcionales y recetas gourmet 100% naturales, sin conservantes ni químicos.",
+      href: "/catalogo-perros",
+      color: "#10b981",
+      bgColor: "#ecfdf5"
+    },
+    {
+      icon: <IceCream size={24} />,
+      title: "Recetas Gratis",
+      description: "Aprende a preparar helados de pollo, hígado y manzana. Guías paso a paso para consentir a tu mascota de forma saludable.",
+      href: "/helados",
+      color: "#06b6d4",
+      bgColor: "#f0f9ff"
+    },
+    {
       icon: <Users size={24} />,
-      title: "Comunidad Facebook",
-      description: "Únete a nuestra comunidad en Facebook. Comparte fotos de tu mascota, conecta con otros dueños, recibe consejos exclusivos y accede a promociones especiales para miembros del grupo. ¡Captura y comparte momentos únicos!",
+      title: "Comunidad Raízel",
+      description: "Comparte momentos, resuelve dudas con otros dueños y accede a promociones exclusivas en nuestro grupo oficial de Facebook.",
       href: "/comunidad",
-      color: "#1877f2", // azul Facebook
+      color: "#1877f2",
       bgColor: "#e7f3ff"
     },
     {
-      icon: <Users size={24} />,
-      title: "Nuestros Aliados",
-      description: "Sistema completo de gestión de aliados con CRUD funcional, filtros avanzados por región y servicios, contacto directo, control de estado activo/inactivo, búsqueda inteligente y red de colaboradores especializados. ¡Conecta con los mejores!",
-      href: "/aliados",
-      color: "#f59e0b", // ámbar vibrante
-      bgColor: "#fffbeb"
-    },
-    {
       icon: <MessageCircle size={24} />,
-      title: "Contacto",
-      description: "Escríbenos a WhatsApp o correo para más información, consultas sobre productos, asesoría nutricional, soporte técnico y atención personalizada 24/7. ¡Estamos aquí para ayudarte!",
+      title: "Soporte Veterinaria",
+      description: "¿Dudas sobre la dieta? Habla directamente con nuestros expertos en nutrición para una asesoría personalizada 24/7.",
       href: "/contacto",
-      color: "#10b981", // verde vibrante
-      bgColor: "#ecfdf5"
+      color: "#8b5cf6",
+      bgColor: "#faf5ff"
     },
   ];
 
