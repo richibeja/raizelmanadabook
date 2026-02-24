@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { ArrowLeft, Users, Camera, Facebook, MessageCircle, Share2, Heart, Instagram, Zap, Globe, MessageSquare } from 'lucide-react';
 
 export default function ComunidadPage() {
@@ -107,9 +108,9 @@ export default function ComunidadPage() {
               </button>
             ) : (
               <div className="space-y-8 animate-fade-in">
-                <div className="relative group max-w-sm">
-                  <img src={photoPreview} className="rounded-[2.5rem] w-full aspect-square object-cover border-4 border-white/10" alt="Pet preview" />
-                  <button onClick={() => setPhotoPreview(null)} className="absolute top-4 right-4 bg-black/60 p-3 rounded-full hover:bg-red-500 transition-colors">
+                <div className="relative group max-w-sm aspect-square">
+                  <NextImage src={photoPreview} fill className="rounded-[2.5rem] object-cover border-4 border-white/10" alt="Pet preview" unoptimized />
+                  <button onClick={() => setPhotoPreview(null)} className="absolute top-4 right-4 bg-black/60 p-3 rounded-full hover:bg-red-500 transition-colors z-10">
                     <ArrowLeft className="rotate-45" size={20} />
                   </button>
                 </div>

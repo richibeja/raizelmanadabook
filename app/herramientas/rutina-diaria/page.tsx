@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Clock, Utensils, Droplets, Footprints, Heart, Camera, Plus, CheckCircle2, Trophy, Bell, Trash2, X, Star, ChevronRight, UserPlus } from 'lucide-react';
 
 interface RoutineTask {
@@ -175,8 +176,8 @@ export default function RutinaDiaria() {
                             className={`flex-shrink-0 flex items-center gap-3 px-6 py-4 rounded-[2rem] transition-all border
                                 ${activePetId === pet.id ? 'bg-indigo-600 border-transparent text-white shadow-xl shadow-indigo-200' : 'bg-white border-gray-100 text-gray-400 hover:border-indigo-200'}`}
                         >
-                            <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-white/20">
-                                {pet.image ? <img src={pet.image} className="w-full h-full object-cover" /> : <Heart size={14} className="m-auto" />}
+                            <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-white/20">
+                                {pet.image ? <Image src={pet.image} alt={pet.name} fill className="object-cover" unoptimized /> : <Heart size={14} className="m-auto" />}
                             </div>
                             <span className="font-black text-xs uppercase tracking-widest">{pet.name}</span>
                             {pets.length > 1 && (
@@ -207,9 +208,9 @@ export default function RutinaDiaria() {
 
                             <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
                                 <div className="relative group">
-                                    <div className="w-44 h-44 rounded-[3rem] bg-indigo-50 border-4 border-white shadow-2xl overflow-hidden flex items-center justify-center transition-transform hover:scale-105">
+                                    <div className="relative w-44 h-44 rounded-[3rem] bg-indigo-50 border-4 border-white shadow-2xl overflow-hidden flex items-center justify-center transition-transform hover:scale-105">
                                         {activePet.image ? (
-                                            <img src={activePet.image} alt={activePet.name} className="w-full h-full object-cover" />
+                                            <Image src={activePet.image} alt={activePet.name} fill className="object-cover" unoptimized />
                                         ) : (
                                             <Heart size={64} className="text-indigo-200" />
                                         )}
