@@ -150,6 +150,14 @@ function NavigationHub() {
       bgColor: "#eff6ff"
     },
     {
+      icon: <ShieldAlert size={24} />,
+      title: "Alimentos Tóxicos",
+      description: "Buscador de emergencia. Descubre qué alimentos son un riesgo mortal para tu mascota en segundos.",
+      href: "/herramientas/alimentos-toxicos",
+      color: "#f97316",
+      bgColor: "#fff7ed"
+    },
+    {
       icon: <ChefHat size={24} />,
       title: "Cocina Natural",
       description: "Centro gourmet exclusivo. Aprende a preparar platillos BARF y postres naturales con el sello de calidad Raízel.",
