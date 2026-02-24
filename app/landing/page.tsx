@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ArrowRight, Star, Users, Heart, Shield, Clock, MapPin } from 'lucide-react';
 import Header from '../components/Header';
 // import Hero from '../components/ui/Hero';
@@ -116,7 +117,7 @@ export default function LandingPage() {
               ¿Por qué elegir Raizel?
             </h2>
             <p className="text-xl text-[#6B7280] max-w-3xl mx-auto">
-              Nuestro compromiso es hacer que el proceso de adopción sea seguro, 
+              Nuestro compromiso es hacer que el proceso de adopción sea seguro,
               transparente y lleno de amor para todos.
             </p>
           </motion.div>
@@ -161,7 +162,7 @@ export default function LandingPage() {
               Mascotas Destacadas
             </h2>
             <p className="text-xl text-[#6B7280] max-w-3xl mx-auto">
-              Estas mascotas están buscando un hogar amoroso. 
+              Estas mascotas están buscando un hogar amoroso.
               ¿Podrías ser su familia perfecta?
             </p>
           </motion.div>
@@ -175,11 +176,14 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <div className="mascota-card p-4 bg-white rounded-lg">
-                  <img 
-                    src={mascota.imagen}
-                    alt={mascota.nombre}
-                    className="w-full h-48 object-cover rounded-lg mb-3"
-                  />
+                  <div className="relative w-full h-48 mb-3 overflow-hidden rounded-lg">
+                    <Image
+                      src={mascota.imagen}
+                      alt={mascota.nombre}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   <h3 className="font-semibold">{mascota.nombre}</h3>
                   <p className="text-sm text-gray-600">{mascota.tipo} • {mascota.edad}</p>
                   <p className="text-xs text-gray-500">{mascota.ubicacion}</p>
@@ -238,10 +242,12 @@ export default function LandingPage() {
                       &ldquo;{testimonio.texto}&rdquo;
                     </p>
                     <div className="flex items-center">
-                      <img
+                      <Image
                         src={testimonio.avatar}
                         alt={testimonio.nombre}
-                        className="w-12 h-12 rounded-full mr-4"
+                        width={48}
+                        height={48}
+                        className="rounded-full mr-4"
                       />
                       <div>
                         <h4 className="font-semibold text-[#0B1220]">
@@ -273,7 +279,7 @@ export default function LandingPage() {
               ¿Listo para cambiar una vida?
             </h2>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Únete a nuestra comunidad y descubre la alegría de darle un hogar 
+              Únete a nuestra comunidad y descubre la alegría de darle un hogar
               a una mascota que lo necesita.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
