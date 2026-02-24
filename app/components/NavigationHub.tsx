@@ -16,7 +16,8 @@ import {
   ChefHat,
   Shield,
   ShieldAlert,
-  Syringe
+  Syringe,
+  Scale
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -108,8 +109,8 @@ function NavigationHub() {
   const navigationCards = [
     {
       icon: <Calculator size={24} />,
-      title: "Calculadora de Dieta",
-      description: "Algoritmo avanzado para determinar la ración exacta según peso, actividad y etapa de vida. ¡Evita el sobrepeso y ahorra dinero calculando solo lo que tu mascota necesita!",
+      title: "Smart Diet Calc",
+      description: "Algoritmo avanzado para determinar la ración exacta. Ahorra dinero y evita el sobrepeso calculando la nutrición real de tu mascota.",
       href: "/calculadora",
       color: "#ef4444",
       bgColor: "#fef2f2"
@@ -117,47 +118,55 @@ function NavigationHub() {
     {
       icon: <ShieldAlert size={24} />,
       title: "Alimentos Tóxicos",
-      description: "Buscador inteligente de emergencia. Descubre qué alimentos pueden salvar o poner en riesgo la vida de tu mejor amigo en segundos.",
+      description: "Buscador inteligente de emergencia. Descubre en segundos qué alimentos son un riesgo mortal para tu mascota.",
       href: "/herramientas/alimentos-toxicos",
       color: "#f97316",
       bgColor: "#fff7ed"
     },
     {
       icon: <Syringe size={24} />,
-      title: "Carnet de Vacunas",
-      description: "Digitaliza el carnet de tu mascota. Recibe alertas y nunca más olvides una fecha importante de vacunación.",
+      title: "Pasaporte de Salud",
+      description: "Digitaliza el carnet de vacunas. Recibe alertas inteligentes y mantén el historial de protección siempre a la mano.",
       href: "/herramientas/calendario-vacunas",
       color: "#16a34a",
       bgColor: "#f0fdf4"
     },
     {
+      icon: <Scale size={24} />,
+      title: "Control de Peso",
+      description: "Monitorea la evolución física de tu mejor amigo. Historial de pesaje y metas de bienestar para una vida larga y activa.",
+      href: "/herramientas/control-peso",
+      color: "#3b82f6",
+      bgColor: "#eff6ff"
+    },
+    {
+      icon: <ChefHat size={24} />,
+      title: "Cocina Natural",
+      description: "Centro gourmet exclusivo. Aprende a preparar platillos BARF y postres naturales con el sello de calidad Raízel.",
+      href: "/cocina",
+      color: "#f59e0b",
+      bgColor: "#fffbeb"
+    },
+    {
       icon: <Dog size={24} />,
-      title: "Productos Raízel",
-      description: "Explora nuestra línea de alimentos BARF premium, snacks funcionales y recetas gourmet 100% naturales, sin conservantes ni químicos.",
+      title: "Productos Boutique",
+      description: "Explora nuestra línea de alimentos premium, snacks funcionales y recetas gourmet 100% naturales.",
       href: "/catalogo-perros",
       color: "#10b981",
       bgColor: "#ecfdf5"
     },
     {
-      icon: <IceCream size={24} />,
-      title: "Recetas Gratis",
-      description: "Aprende a preparar helados de pollo, hígado y manzana. Guías paso a paso para consentir a tu mascota de forma saludable.",
-      href: "/helados",
-      color: "#06b6d4",
-      bgColor: "#f0f9ff"
-    },
-    {
       icon: <Users size={24} />,
-      title: "Comunidad Raízel",
-      description: "Comparte momentos, resuelve dudas con otros dueños y accede a promociones exclusivas en nuestro grupo oficial de Facebook.",
+      title: "Comunidad VIP",
+      description: "Únete a dueños responsables, resuelve dudas y accede a beneficios exclusivos en nuestra comunidad oficial.",
       href: "/comunidad",
       color: "#1877f2",
       bgColor: "#e7f3ff"
     },
     {
       icon: <MessageCircle size={24} />,
-      title: "Soporte Veterinaria",
-      description: "¿Dudas sobre la dieta? Habla directamente con nuestros expertos en nutrición para una asesoría personalizada 24/7.",
+      title: "Soporte Experto",
+      description: "¿Dudas sobre nutrición? Escríbenos directamente para asesoría personalizada por especialistas en bienestar animal.",
       href: "/contacto",
       color: "#8b5cf6",
       bgColor: "#faf5ff"
