@@ -36,58 +36,65 @@ function NavigationCard({
 }: NavigationCardProps) {
   return (
     <Link href={href} className="block group">
-      <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 p-6 h-full border border-gray-100">
-        {/* Icono con fondo moderno */}
+      <div className="relative bg-white/70 backdrop-blur-md rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-3 p-8 h-full border border-white/50 group-hover:border-white/80 overflow-hidden">
+        {/* Decorative background element */}
         <div
-          className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl shadow-md"
+          className="absolute -right-8 -top-8 w-32 h-32 rounded-full opacity-10 transition-transform duration-700 group-hover:scale-150"
+          style={{ backgroundColor: color }}
+        />
+
+        {/* Icon container with premium border */}
+        <div
+          className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg transform transition-transform duration-500 group-hover:rotate-12"
           style={{
             backgroundColor: `${color}15`,
-            border: `2px solid ${color}30`
+            border: `1px solid ${color}30`
           }}
         >
-          <div style={{ color }} className="text-2xl">
+          <div style={{ color }} className="text-3xl filter drop-shadow-sm">
             {icon}
           </div>
         </div>
 
-        {/* Contenido con tipografía mejorada */}
-        <div className="space-y-3">
-          <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-gray-700 transition-colors">
+        {/* Content with improved spacing and contrast */}
+        <div className="relative space-y-4">
+          <h3 className="text-2xl font-extrabold text-gray-900 leading-tight group-hover:text-transparent group-hover:bg-clip-text transition-all duration-300"
+            style={{ backgroundImage: `linear-gradient(to right, ${color}, ${color}dd)` }}>
             {title}
           </h3>
-          <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+          <p className="text-gray-600 leading-relaxed font-medium opacity-80 group-hover:opacity-100 transition-opacity">
             {description}
           </p>
         </div>
 
-        {/* Botón de acción moderno */}
-        <div className="mt-6 flex items-center justify-between">
+        {/* Action area with glowing button effect */}
+        <div className="mt-8 flex items-center justify-between">
           <span
-            className="text-sm font-semibold px-3 py-1.5 rounded-full transition-all duration-200"
+            className="text-sm font-bold px-4 py-2 rounded-xl transition-all duration-300 transform group-hover:scale-105"
             style={{
-              color: color,
-              backgroundColor: `${color}10`
+              color: 'white',
+              backgroundColor: color,
+              boxShadow: `0 4px 14px 0 ${color}40`
             }}
           >
-            Explorar
+            Explorar Ahora
           </span>
           <div
-            className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 group-hover:scale-110"
-            style={{ backgroundColor: `${color}20` }}
+            className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 bg-gray-50 group-hover:bg-white group-hover:shadow-md"
           >
             <ArrowRight
-              size={16}
+              size={20}
               style={{ color }}
-              className="transition-transform group-hover:translate-x-0.5"
+              className="transition-transform group-hover:translate-x-1"
             />
           </div>
         </div>
 
-        {/* Gradiente sutil en hover */}
+        {/* Hover overlay gradient */}
         <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"
+          className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"
           style={{
-            background: `linear-gradient(135deg, ${color}20, ${color}10)`
+            background: `linear-gradient(135deg, ${color}20, transparent)`
           }}
         />
       </div>

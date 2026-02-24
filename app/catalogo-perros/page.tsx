@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ShoppingCart, Heart, Star } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Heart, Star, MessageCircle } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -124,124 +124,133 @@ export default function CatalogoPerrosPage() {
     window.open(whatsappUrl, '_blank');
   };
 
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      {/* Imagen del producto */}
-      <div className="h-56 bg-gray-100 flex items-center justify-center relative overflow-hidden">
-        {product.image.startsWith('/images/ALBONDIGAS') ? (
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10" />
-        ) : null}
-        <div className="text-6xl z-0">🐕</div>
-        {/* En una app real usaríamos next/image con product.image */}
-        <div className="absolute bottom-2 left-2 z-20">
-             <span className="text-xs font-bold text-white bg-green-600/80 px-2 py-1 rounded-md backdrop-blur-sm">
-                RAÍZEL PREMIUM
-             </span>
-        </div>
-      </div>
-      
-      {/* Contenido */}
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-            {product.category}
-          </span>
-          <div className="flex items-center space-x-1">
-            <Star size={16} className="text-yellow-400 fill-current" />
-            <span className="text-sm text-gray-600">5.0</span>
+  const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+    return (
+      <div className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.04)] overflow-hidden hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 transform hover:-translate-y-2 group">
+        {/* Imagen del producto con efecto de zoom */}
+        <div className="h-64 bg-gray-50 flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          {/* Simulación de imagen con Next.js Image handling o fallback */}
+          <div className="text-7xl z-0 transform transition-transform duration-700 group-hover:scale-125">
+            {product.category === 'BARF' ? '🥩' : product.category === 'Helados' ? '🍦' : '🍖'}
+          </div>
+
+          {/* Badge de calidad */}
+          <div className="absolute top-4 left-4 z-20">
+            <span className="text-[10px] tracking-widest uppercase font-black text-white bg-green-600 px-3 py-1.5 rounded-full shadow-lg">
+              100% Natural
+            </span>
           </div>
         </div>
-        
-        <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
-        <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2">{product.description}</p>
-        
-        {/* Ingredientes */}
-        <div className="mb-4">
-          <h4 className="text-sm font-bold text-gray-700 mb-2">Ingredientes:</h4>
-          <div className="flex flex-wrap gap-1">
-            {product.ingredients.slice(0, 4).map((ingredient, index) => (
-              <span key={index} className="text-[10px] bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded border border-gray-200">
-                {ingredient}
-              </span>
-            ))}
+
+        {/* Contenido con jerarquía visual clara */}
+        <div className="p-8">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-green-600 bg-green-50 px-3 py-1 rounded-lg">
+              {product.category}
+            </span>
+            <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-lg">
+              <Star size={14} className="text-yellow-500 fill-current" />
+              <span className="text-xs font-bold text-yellow-700">5.0</span>
+            </div>
           </div>
-        </div>
-        
-        {/* Precio y acciones */}
-        <div className="flex flex-col space-y-3 pt-2">
-            <button 
+
+          <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-green-600 transition-colors">{product.name}</h3>
+          <p className="text-gray-600 text-sm mb-6 leading-relaxed line-clamp-2 font-medium">{product.description}</p>
+
+          {/* Ingredientes destacados */}
+          <div className="mb-8">
+            <div className="flex flex-wrap gap-2">
+              {product.ingredients.slice(0, 3).map((ingredient, index) => (
+                <span key={index} className="text-[10px] font-bold bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-100 uppercase tracking-tighter">
+                  {ingredient}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Acciones Premium */}
+          <div className="flex flex-col space-y-3">
+            <button
               onClick={() => handleBuyNow(product.name)}
-              className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200 flex items-center justify-center space-x-2"
+              className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl hover:bg-green-600 transition-all duration-300 shadow-xl hover:shadow-green-200 flex items-center justify-center space-x-3 group/btn"
             >
-              <ShoppingCart size={18} />
-              <span>Comprar en Tiendanube</span>
+              <ShoppingCart size={20} className="group-hover/btn:scale-110 transition-transform" />
+              <span>Pedir a Domicilio</span>
             </button>
-            <button 
+            <button
               onClick={() => handleContactWhatsApp(product.name)}
-              className="w-full bg-white text-green-600 font-bold py-2 rounded-xl border-2 border-green-600 hover:bg-green-50 transition-colors flex items-center justify-center space-x-2"
+              className="w-full bg-white text-gray-900 font-bold py-3 rounded-2xl border-2 border-gray-100 hover:border-green-600 hover:text-green-600 transition-all duration-300 flex items-center justify-center space-x-2"
             >
               <MessageCircle size={18} />
-              <span>Consultar WhatsApp</span>
+              <span>Consultar Dieta</span>
             </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <Link href="/" className="inline-flex items-center text-green-600 hover:text-green-700 font-bold mb-6 hover:-translate-x-1 transition-transform">
-            <ArrowLeft size={20} className="mr-2" />
-            Volver a Raízel
+    <div className="min-h-screen bg-[#fafafa]">
+      <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in">
+        {/* Header Minimalista y Premium */}
+        <div className="mb-16 text-center">
+          <Link href="/" className="inline-flex items-center text-gray-900 hover:text-green-600 font-bold mb-8 transition-all hover:-translate-x-1 group">
+            <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center mr-3 group-hover:bg-green-50 transition-colors">
+              <ArrowLeft size={18} />
+            </div>
+            <span className="text-sm uppercase tracking-widest">Volver al Inicio</span>
           </Link>
-          <h1 className="text-5xl font-extrabold text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-            Catálogo Gourmet para Perros
+          <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-6 tracking-tighter">
+            Nutrición <span className="text-green-600">Real</span>.
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
-            Alimentos biológicamente apropiados (BARF) y snacks funcionales diseñados para una vida larga y saludable.
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed">
+            Nuestra línea gourmet está diseñada para satisfacer los instintos naturales de tu mascota con ingredientes de grado humano.
           </p>
         </div>
 
-        {/* Filtros */}
-        <div className="mb-12 flex flex-wrap justify-center gap-4">
-          <button className="bg-green-600 text-white font-bold px-6 py-2 rounded-full shadow-lg transition-all hover:scale-105">Todos</button>
-          {['BARF', 'Albóndigas', 'Pellets', 'Snacks', 'Helados'].map(cat => (
-              <button key={cat} className="bg-white text-gray-700 font-bold px-6 py-2 rounded-full border-2 border-transparent hover:border-green-600 transition-all hover:shadow-md">
-                {cat}
-              </button>
+        {/* Filtros Estilo Apple */}
+        <div className="mb-16 flex flex-wrap justify-center gap-3">
+          <button className="bg-gray-900 text-white font-bold px-8 py-3 rounded-2xl shadow-2xl transition-all hover:scale-105">Especies</button>
+          {['BARF', 'Albóndigas', 'Pellets', 'Helados'].map(cat => (
+            <button key={cat} className="bg-white text-gray-500 font-bold px-8 py-3 rounded-2xl border border-gray-100 hover:border-gray-200 hover:text-gray-900 transition-all">
+              {cat}
+            </button>
           ))}
         </div>
 
-        {/* Grid de productos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {/* Grid de productos con espaciado amplio */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="mt-20 text-center bg-gradient-to-r from-green-600 to-blue-500 rounded-3xl p-12 shadow-2xl text-white">
-          <h2 className="text-4xl font-bold mb-4">
-            ¿Buscas una dieta personalizada? 🐾
-          </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Nuestro equipo de nutrición animal está listo para diseñar el plan perfecto para tu mascota.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button 
-              onClick={() => handleContactWhatsApp('Asesoría Personalizada')}
-              className="bg-white text-green-600 text-lg font-bold px-10 py-4 rounded-2xl hover:bg-gray-100 transition-all shadow-xl hover:-translate-y-1"
-            >
-              Hablar con un Experto
-            </button>
-            <Link href="/calculadora" className="bg-green-400 text-white text-lg font-bold px-10 py-4 rounded-2xl hover:bg-green-300 transition-all shadow-xl hover:-translate-y-1">
-              Usar Calculadora
-            </Link>
+        {/* Footer CTA Ultra Premium */}
+        <div className="mt-32 relative overflow-hidden bg-gray-900 rounded-[3rem] p-16 md:p-24 text-white">
+          <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-green-600 rounded-full blur-[120px] opacity-20" />
+          <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20" />
+
+          <div className="relative z-10 max-w-3xl">
+            <h2 className="text-5xl md:text-6xl font-black mb-8 tracking-tighter leading-none">
+              ¿Tu mascota necesita algo especial?
+            </h2>
+            <p className="text-2xl text-gray-400 mb-12 font-medium leading-relaxed">
+              Asesoría personalizada gratuita con nuestros expertos en nutrición funcional.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6">
+              <button
+                onClick={() => handleContactWhatsApp('Asesoría Personalizada')}
+                className="bg-green-600 text-white text-xl font-bold px-12 py-5 rounded-2xl hover:bg-green-500 transition-all shadow-2xl shadow-green-900/20 hover:-translate-y-1"
+              >
+                Chatear con Nutricionista
+              </button>
+              <Link href="/calculadora" className="bg-white/10 backdrop-blur-md text-white border border-white/20 text-xl font-bold px-12 py-5 rounded-2xl hover:bg-white/20 transition-all hover:-translate-y-1">
+                Calcular Ración
+              </Link>
+            </div>
           </div>
         </div>
       </div>
