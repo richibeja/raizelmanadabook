@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Imágenes de anuncios - solo propietarios autenticados
+    match /ads/{ownerId}/{fileName} {
+      allow read: if true; // Lectura pública
+      allow write: if request.auth != null && 
+        request.auth.uid == ownerId &&
+        request.resource.size < 5 * 1024 * 1024 && // Máximo 5MB
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Imágenes de mascotas - solo propietarios
+    match /pets/{ownerId}/{fileName} {
+      allow read: if true; // Lectura pública  
+      allow write: if request.auth != null && 
+        request.auth.uid == ownerId &&
+        request.resource.size < 10 * 1024 * 1024 && // Máximo 10MB
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Avatares de usuarios - solo el propio usuario
+    match /avatars/{userId}/{fileName} {
+      allow read: if true; // Lectura pública
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 2 * 1024 * 1024 && // Máximo 2MB
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Videos para anuncios tipo story/feed
+    match /ads-videos/{ownerId}/{fileName} {
+      allow read: if true; // Lectura pública
+      allow write: if request.auth != null && 
+        request.auth.uid == ownerId &&
+        request.resource.size < 50 * 1024 * 1024 && // Máximo 50MB
+        request.resource.contentType.matches('video/.*');
+    }
+    
+    // Otros archivos - solo admins
+    match /{allPaths=**} {
+      allow read, write: if false; // Denegar por defecto
+    }
+  }
+}

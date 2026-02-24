@@ -1,0 +1,77 @@
+========================================
+VARIABLES PARA CONFIGURAR EN VERCEL
+========================================
+
+Después del deploy inicial, ve a:
+https://vercel.com/dashboard
+
+Busca tu proyecto "raizel-manadabook" → Settings → Environment Variables
+
+AGREGA ESTAS VARIABLES UNA POR UNA:
+
+========================================
+🌐 API URLS (BÁSICAS)
+========================================
+
+Variable: NEXT_PUBLIC_API_URL
+Value: http://localhost:3001
+Environment: Production
+(Cambiar después por tu URL de backend real)
+
+Variable: NEXT_PUBLIC_WS_URL  
+Value: ws://localhost:3001
+Environment: Production
+
+Variable: NEXT_PUBLIC_MINIO_ENDPOINT
+Value: http://localhost:9000
+Environment: Production
+
+========================================
+🔥 FIREBASE (MÍNIMAS)
+========================================
+
+Variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+Value: raizel-ecosystem
+Environment: Production
+
+Variable: NEXT_PUBLIC_FIREBASE_API_KEY
+Value: tu-firebase-api-key-real
+Environment: Production
+
+Variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+Value: raizel-ecosystem.firebaseapp.com
+Environment: Production
+
+========================================
+🔐 SECRETS (BÁSICOS)
+========================================
+
+Variable: JWT_SECRET
+Value: vercel-jwt-secret-123
+Environment: Production
+
+Variable: WORKER_SECRET_TOKEN
+Value: worker-vercel-123
+Environment: Production
+
+========================================
+💳 STRIPE (OPCIONAL - PARA MARKETPLACE)
+========================================
+
+Variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+Value: pk_test_tu_stripe_key
+Environment: Production
+
+Variable: STRIPE_SECRET_KEY
+Value: sk_test_tu_stripe_secret
+Environment: Production
+
+========================================
+
+DESPUÉS DE CONFIGURAR ESTAS VARIABLES:
+
+1. Ve a deployments
+2. Click en "Redeploy" 
+3. O ejecuta: vercel --prod
+
+========================================

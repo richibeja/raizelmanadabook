@@ -1,0 +1,112 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Función helper para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Función helper para verificar si es el propietario del documento
+    function isOwner(ownerId) {
+      return isAuthenticated() && request.auth.uid == ownerId;
+    }
+    
+    // Función helper para verificar si es admin (puedes personalizar esto)
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    // ========================================
+    // USUARIOS - Solo pueden editar su propio perfil
+    // ========================================
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ========================================
+    // ANUNCIOS - Lectura pública, escritura para propietarios
+    // ========================================
+    match /ads/{adId} {
+      // Lectura: cualquier usuario autenticado
+      allow read: if isAuthenticated();
+      
+      // Crear: solo usuarios autenticados
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.ownerId;
+      
+      // Actualizar: solo propietario o admin
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.ownerId || 
+        isAdmin()
+      );
+      
+      // Eliminar: solo propietario o admin
+      allow delete: if isAuthenticated() && (
+        request.auth.uid == resource.data.ownerId || 
+        isAdmin()
+      );
+    }
+    
+    // ========================================
+    // SPONSORS - Solo lectura pública, escritura para admins
+    // ========================================
+    match /sponsors/{sponsorId} {
+      allow read: if true; // Lectura pública
+      allow write: if isAdmin();
+    }
+    
+    // ========================================
+    // MASCOTAS - Solo propietarios pueden gestionar sus mascotas
+    // ========================================
+    match /pets/{petId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        request.auth.uid == resource.data.ownerId;
+    }
+    
+    // ========================================
+    // CONVERSACIONES - Solo participantes pueden acceder
+    // ========================================
+    match /conversations/{conversationId} {
+      allow read, write: if isAuthenticated() && 
+        request.auth.uid in resource.data.participants;
+    }
+    
+    // Mensajes dentro de conversaciones
+    match /conversations/{conversationId}/messages/{messageId} {
+      allow read: if isAuthenticated() && 
+        request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+      allow create: if isAuthenticated() && 
+        request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants &&
+        request.auth.uid == request.resource.data.senderId;
+    }
+    
+    // ========================================
+    // ANALYTICS - Solo lectura para propietarios de anuncios
+    // ========================================
+    match /analytics/{analyticsId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ========================================
+    // REPORTES - Solo usuarios autenticados pueden crear
+    // ========================================
+    match /reports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    
+    // ========================================
+    // ADMINISTRADORES - Solo lectura, gestión manual
+    // ========================================
+    match /admins/{adminId} {
+      allow read: if isAuthenticated() && request.auth.uid == adminId;
+      // No permitir write desde el cliente - gestión manual
+    }
+  }
+}
