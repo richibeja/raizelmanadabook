@@ -1,23 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
   getDoc,
   getDocs,
   orderBy,
   limit,
-  Timestamp 
+  Timestamp
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
 export interface Message {
   id: string;
@@ -111,14 +111,14 @@ export function useMessaging() {
       async (snapshot) => {
         try {
           const conversationsData: Conversation[] = [];
-          
+
           for (const docSnapshot of snapshot.docs) {
             const conversationData = docSnapshot.data();
-            
+
             // Obtener información de los participantes
             const participantNames: { [userId: string]: string } = {};
             const participantAvatars: { [userId: string]: string } = {};
-            
+
             for (const participantId of conversationData.participants) {
               const participantDoc = await getDoc(doc(db, 'users', participantId));
               if (participantDoc.exists) {
@@ -172,7 +172,7 @@ export function useMessaging() {
 
     try {
       setLoading(true);
-      
+
       const messagesQuery = query(
         collection(db, 'messages'),
         where('conversationId', '==', conversationId),
@@ -185,12 +185,12 @@ export function useMessaging() {
 
       for (const docSnapshot of snapshot.docs) {
         const messageData = docSnapshot.data();
-        
+
         // Obtener información del remitente
         const senderDoc = await getDoc(doc(db, 'users', messageData.senderId));
         let senderName = 'Usuario Anónimo';
         let senderAvatar = '';
-        
+
         if (senderDoc.exists) {
           const senderData = senderDoc.data();
           senderName = senderData.name || 'Usuario Anónimo';
@@ -237,7 +237,7 @@ export function useMessaging() {
         where('type', '==', 'direct'),
         where('participants', 'array-contains', user.uid)
       );
-      
+
       const existingSnapshot = await getDocs(existingQuery);
       for (const docSnapshot of existingSnapshot.docs) {
         const conversationData = docSnapshot.data();
@@ -255,7 +255,7 @@ export function useMessaging() {
           [otherUserId]: '', // Se llenará automáticamente
         },
         participantAvatars: {
-          [user.uid]: userProfile?.avatarUrl || '',
+          [user.uid]: userProfile?.avatar || '',
           [otherUserId]: '', // Se llenará automáticamente
         },
         lastMessageAt: Timestamp.now(),
@@ -299,7 +299,7 @@ export function useMessaging() {
           [user.uid]: userProfile?.name || 'Usuario Anónimo',
         },
         participantAvatars: {
-          [user.uid]: userProfile?.avatarUrl || '',
+          [user.uid]: userProfile?.avatar || '',
         },
         lastMessageAt: Timestamp.now(),
         unreadCount: {
@@ -354,7 +354,7 @@ export function useMessaging() {
       };
 
       const docRef = await addDoc(collection(db, 'messages'), newMessage);
-      
+
       // Actualizar conversación con último mensaje
       const conversationRef = doc(db, 'conversations', conversationId);
       await updateDoc(conversationRef, {
@@ -430,15 +430,15 @@ export function useMessaging() {
     try {
       const messageRef = doc(db, 'messages', messageId);
       const message = messages.find(m => m.id === messageId);
-      
+
       if (!message) throw new Error('Mensaje no encontrado');
 
       // Verificar si ya reaccionó
       const existingReaction = message.reactions.find(r => r.userId === user.uid);
-      
+
       if (existingReaction) {
         // Actualizar reacción existente
-        const updatedReactions = message.reactions.map(r => 
+        const updatedReactions = message.reactions.map(r =>
           r.userId === user.uid ? { ...r, emoji, updatedAt: Timestamp.now() } : r
         );
         await updateDoc(messageRef, {
@@ -453,7 +453,7 @@ export function useMessaging() {
           emoji,
           createdAt: Timestamp.now(),
         };
-        
+
         await updateDoc(messageRef, {
           reactions: [...message.reactions, newReaction],
           updatedAt: Timestamp.now(),
@@ -471,11 +471,11 @@ export function useMessaging() {
     try {
       const messageRef = doc(db, 'messages', messageId);
       const message = messages.find(m => m.id === messageId);
-      
+
       if (!message) throw new Error('Mensaje no encontrado');
 
       const updatedReactions = message.reactions.filter(r => r.userId !== user.uid);
-      
+
       await updateDoc(messageRef, {
         reactions: updatedReactions,
         updatedAt: Timestamp.now(),
@@ -489,7 +489,7 @@ export function useMessaging() {
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) return 'hace un momento';
     if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`;
     if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`;

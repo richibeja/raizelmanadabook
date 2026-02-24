@@ -1,21 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  addDoc, 
-  updateDoc, 
-  doc, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  updateDoc,
+  doc,
+  deleteDoc,
   getDocs,
   orderBy,
   limit,
-  Timestamp 
+  Timestamp
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
 export interface Notification {
   id: string;
@@ -41,9 +42,7 @@ export interface Notification {
 }
 
 export function useNotifications() {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
+  const { user, userProfile } = useManadaBookAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -74,7 +73,7 @@ export function useNotifications() {
         try {
           const notificationsData: Notification[] = [];
           let unread = 0;
-          
+
           snapshot.forEach((doc) => {
             const notificationData = doc.data();
             const notification: Notification = {
@@ -90,7 +89,7 @@ export function useNotifications() {
               priority: notificationData.priority || 'medium',
               actionUrl: notificationData.actionUrl,
             };
-            
+
             notificationsData.push(notification);
             if (!notification.isRead) {
               unread++;
@@ -136,13 +135,13 @@ export function useNotifications() {
 
     try {
       const unreadNotifications = notifications.filter(n => !n.isRead);
-      const batch = unreadNotifications.map(notification => 
+      const batch = unreadNotifications.map(notification =>
         updateDoc(doc(db, 'notifications', notification.id), {
           isRead: true,
           readAt: Timestamp.now(),
         })
       );
-      
+
       await Promise.all(batch);
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
@@ -253,7 +252,7 @@ export function useNotifications() {
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) return 'hace un momento';
     if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`;
     if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`;

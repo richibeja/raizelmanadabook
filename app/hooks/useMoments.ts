@@ -1,19 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  addDoc, 
-  deleteDoc, 
-  doc, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
   getDoc,
   getDocs,
   orderBy,
   limit,
-  Timestamp 
+  Timestamp,
+  updateDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
@@ -81,15 +82,15 @@ export function useMoments() {
       async (snapshot) => {
         try {
           const momentsData: Moment[] = [];
-          
+
           for (const docSnapshot of snapshot.docs) {
             const momentData = docSnapshot.data();
-            
+
             // Obtener información del autor
             const authorDoc = await getDoc(doc(db, 'users', momentData.authorId));
             let authorName = 'Usuario Anónimo';
             let authorAvatar = '';
-            
+
             if (authorDoc.exists) {
               const authorData = authorDoc.data();
               authorName = authorData.name || 'Usuario Anónimo';
@@ -138,13 +139,13 @@ export function useMoments() {
           }
 
           setMoments(momentsData);
-          
+
           // Filtrar moments del usuario
-          const userMoments = momentsData.filter(moment => 
+          const userMoments = momentsData.filter(moment =>
             moment.authorId === user.uid
           );
           setMyMoments(userMoments);
-          
+
           setLoading(false);
         } catch (err) {
           console.error('Error fetching moments:', err);

@@ -1,22 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  addDoc, 
-  deleteDoc, 
-  doc, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
   getDoc,
   getDocs,
   orderBy,
   limit,
-  Timestamp 
+  Timestamp,
+  updateDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
 export interface Snippet {
   id: string;
@@ -60,9 +61,7 @@ export interface SnippetComment {
 }
 
 export function useSnippets() {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
+  const { user, userProfile } = useManadaBookAuth();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [mySnippets, setMySnippets] = useState<Snippet[]>([]);
   const [trendingSnippets, setTrendingSnippets] = useState<Snippet[]>([]);
@@ -94,15 +93,15 @@ export function useSnippets() {
       async (snapshot) => {
         try {
           const snippetsData: Snippet[] = [];
-          
+
           for (const docSnapshot of snapshot.docs) {
             const snippetData = docSnapshot.data();
-            
+
             // Obtener información del autor
             const authorDoc = await getDoc(doc(db, 'users', snippetData.authorId));
             let authorName = 'Usuario Anónimo';
             let authorAvatar = '';
-            
+
             if (authorDoc.exists) {
               const authorData = authorDoc.data();
               authorName = authorData.name || 'Usuario Anónimo';
@@ -166,13 +165,13 @@ export function useSnippets() {
           }
 
           setSnippets(snippetsData);
-          
+
           // Filtrar snippets del usuario
-          const userSnippets = snippetsData.filter(snippet => 
+          const userSnippets = snippetsData.filter(snippet =>
             snippet.authorId === user.uid
           );
           setMySnippets(userSnippets);
-          
+
           // Calcular trending (por views y likes en las últimas 24h)
           const now = new Date();
           const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -181,7 +180,7 @@ export function useSnippets() {
             .sort((a, b) => (b.viewsCount + b.likesCount) - (a.viewsCount + a.likesCount))
             .slice(0, 20);
           setTrendingSnippets(trending);
-          
+
           setLoading(false);
         } catch (err) {
           console.error('Error fetching snippets:', err);
@@ -412,7 +411,7 @@ export function useSnippets() {
         };
 
         // Filtros de búsqueda
-        const matchesSearch = searchTerm === '' || 
+        const matchesSearch = searchTerm === '' ||
           snippet.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           snippet.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
           snippet.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));

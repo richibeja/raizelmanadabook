@@ -1,22 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
   getDocs,
   orderBy,
   limit,
-  Timestamp 
+  Timestamp
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-// import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
+import { useManadaBookAuth } from '@/contexts/ManadaBookAuthContext';
 
 export interface Report {
   id: string;
@@ -66,9 +67,7 @@ export interface UserWarning {
 }
 
 export function useModeration() {
-  // const { user, userProfile } = useManadaBookAuth();
-  const user = null;
-  const userProfile = null;
+  const { user, userProfile } = useManadaBookAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [myReports, setMyReports] = useState<Report[]>([]);
   const [pendingReports, setPendingReports] = useState<Report[]>([]);
@@ -103,14 +102,14 @@ export function useModeration() {
       async (snapshot) => {
         try {
           const reportsData: Report[] = [];
-          
+
           for (const docSnapshot of snapshot.docs) {
             const reportData = docSnapshot.data();
-            
+
             // Obtener información del reporter
             const reporterDoc = await getDoc(doc(db, 'users', reportData.reporterId));
             let reporterName = 'Usuario Anónimo';
-            
+
             if (reporterDoc.exists()) {
               const reporterData = reporterDoc.data();
               reporterName = reporterData.name || 'Usuario Anónimo';
@@ -159,19 +158,19 @@ export function useModeration() {
           }
 
           setReports(reportsData);
-          
+
           // Filtrar reportes del usuario
-          const userReports = reportsData.filter(report => 
+          const userReports = reportsData.filter(report =>
             report.reporterId === user.uid
           );
           setMyReports(userReports);
-          
+
           // Filtrar reportes pendientes
-          const pending = reportsData.filter(report => 
+          const pending = reportsData.filter(report =>
             report.status === 'pending' || report.status === 'reviewing'
           );
           setPendingReports(pending);
-          
+
           setLoading(false);
         } catch (err) {
           console.error('Error fetching reports:', err);
@@ -288,7 +287,7 @@ export function useModeration() {
     if (!user) throw new Error('Usuario no autenticado');
 
     try {
-      const expiresAt = warningData.duration 
+      const expiresAt = warningData.duration
         ? new Date(Date.now() + warningData.duration * 24 * 60 * 60 * 1000)
         : undefined;
 
@@ -359,7 +358,7 @@ export function useModeration() {
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) return 'hace un momento';
     if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`;
     if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`;

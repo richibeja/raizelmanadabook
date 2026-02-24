@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 
 // Hook para optimizar cambios de DOM y evitar forced reflows
 export function useOptimizedReflow() {
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
 
   // Función para agrupar cambios de DOM
   const batchDOMUpdates = useCallback((updates: (() => void)[]) => {
