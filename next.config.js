@@ -7,12 +7,12 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  
+
   // Optimizaciones
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  
+
   // Configuración de imágenes
   images: {
     domains: [
@@ -25,7 +25,7 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60,
   },
-  
+
   // Configuración experimental para mejor rendimiento
   experimental: {
     esmExternals: true,
@@ -36,14 +36,6 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
   webpack: (config, { isServer }) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': require('path').resolve(__dirname),
-      '@/lib': require('path').resolve(__dirname, 'lib'),
-      '@/components': require('path').resolve(__dirname, 'app/components'),
-      '@/hooks': require('path').resolve(__dirname, 'app/hooks'),
-    };
-    
     // Asegurar que los módulos de Firebase se resuelvan correctamente
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -51,7 +43,7 @@ const nextConfig = {
       net: false,
       tls: false,
     };
-    
+
     return config;
   },
   // PWA Configuration removed - using manual implementation
