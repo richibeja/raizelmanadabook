@@ -28,12 +28,6 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // Configuración experimental para mejor rendimiento
-  experimental: {
-    esmExternals: true,
-  },
-  // Configuración para deployment
-  outputFileTracingRoot: __dirname,
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
