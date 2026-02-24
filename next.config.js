@@ -38,15 +38,6 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
   webpack: (config, { isServer }) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': path.resolve(__dirname),
-      '@/lib': path.resolve(__dirname, 'lib'),
-      '@/components': path.resolve(__dirname, 'app/components'),
-      '@/hooks': path.resolve(__dirname, 'app/hooks'),
-      '@/contexts': path.resolve(__dirname, 'app/contexts'),
-    };
-
     // Asegurar que los módulos de Firebase se resuelvan correctamente
     config.resolve.fallback = {
       ...config.resolve.fallback,
