@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Ignorar errores en partes complejas que no usamos
@@ -36,6 +38,11 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
   webpack: (config, { isServer }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname),
+    };
+
     // Asegurar que los módulos de Firebase se resuelvan correctamente
     config.resolve.fallback = {
       ...config.resolve.fallback,
