@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import PetProfileCard from '../../components/PetProfileCard';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Pet {
   id: string;
@@ -51,7 +52,7 @@ export default function PetProfilePage() {
       try {
         setLoading(true);
         const response = await fetch(`/api/pets/${params.id}`);
-        
+
         if (!response.ok) {
           if (response.status === 404) {
             setError('Mascota no encontrada');
@@ -138,15 +139,23 @@ export default function PetProfilePage() {
         {/* Perfil de mascota */}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="text-center">
-            <img
-              src="/api/placeholder/200/200"
-              alt={petForCard.name}
-              className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-            />
+            {petForCard.avatar_url ? (
+              <Image
+                src={petForCard.avatar_url}
+                alt={petForCard.name}
+                width={128}
+                height={128}
+                className="rounded-full mx-auto mb-4 object-cover"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-200 flex items-center justify-center text-4xl">
+                🐾
+              </div>
+            )}
             <h1 className="text-2xl font-bold text-gray-900">{petForCard.name}</h1>
             <p className="text-gray-600">{petForCard.species} • {petForCard.breed}</p>
             <p className="text-sm text-gray-500 mt-2">{petForCard.bio || 'Una mascota especial'}</p>
-            
+
             <div className="flex justify-center gap-4 mt-6">
               <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
                 Seguir

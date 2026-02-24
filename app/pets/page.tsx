@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import PetProfileForm from '../components/PetProfileForm';
 import { usePets } from '../hooks/usePets';
 import { Plus, Search, Filter, Loader2 } from 'lucide-react';
@@ -49,7 +50,7 @@ export default function PetsPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">Error: {error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
@@ -123,21 +124,22 @@ export default function PetsPage() {
               {/* Imagen de portada */}
               <div className="relative h-48 bg-gradient-to-br from-blue-400 to-purple-500">
                 {pet.profile_image_url ? (
-                  <img 
-                    src={pet.profile_image_url} 
+                  <Image
+                    src={pet.profile_image_url}
                     alt={pet.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="text-6xl">
-                      {pet.species === 'Perro' ? '🐕' : 
-                       pet.species === 'Gato' ? '🐱' : 
-                       pet.species === 'Perico' ? '🦜' : '🐾'}
+                      {pet.species === 'Perro' ? '🐕' :
+                        pet.species === 'Gato' ? '🐱' :
+                          pet.species === 'Perico' ? '🦜' : '🐾'}
                     </div>
                   </div>
                 )}
-                
+
                 {/* Overlay con información básica */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                   <h3 className="text-xl font-bold text-white mb-1">{pet.name}</h3>
