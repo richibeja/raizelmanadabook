@@ -293,15 +293,6 @@ export default function BioCheckIntestinal() {
                 </div>
             </div>
 
-            <style jsx global>{`
-        @keyframes scan-line {
-          0% { top: 0; }
-          100% { top: 100%; }
-        }
-        .animate-scan-line {
-          animation: scan-line 2s linear infinite;
-        }
-      `}</style>
         </div>
     );
 }
