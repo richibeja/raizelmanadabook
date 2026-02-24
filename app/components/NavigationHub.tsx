@@ -17,7 +17,8 @@ import {
   Shield,
   ShieldAlert,
   Syringe,
-  Scale
+  Scale,
+  Microscope
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -107,6 +108,14 @@ function NavigationCard({
 
 function NavigationHub() {
   const navigationCards = [
+    {
+      icon: <Microscope size={24} />,
+      title: "BioCheck AI",
+      description: "Análisis inteligente de salud digestiva. Escanea y monitorea el microbioma de tu mascota con validación científica instantánea.",
+      href: "/herramientas/biocheck-intestinal",
+      color: "#06b6d4",
+      bgColor: "#ecfeff"
+    },
     {
       icon: <Calculator size={24} />,
       title: "Smart Diet Calc",
