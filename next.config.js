@@ -41,6 +41,9 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
+      '@/lib': path.resolve(__dirname, 'lib'),
+      '@/components': path.resolve(__dirname, 'app/components'),
+      '@/hooks': path.resolve(__dirname, 'app/hooks'),
     };
 
     // Asegurar que los módulos de Firebase se resuelvan correctamente
