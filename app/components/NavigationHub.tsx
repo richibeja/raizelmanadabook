@@ -19,7 +19,8 @@ import {
   Syringe,
   Scale,
   Microscope,
-  Clock
+  Clock,
+  BookOpen
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -116,6 +117,14 @@ function NavigationHub() {
       href: "/herramientas/biocheck-intestinal",
       color: "#06b6d4",
       bgColor: "#ecfeff"
+    },
+    {
+      icon: <BookOpen size={24} />,
+      title: "Guía de Transición",
+      description: "El paso a paso definitivo para cambiar de croquetas a BARF de forma segura. Evita diarreas y optimiza la salud de tu mascota.",
+      href: "/herramientas/guia-barf",
+      color: "#f43f5e",
+      bgColor: "#fff1f2"
     },
     {
       icon: <Heart size={24} />,
