@@ -1,8 +1,8 @@
 {
-  "buildCommand": "npm run vercel:pre-build && npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm ci --legacy-peer-deps",
+  "installCommand": "npm install --legacy-peer-deps",
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
