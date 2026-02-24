@@ -1,11 +1,11 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { 
-  Dog, 
-  Cat, 
-  Calculator, 
-  Users, 
+import {
+  Dog,
+  Cat,
+  Calculator,
+  Users,
   MessageCircle,
   ArrowRight,
   Heart,
@@ -26,21 +26,21 @@ interface NavigationCardProps {
   bgColor: string;
 }
 
-function NavigationCard({ 
-  icon, 
-  title, 
-  description, 
-  href, 
-  color, 
-  bgColor 
+function NavigationCard({
+  icon,
+  title,
+  description,
+  href,
+  color,
+  bgColor
 }: NavigationCardProps) {
   return (
     <Link href={href} className="block group">
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 p-6 h-full border border-gray-100">
         {/* Icono con fondo moderno */}
-        <div 
+        <div
           className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl shadow-md"
-          style={{ 
+          style={{
             backgroundColor: `${color}15`,
             border: `2px solid ${color}30`
           }}
@@ -62,31 +62,31 @@ function NavigationCard({
 
         {/* Botón de acción moderno */}
         <div className="mt-6 flex items-center justify-between">
-          <span 
+          <span
             className="text-sm font-semibold px-3 py-1.5 rounded-full transition-all duration-200"
-            style={{ 
+            style={{
               color: color,
               backgroundColor: `${color}10`
             }}
           >
             Explorar
           </span>
-          <div 
+          <div
             className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 group-hover:scale-110"
             style={{ backgroundColor: `${color}20` }}
           >
-            <ArrowRight 
-              size={16} 
+            <ArrowRight
+              size={16}
               style={{ color }}
-              className="transition-transform group-hover:translate-x-0.5" 
+              className="transition-transform group-hover:translate-x-0.5"
             />
           </div>
         </div>
 
         {/* Gradiente sutil en hover */}
-        <div 
+        <div
           className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"
-          style={{ 
+          style={{
             background: `linear-gradient(135deg, ${color}20, ${color}10)`
           }}
         />
@@ -219,14 +219,14 @@ function NavigationHub() {
             <Link href="/calculadora" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105 animate-pulse">
               🧮 Calcular Porciones Ahora
             </Link>
-            <Link href="/catalogo-perros" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
-              🛍️ Ver Productos
-            </Link>
+            <a href="https://raizel4.mitiendanube.com" target="_blank" rel="noopener noreferrer" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
+              🛒 Ir a la Tienda Oficial
+            </a>
             <Link href="/comunidad" className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 text-base sm:text-lg text-center transform hover:scale-105">
               👥 Comunidad
             </Link>
           </div>
-          
+
           {/* Enlace a políticas */}
           <div className="text-center mt-6">
             <Link href="/politicas" className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors text-sm">
@@ -258,11 +258,11 @@ function NavigationHub() {
               ¿Por qué elegir Raízel? 🌟
             </h2>
             <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto px-4 font-medium">
-              Descubre las ventajas increíbles que nos hacen únicos en el cuidado de mascotas. 
+              Descubre las ventajas increíbles que nos hacen únicos en el cuidado de mascotas.
               ¡Somos más que una marca, somos una familia! 💕
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
             <div className="text-center group bg-white/60 rounded-2xl p-6 hover:bg-white/80 transition-all duration-300 hover:shadow-xl">
               <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 rounded-3xl shadow-2xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -271,7 +271,7 @@ function NavigationHub() {
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">100% Natural 🌿</h3>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-medium">Sin conservantes ni químicos artificiales. Solo ingredientes puros y nutritivos para tu mascota.</p>
             </div>
-            
+
             <div className="text-center group bg-white/60 rounded-2xl p-6 hover:bg-white/80 transition-all duration-300 hover:shadow-xl">
               <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-500 via-cyan-500 to-sky-500 rounded-3xl shadow-2xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Camera size={24} className="sm:w-8 sm:h-8 text-white" />
@@ -279,7 +279,7 @@ function NavigationHub() {
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Comunidad Activa 👥</h3>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-medium">Conecta con miles de dueños de mascotas, comparte momentos y forma parte de nuestra gran familia.</p>
             </div>
-            
+
             <div className="text-center group bg-white/60 rounded-2xl p-6 hover:bg-white/80 transition-all duration-300 hover:shadow-xl">
               <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-500 rounded-3xl shadow-2xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Globe size={24} className="sm:w-8 sm:h-8 text-white" />
@@ -287,7 +287,7 @@ function NavigationHub() {
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Todas las Mascotas 🐾</h3>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-medium">Perros, gatos, conejos, aves y muchas más especies. ¡Todos son bienvenidos en Raízel!</p>
             </div>
-            
+
             <div className="text-center group bg-white/60 rounded-2xl p-6 hover:bg-white/80 transition-all duration-300 hover:shadow-xl">
               <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-red-500 via-pink-500 to-rose-500 rounded-3xl shadow-2xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Phone size={24} className="sm:w-8 sm:h-8 text-white" />

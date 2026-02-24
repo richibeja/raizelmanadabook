@@ -42,6 +42,15 @@ const products: Product[] = [
     benefits: ['Proteína de cordero', 'Fácil digestión', 'Rico en hierro', 'Ideal para perros sensibles', 'Sabor suave']
   },
   {
+    id: 'oat-meatballs',
+    name: 'Albóndigas Raízel - Receta Oat-Crusted',
+    description: 'Nuestra especialidad premium: albóndigas de carne seleccionada con una capa crujiente de avena orgánica. Perfectas para una digestión lenta y energía constante.',
+    image: '/images/ALBONDIGAS_AVENA_2.png',
+    category: 'Albóndigas',
+    ingredients: ['Carne de res seleccionada', 'Avena orgánica en hojuelas', 'Zanahoria', 'Corazón de res', 'Aceite de coco'],
+    benefits: ['Textura gourmet única', 'Rico en fibra natural', 'Energía de larga duración', 'Pelo más fuerte', 'Altamente palatable']
+  },
+  {
     id: '4',
     name: 'Vital Pellets Naturales',
     description: 'Pellets deshidratados de vísceras con plantas medicinales y granos funcionales. Prácticos y de larga duración.',
@@ -78,15 +87,6 @@ const products: Product[] = [
     benefits: ['Formato práctico', 'Digestión mejorada', 'Nutrición concentrada', 'Fácil de servir', 'Ingredientes naturales']
   },
   {
-    id: '8',
-    name: 'Albóndigas Funcionales',
-    description: 'Hechas con vísceras, coliflor, zanahoria, linaza, aceites naturales, sal marina y calcio. Formato práctico para porciones diarias.',
-    image: '/images/albondegas.jpg',
-    category: 'Albóndigas',
-    ingredients: ['Vísceras', 'Coliflor', 'Zanahoria', 'Linaza', 'Aceites naturales', 'Sal marina', 'Calcio'],
-    benefits: ['Porciones controladas', 'Nutrición balanceada', 'Fácil de medir', 'Ideal para dietas', 'Ingredientes completos']
-  },
-  {
     id: '9',
     name: 'Helados Naturales',
     description: 'Con base de vísceras, coliflor, zanahoria, linaza, aceites naturales, sal marina, calcio + frutas naturales (plátano, arándanos, manzana). Refrescantes, digestivos y sin químicos.',
@@ -106,40 +106,39 @@ export default function CatalogoPerrosPage() {
       const newFavorites = new Set(prev);
       if (newFavorites.has(productId)) {
         newFavorites.delete(productId);
-        alert('Producto removido de favoritos');
       } else {
         newFavorites.add(productId);
-        alert('Producto agregado a favoritos');
       }
       return newFavorites;
     });
   };
 
-  const handleAddToCart = (productId: string) => {
-    setCart(prev => {
-      const newCart = new Set(prev);
-      if (newCart.has(productId)) {
-        alert('Este producto ya está en tu carrito');
-      } else {
-        newCart.add(productId);
-        alert('Producto agregado al carrito');
-      }
-      return newCart;
-    });
+  const handleBuyNow = (productName: string) => {
+    // Redirigir a la tienda Tiendanube
+    window.open('https://raizel4.mitiendanube.com', '_blank');
   };
 
   const handleContactWhatsApp = (productName: string) => {
-    const message = `Hola! Me interesa el producto: ${productName}. ¿Podrían darme más información sobre disponibilidad y cómo puedo adquirirlo?`;
-    const whatsappUrl = `https://wa.me/573001234567?text=${encodeURIComponent(message)}`;
+    const message = `Hola! Vengo desde la App de Raízel. Me interesa el producto: ${productName}. ¿Podrían darme más información?`;
+    const whatsappUrl = `https://wa.me/573108188723?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
       {/* Imagen del producto */}
-      <div className="h-48 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
-        <div className="text-6xl">🐕</div>
+      <div className="h-56 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+        {product.image.startsWith('/images/ALBONDIGAS') ? (
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10" />
+        ) : null}
+        <div className="text-6xl z-0">🐕</div>
+        {/* En una app real usaríamos next/image con product.image */}
+        <div className="absolute bottom-2 left-2 z-20">
+             <span className="text-xs font-bold text-white bg-green-600/80 px-2 py-1 rounded-md backdrop-blur-sm">
+                RAÍZEL PREMIUM
+             </span>
+        </div>
       </div>
       
       {/* Contenido */}
@@ -150,62 +149,41 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           </span>
           <div className="flex items-center space-x-1">
             <Star size={16} className="text-yellow-400 fill-current" />
-            <span className="text-sm text-gray-600">4.8</span>
+            <span className="text-sm text-gray-600">5.0</span>
           </div>
         </div>
         
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">{product.name}</h3>
-        <p className="text-gray-600 text-sm mb-4 leading-relaxed">{product.description}</p>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
+        <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2">{product.description}</p>
         
         {/* Ingredientes */}
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Ingredientes principales:</h4>
+          <h4 className="text-sm font-bold text-gray-700 mb-2">Ingredientes:</h4>
           <div className="flex flex-wrap gap-1">
-            {product.ingredients.slice(0, 3).map((ingredient, index) => (
-              <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+            {product.ingredients.slice(0, 4).map((ingredient, index) => (
+              <span key={index} className="text-[10px] bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded border border-gray-200">
                 {ingredient}
               </span>
             ))}
           </div>
         </div>
         
-        {/* Beneficios */}
-        <div className="mb-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Beneficios:</h4>
-          <ul className="text-xs text-gray-600 space-y-1">
-            {product.benefits.slice(0, 2).map((benefit, index) => (
-              <li key={index} className="flex items-center">
-                <span className="w-1 h-1 bg-green-500 rounded-full mr-2"></span>
-                {benefit}
-              </li>
-            ))}
-          </ul>
-        </div>
-        
         {/* Precio y acciones */}
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-lg font-semibold text-green-600">Consultar precio</span>
-          </div>
-          <div className="flex space-x-2">
+        <div className="flex flex-col space-y-3 pt-2">
             <button 
-              onClick={() => handleAddToFavorites(product.id)}
-              className={`p-2 transition-colors ${
-                favorites.has(product.id) 
-                  ? 'text-red-500' 
-                  : 'text-gray-400 hover:text-red-500'
-              }`}
+              onClick={() => handleBuyNow(product.name)}
+              className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200 flex items-center justify-center space-x-2"
             >
-              <Heart size={20} fill={favorites.has(product.id) ? 'currentColor' : 'none'} />
+              <ShoppingCart size={18} />
+              <span>Comprar en Tiendanube</span>
             </button>
             <button 
               onClick={() => handleContactWhatsApp(product.name)}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-1"
+              className="w-full bg-white text-green-600 font-bold py-2 rounded-xl border-2 border-green-600 hover:bg-green-50 transition-colors flex items-center justify-center space-x-2"
             >
-              <ShoppingCart size={16} />
-              <span>Consultar</span>
+              <MessageCircle size={18} />
+              <span>Consultar WhatsApp</span>
             </button>
-          </div>
         </div>
       </div>
     </div>
@@ -216,49 +194,53 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-green-600 hover:text-green-700 mb-4">
+        <div className="mb-12 text-center">
+          <Link href="/" className="inline-flex items-center text-green-600 hover:text-green-700 font-bold mb-6 hover:-translate-x-1 transition-transform">
             <ArrowLeft size={20} className="mr-2" />
             Volver a Raízel
           </Link>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Productos para Perros</h1>
-          <p className="text-lg text-gray-600 max-w-3xl">
-            Alimentos naturales y funcionales diseñados específicamente para el bienestar de tu perro. 
-            Todos nuestros productos están libres de conservantes y químicos artificiales.
+          <h1 className="text-5xl font-extrabold text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            Catálogo Gourmet para Perros
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
+            Alimentos biológicamente apropiados (BARF) y snacks funcionales diseñados para una vida larga y saludable.
           </p>
         </div>
 
         {/* Filtros */}
-        <div className="mb-8 flex flex-wrap gap-4">
-          <button className="bg-green-600 text-white px-4 py-2 rounded-lg">Todos</button>
-          <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-50">BARF</button>
-          <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-50">Pellets</button>
-          <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-50">Chorizos</button>
-          <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-50">Albóndigas</button>
-          <button className="bg-white text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-50">Helados</button>
+        <div className="mb-12 flex flex-wrap justify-center gap-4">
+          <button className="bg-green-600 text-white font-bold px-6 py-2 rounded-full shadow-lg transition-all hover:scale-105">Todos</button>
+          {['BARF', 'Albóndigas', 'Pellets', 'Snacks', 'Helados'].map(cat => (
+              <button key={cat} className="bg-white text-gray-700 font-bold px-6 py-2 rounded-full border-2 border-transparent hover:border-green-600 transition-all hover:shadow-md">
+                {cat}
+              </button>
+          ))}
         </div>
 
         {/* Grid de productos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center bg-white rounded-2xl p-8 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            ¿No encuentras lo que buscas?
+        <div className="mt-20 text-center bg-gradient-to-r from-green-600 to-blue-500 rounded-3xl p-12 shadow-2xl text-white">
+          <h2 className="text-4xl font-bold mb-4">
+            ¿Buscas una dieta personalizada? 🐾
           </h2>
-          <p className="text-gray-600 mb-6">
-            Contáctanos para productos personalizados o consultas sobre la dieta de tu perro.
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            Nuestro equipo de nutrición animal está listo para diseñar el plan perfecto para tu mascota.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contacto" className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
-              Contactar
-            </Link>
-            <Link href="/calculadora" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-              Calculadora de Porciones
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <button 
+              onClick={() => handleContactWhatsApp('Asesoría Personalizada')}
+              className="bg-white text-green-600 text-lg font-bold px-10 py-4 rounded-2xl hover:bg-gray-100 transition-all shadow-xl hover:-translate-y-1"
+            >
+              Hablar con un Experto
+            </button>
+            <Link href="/calculadora" className="bg-green-400 text-white text-lg font-bold px-10 py-4 rounded-2xl hover:bg-green-300 transition-all shadow-xl hover:-translate-y-1">
+              Usar Calculadora
             </Link>
           </div>
         </div>
