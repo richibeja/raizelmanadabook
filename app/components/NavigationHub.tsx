@@ -18,7 +18,8 @@ import {
   ShieldAlert,
   Syringe,
   Scale,
-  Microscope
+  Microscope,
+  Clock
 } from 'lucide-react';
 
 interface NavigationCardProps {
@@ -115,6 +116,14 @@ function NavigationHub() {
       href: "/herramientas/biocheck-intestinal",
       color: "#06b6d4",
       bgColor: "#ecfeff"
+    },
+    {
+      icon: <Heart size={24} />,
+      title: "Rutina de Cuidado",
+      description: "Asistente diario indispensable. Agenda de alimentación, hidratación, paseos y juegos para una mascota feliz y sin estrés.",
+      href: "/herramientas/rutina-diaria",
+      color: "#6366f1",
+      bgColor: "#eef2ff"
     },
     {
       icon: <Calculator size={24} />,
