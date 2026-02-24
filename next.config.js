@@ -44,6 +44,7 @@ const nextConfig = {
       '@/lib': path.resolve(__dirname, 'lib'),
       '@/components': path.resolve(__dirname, 'app/components'),
       '@/hooks': path.resolve(__dirname, 'app/hooks'),
+      '@/contexts': path.resolve(__dirname, 'app/contexts'),
     };
 
     // Asegurar que los módulos de Firebase se resuelvan correctamente
