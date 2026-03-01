@@ -303,15 +303,15 @@ function NavigationHub() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
             {[
               {
-                id: 'suplemento-2gotas',
-                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/1766592010sin20titulo20post20de20instagram-9d2969254f169cae3117723314569322-480-0.webp',
-                badge: '💰 $52K MARGEN',
-                badgeColor: '#16a34a',
-                name: '2 Gotas Suplemento',
-                desc: 'Suplemento natural en gotas para la salud y vitalidad de tu mascota.',
-                price: '$69.000',
-                category: 'Bienestar',
-                accent: '#16a34a',
+                id: 'vital-barf',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/tmp_b64_deac6bdc-6b53-42d0-962c-c10c049deb0c_7338890_7621345-44a1d8d9c59aa45e0d17719678860155-1024-1024.webp',
+                badge: '⭐ PRODUCTO ESTRELLA',
+                badgeColor: '#b45309',
+                name: 'Vital BARF Raízel',
+                desc: 'Dieta BARF 100% natural. La ración perfecta que tu mascota necesita. Hecha con amor en Colombia.',
+                price: 'Desde $15.000',
+                category: 'Alimentación Natural',
+                accent: '#b45309',
               },
               {
                 id: 'morral-astronauta',
