@@ -5,12 +5,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import PetProfileForm from '../components/PetProfileForm';
 import { usePets } from '../hooks/usePets';
-import { Plus, Search, Filter, Loader2 } from 'lucide-react';
+import { useManadaBookAuth } from '../contexts/ManadaBookAuthContext';
+import { Plus, Search, Filter, Loader2, AlertCircle } from 'lucide-react';
 
 export default function PetsPage() {
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSpecies, setFilterSpecies] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user } = useManadaBookAuth();
 
   const { pets, loading, error, createPet } = usePets({
     search: searchTerm,
@@ -21,16 +26,38 @@ export default function PetsPage() {
   const speciesOptions = Array.from(new Set(pets.map(pet => pet.species)));
 
   const handleCreatePet = async (petData: any) => {
+    if (!user) {
+      setFormError('Debes iniciar sesión para agregar una mascota');
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
+      setFormError(null);
+
+      // Calcular fecha de nacimiento aproximada para compatibilidad con Firebase
+      const birthDate = new Date();
+      if (petData.age_unit === 'years') {
+        birthDate.setFullYear(birthDate.getFullYear() - petData.age);
+      } else if (petData.age_unit === 'months') {
+        birthDate.setMonth(birthDate.getMonth() - petData.age);
+      }
+
       await createPet({
         ...petData,
-        owner_id: '1', // Simular usuario actual
+        owner_id: user.uid,
+        birthDate: birthDate.toISOString(), // Para la API
         followers_count: 0,
         posts_count: 0
       });
+
       setShowForm(false);
-    } catch (error) {
-      console.error('Error al crear mascota:', error);
+      setFormError(null);
+    } catch (err: any) {
+      console.error('Error al crear mascota:', err);
+      setFormError(err.message || 'No se pudo guardar la mascota. Por favor, intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -230,16 +257,43 @@ export default function PetsPage() {
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold text-gray-900">Agregar Nueva Mascota</h2>
                   <button
-                    onClick={() => setShowForm(false)}
+                    onClick={() => {
+                      setShowForm(false);
+                      setFormError(null);
+                    }}
                     className="text-gray-400 hover:text-gray-600"
                   >
                     ✕
                   </button>
                 </div>
-                <PetProfileForm
-                  onSubmit={handleCreatePet}
-                  onCancel={() => setShowForm(false)}
-                />
+
+                {formError && (
+                  <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg flex items-center gap-3 text-red-700">
+                    <AlertCircle size={20} />
+                    <p className="text-sm font-medium">{formError}</p>
+                  </div>
+                )}
+
+                {!user ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600 mb-4">Inicia sesión en ManadaBook para registrar y compartir el perfil de tu mascota.</p>
+                    <Link
+                      href="/login"
+                      className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Ir a Iniciar Sesión
+                    </Link>
+                  </div>
+                ) : (
+                  <PetProfileForm
+                    onSubmit={handleCreatePet}
+                    onCancel={() => {
+                      setShowForm(false);
+                      setFormError(null);
+                    }}
+                    isLoading={isSubmitting}
+                  />
+                )}
               </div>
             </div>
           </div>

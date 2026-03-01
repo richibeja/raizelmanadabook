@@ -201,7 +201,7 @@ export default function CocinaRaizel() {
                                 <div>
                                     <div className="text-xs font-black text-orange-500 uppercase tracking-widest mb-4">RECETA EXCLUSIVA</div>
                                     <h2 className="text-5xl font-black text-gray-900 mb-6 tracking-tighter">{selected.name}</h2>
-                                    <p className="text-xl text-gray-500 font-medium mb-10 leading-relaxed italic">"{selected.description}"</p>
+                                    <p className="text-xl text-gray-500 font-medium mb-10 leading-relaxed italic">&quot;{selected.description}&quot;</p>
 
                                     <div className="space-y-6">
                                         <h4 className="font-black uppercase tracking-widest text-gray-400 text-xs">Beneficios Clave</h4>

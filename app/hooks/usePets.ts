@@ -29,16 +29,16 @@ export const usePets = (filters?: { search?: string; species?: string; limit?: n
     const fetchPets = async () => {
       try {
         setLoading(true);
-        
+
         // Build query params
         const params = new URLSearchParams();
         if (filters?.search) params.append('search', filters.search);
         if (filters?.species) params.append('species', filters.species);
         if (filters?.limit) params.append('limit', filters.limit.toString());
-        
+
         const response = await fetch(`/api/pets?${params.toString()}`);
         const result = await response.json();
-        
+
         if (result.success) {
           setPets(result.data);
         } else {
@@ -56,21 +56,26 @@ export const usePets = (filters?: { search?: string; species?: string; limit?: n
 
   const createPet = async (petData: Omit<Pet, 'id' | 'created_at' | 'updated_at'>) => {
     try {
+      setError(null);
       const response = await fetch('/api/pets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(petData)
       });
-      
+
       const result = await response.json();
       if (result.success) {
         setPets(prev => [result.data, ...prev]);
         return result.data;
       } else {
-        setError(result.error || 'Error al crear mascota');
+        const errorMsg = result.error || 'Error al crear mascota';
+        setError(errorMsg);
+        throw new Error(errorMsg);
       }
-    } catch (err) {
-      setError('Error al crear mascota');
+    } catch (err: any) {
+      const errorMsg = err.message || 'Error al crear mascota';
+      setError(errorMsg);
+      throw new Error(errorMsg);
     }
   };
 

@@ -24,6 +24,29 @@ const TOXIC_FOODS = [
 export default function ToxicFoodChecker() {
     const [searchTerm, setSearchTerm] = useState('');
 
+    const RaizelLogo = ({ className = "text-xl" }) => (
+        <div className={`flex items-center font-black tracking-tighter ${className} text-[#4a3728]`}>
+            <span>Ra</span>
+            <div className="relative w-[0.8em] h-[1.4em] mx-0.5 flex items-center justify-center translate-y-[0.1em]">
+                <svg viewBox="0 0 24 32" className="w-full h-full text-green-700 overflow-visible" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    {/* Stem */}
+                    <path d="M12 26V10" />
+                    {/* Leaf Left */}
+                    <path d="M12 10C12 10 6 4 4 6C2 8 8 12 12 12" />
+                    {/* Leaf Right */}
+                    <path d="M12 10C12 10 18 4 20 6C22 8 16 12 12 12" />
+                    {/* Roots */}
+                    <path d="M12 26C12 26 10 28.5 7 28" strokeWidth="1.5" />
+                    <path d="M12 26C12 26 14 28.5 17 28" strokeWidth="1.5" />
+                    <path d="M12 26V31" strokeWidth="1.5" />
+                    <path d="M10 29L8 31" strokeWidth="1" opacity="0.6" />
+                    <path d="M14 29L16 31" strokeWidth="1" opacity="0.6" />
+                </svg>
+            </div>
+            <span>zel</span>
+        </div>
+    );
+
     const filteredFoods = TOXIC_FOODS.filter(food =>
         food.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -31,10 +54,13 @@ export default function ToxicFoodChecker() {
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-4xl mx-auto px-6 py-12">
-                <Link href="/" className="inline-flex items-center text-gray-500 hover:text-red-600 font-bold mb-8 transition-all">
-                    <ArrowLeft size={20} className="mr-2" />
-                    VOLVER AL INICIO
-                </Link>
+                <div className="flex justify-between items-center mb-12">
+                    <Link href="/" className="inline-flex items-center text-gray-500 hover:text-red-600 font-bold transition-all">
+                        <ArrowLeft size={20} className="mr-2" />
+                        VOLVER
+                    </Link>
+                    <RaizelLogo />
+                </div>
 
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-3xl mb-6 shadow-xl shadow-red-100">
@@ -82,7 +108,7 @@ export default function ToxicFoodChecker() {
                             </div>
 
                             <p className="text-gray-700 font-medium leading-relaxed italic">
-                                "{food.reason}"
+                                &quot;{food.reason}&quot;
                             </p>
                         </div>
                     ))}

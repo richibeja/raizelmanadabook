@@ -1,3 +1,30 @@
 {
-    "installCommand": "npm install --legacy-peer-deps"
+    "version": 2,
+    "installCommand": "npm install --legacy-peer-deps",
+    "framework": "nextjs",
+    "rewrites": [
+        {
+            "source": "/api/backend/(.*)",
+            "destination": "https://api.manadabook.com/api/$1"
+        }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Content-Type-Options",
+                    "value": "nosniff"
+                },
+                {
+                    "key": "X-Frame-Options",
+                    "value": "DENY"
+                },
+                {
+                    "key": "X-XSS-Protection",
+                    "value": "1; mode=block"
+                }
+            ]
+        }
+    ]
 }

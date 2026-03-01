@@ -119,7 +119,7 @@ export default function ControlPeso() {
                             <div className="flex items-start gap-4">
                                 <Info className="text-blue-600 mt-1 flex-shrink-0" size={20} />
                                 <p className="text-sm font-medium text-blue-900 italic">
-                                    "En dietas naturales, es normal ver variaciones. Lo ideal es que {petName || 'tu mascota'} mantenga su peso meta con un margen de +/- 0.5kg."
+                                    &quot;En dietas naturales, es normal ver variaciones. Lo ideal es que {petName || 'tu mascota'} mantenga su peso meta con un margen de +/- 0.5kg.&quot;
                                 </p>
                             </div>
                         </div>

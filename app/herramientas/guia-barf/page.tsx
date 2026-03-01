@@ -27,16 +27,42 @@ export default function GuiaBarf() {
         { id: 'tips', title: 'Tips Maestros', icon: <Zap size={20} /> }
     ];
 
+    const RaizelLogo = ({ className = "text-xl" }) => (
+        <div className={`flex items-center font-black tracking-tighter ${className} text-[#4a3728]`}>
+            <span>Ra</span>
+            <div className="relative w-[0.8em] h-[1.4em] mx-0.5 flex items-center justify-center translate-y-[0.1em]">
+                <svg viewBox="0 0 24 32" className="w-full h-full text-green-700 overflow-visible" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    {/* Stem */}
+                    <path d="M12 26V10" />
+                    {/* Leaf Left */}
+                    <path d="M12 10C12 10 6 4 4 6C2 8 8 12 12 12" />
+                    {/* Leaf Right */}
+                    <path d="M12 10C12 10 18 4 20 6C22 8 16 12 12 12" />
+                    {/* Roots */}
+                    <path d="M12 26C12 26 10 28.5 7 28" strokeWidth="1.5" />
+                    <path d="M12 26C12 26 14 28.5 17 28" strokeWidth="1.5" />
+                    <path d="M12 26V31" strokeWidth="1.5" />
+                    <path d="M10 29L8 31" strokeWidth="1" opacity="0.6" />
+                    <path d="M14 29L16 31" strokeWidth="1" opacity="0.6" />
+                </svg>
+            </div>
+            <span>zel</span>
+        </div>
+    );
+
     return (
         <div className="min-h-screen bg-white selection:bg-rose-100 font-sans">
             <div className="max-w-6xl mx-auto px-6 py-12">
                 {/* Header Navigation */}
-                <Link href="/" className="inline-flex items-center text-gray-900 hover:text-rose-600 font-bold mb-12 transition-all hover:-translate-x-1 group">
-                    <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center mr-3 group-hover:bg-rose-50 transition-colors">
-                        <ArrowLeft size={18} />
-                    </div>
-                    <span className="text-sm uppercase tracking-widest leading-none">Volver al Inicio</span>
-                </Link>
+                <div className="flex justify-between items-center mb-12">
+                    <Link href="/" className="inline-flex items-center text-gray-900 hover:text-rose-600 font-bold transition-all hover:-translate-x-1 group">
+                        <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center mr-3 group-hover:bg-rose-50 transition-colors">
+                            <ArrowLeft size={18} />
+                        </div>
+                        <span className="text-sm uppercase tracking-widest leading-none">Volver</span>
+                    </Link>
+                    <RaizelLogo />
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
                     {/* Sidebar navigation */}

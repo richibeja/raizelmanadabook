@@ -3,6 +3,7 @@ import './router-config'; // Suprimir warnings de React Router
 import type { Metadata } from 'next';
 import { AuthProvider } from './contexts/AuthContext';
 import { ManadaBookAuthProvider } from './contexts/ManadaBookAuthContext';
+import { CartProvider } from './contexts/CartContext';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import Script from 'next/script';
 
@@ -115,7 +116,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="h-full font-sans antialiased bg-gray-50">
         <AuthProvider>
           <ManadaBookAuthProvider>
-            {children}
+            <CartProvider>
+              {children}
+            </CartProvider>
             <PWAInstallPrompt />
           </ManadaBookAuthProvider>
         </AuthProvider>
