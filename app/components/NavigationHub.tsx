@@ -304,106 +304,90 @@ function NavigationHub() {
             {[
               {
                 id: 'suplemento-2gotas',
-                emoji: '💊',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/1766592010sin20titulo20post20de20instagram-9d2969254f169cae3117723314569322-480-0.webp',
                 badge: '💰 $52K MARGEN',
                 badgeColor: '#16a34a',
-                name: '2 Gotas Suplemento Mascotas',
-                desc: 'Suplemento natural en gotas para la salud y vitalidad de tu mascota. ¡902 unidades!',
+                name: '2 Gotas Suplemento',
+                desc: 'Suplemento natural en gotas para la salud y vitalidad de tu mascota.',
                 price: '$69.000',
-                dropiId: '1980165',
                 category: 'Bienestar',
-                bg: 'from-green-50 to-emerald-100',
                 accent: '#16a34a',
               },
               {
                 id: 'morral-astronauta',
-                emoji: '🚀',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/176227844919a3b390172-electrohogarcyc-6cna2353mnv-dym4dk9vqqm-8ee1fe88c45f36a88817723314863907-480-0.webp',
                 badge: '🔥 $50K MARGEN',
                 badgeColor: '#dc2626',
-                name: 'Morral Astronauta Mascotas',
+                name: 'Morral Astronauta',
                 desc: 'Morral estilo astronauta con ventana panorámica. Viaja con tu mascota con clase.',
                 price: '$100.000',
-                dropiId: '1984115',
                 category: 'Moda',
-                bg: 'from-red-50 to-rose-100',
                 accent: '#dc2626',
               },
               {
                 id: 'combo-mascotas',
-                emoji: '🎁',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/1766864707combo20mascotas-8785713d373aa38a7717723315338444-480-0.webp',
                 badge: '⭐ $45K MARGEN',
                 badgeColor: '#7c3aed',
-                name: 'Combo Premium Mascotas',
-                desc: 'El combo más completo del mercado. Todo lo que tu mascota necesita en un solo paquete.',
+                name: 'Combo Premium',
+                desc: 'El combo más completo del mercado. Todo lo que tu mascota necesita en un paquete.',
                 price: '$80.000',
-                dropiId: '1987067',
                 category: 'Mascotas',
-                bg: 'from-purple-50 to-violet-100',
                 accent: '#7c3aed',
               },
               {
                 id: 'corral-mascotas',
-                emoji: '🏠',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/17668629911749254863img_7459-77c0e581f5999e0b5317723320249976-480-0.webp',
                 badge: 'PLEGABLE',
                 badgeColor: '#d97706',
-                name: 'Corral Plegable Mascotas',
-                desc: 'Espacio seguro y cómodo para tu mascota. Plegable, fácil de armar y transportar.',
+                name: 'Corral Plegable',
+                desc: 'Espacio seguro y cómodo para tu mascota. Fácil de armar y transportar.',
                 price: '$80.000',
-                dropiId: '1988079',
                 category: 'Mascotas',
-                bg: 'from-amber-50 to-yellow-100',
                 accent: '#d97706',
               },
               {
-                id: 'guante-quita-pelo',
-                emoji: '🧤',
-                badge: 'MÁS VENDIDO',
+                id: 'cama-sofa',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/1771430509101-12bac70c8dd90e623b17723318719880-480-0.webp',
+                badge: 'COMFORT',
                 badgeColor: '#0891b2',
-                name: 'Guante Quita Pelo Pro',
-                desc: 'Remueve el pelo suelto en segundos. Funciona en telas, sofás y ropa. Multiusos.',
-                price: '$55.000',
-                dropiId: '1988137',
+                name: 'Cama Antiestrés Sofá',
+                desc: 'Cama tipo sofá antiestrés para el descanso premium de tu mascota.',
+                price: '$79.900',
                 category: 'Hogar',
-                bg: 'from-cyan-50 to-sky-100',
                 accent: '#0891b2',
               },
               {
-                id: 'maquina-motilar',
-                emoji: '✂️',
-                badge: 'PROF',
+                id: 'arnes-aseo',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/1771376354soporte-mascotas-fk22b-67-46-87f7363e0d2deb172317723318472772-480-0.webp',
+                badge: 'ESENCIAL',
                 badgeColor: '#2563eb',
-                name: 'Máquina Motilar Canina',
-                desc: 'Corte profesional de salud canina en casa. Silenciosa, precisa y de larga duración.',
-                price: '$100.000',
-                dropiId: '1995551',
-                category: 'Hogar',
-                bg: 'from-blue-50 to-indigo-100',
+                name: 'Arnés de Aseo',
+                desc: 'Soporte ergonómico para baño y aseo. Mantén a tu mascota quieta y segura.',
+                price: '$45.000',
+                category: 'Aseo',
                 accent: '#2563eb',
               },
               {
-                id: 'peine-vapor',
-                emoji: '♨️',
-                badge: 'A VAPOR',
+                id: 'tapete-entrenador',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/1769394212gemini_generated_image_5c2psr5c2psr5c2p-f71237bf24517f14c817719330258948-480-0.webp',
+                badge: 'TRAINING',
                 badgeColor: '#0284c7',
-                name: 'Peine a Vapor Mascotas',
-                desc: 'Vapor que desenmara, limpia y da brillo al manto de tu mascota al instante.',
-                price: '$37.000',
-                dropiId: '1994490',
+                name: 'Tapete Entrenador',
+                desc: 'Tapete absorbente para entrenar a tu mascota desde cachorro. Higiénico y fácil.',
+                price: '$48.000',
                 category: 'Mascotas',
-                bg: 'from-sky-50 to-blue-100',
                 accent: '#0284c7',
               },
               {
-                id: 'pelota-inteligente',
-                emoji: '🎾',
-                badge: 'SMART',
+                id: 'pelota-interactiva',
+                image: 'https://dcdn-us.mitiendanube.com/stores/007/338/890/products/176314446325-4b41d453fa963f312417719326415102-480-0.webp',
+                badge: 'VIRAL',
                 badgeColor: '#be185d',
-                name: 'Pelota Inteligente Mascotas',
+                name: 'Pelota Interactiva',
                 desc: 'Se mueve sola con sensores. Entretiene a perros y gatos de forma autónoma.',
-                price: '$25.000',
-                dropiId: '1980663',
+                price: '$35.000',
                 category: 'Mascotas',
-                bg: 'from-pink-50 to-rose-100',
                 accent: '#be185d',
               },
             ]
@@ -423,15 +407,17 @@ function NavigationHub() {
                     {product.badge}
                   </div>
 
-                  {/* Imagen / Emoji Area */}
-                  <div className={`relative h-36 sm:h-44 bg-gradient-to-br ${product.bg} flex items-center justify-center overflow-hidden`}>
-                    <div className="text-6xl sm:text-7xl transform group-hover:scale-125 group-hover:rotate-6 transition-transform duration-500">
-                      {product.emoji}
-                    </div>
+                  {/* Imagen real de la tienda */}
+                  <div className="relative h-36 sm:h-44 bg-gray-100 overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    />
                     {/* Hover overlay */}
                     <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"
-                      style={{ background: `radial-gradient(circle at center, ${product.accent}, transparent)` }}
+                      className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                      style={{ background: `linear-gradient(to top, ${product.accent}, transparent)` }}
                     />
                     {/* Cart icon on hover */}
                     <div className="absolute bottom-3 right-3 w-9 h-9 bg-white/0 group-hover:bg-white rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg">
